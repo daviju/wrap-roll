@@ -1,8 +1,5 @@
 <?php
 
-$base = $_SERVER['DOCUMENT_ROOT'];
-require_once "$base/Clases/Ingredientes.php";
-
 class RepositorioIngredientes {
     private $con;
 
