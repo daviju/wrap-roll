@@ -1,63 +1,56 @@
 <?php
-require_once '../helper/gbd.php';  // Cambia la ruta si es necesario
-require_once '../Clases/Ingredientes.php';
+
+$base = $_SERVER['DOCUMENT_ROOT'];
+require_once "$base/Clases/Ingredientes.php";
 
 class RepositorioIngredientes {
+    private $con;
 
-    private $conn;
-
-    // CREAR CONEXION
-    public function __construct() {
-        $database = new Database(); // Usando la clase Database de gbd.php
-        $this->conn = $database->getConnection();
+    public function __construct($con){
+        $this->con = $con;
     }
 
     // CREATE
     public function create($ingrediente) {
-        $query = "INSERT INTO Ingredientes (idIngredientes, nombre, alergenos) VALUES (:idIngredientes, :nombre, :alergenos)";
-
-        $stmt = $this->conn->prepare($query);
+        $stm = $this->con->prepare("INSERT INTO Ingredientes (idIngredientes, nombre, alergenos) VALUES (:idIngredientes, :nombre, :alergenos)");
         
-        $stmt->bindParam(":idIngredientes", $ingrediente->getIDIngredientes());
-        $stmt->bindParam(":nombre", $ingrediente->getNombre());
         $alergenos = implode(',', $ingrediente->getAlergenos());
-        $stmt->bindParam(":alergenos", $alergenos);
         
-        return $stmt->execute();
+        $stm->execute([
+            'idIngredientes' => $ingrediente->getIDIngredientes(),
+            'nombre' => $ingrediente->getNombre(),
+            'alergenos' => $alergenos
+        ]);
+
+        return $stm->rowCount() > 0;
     }
 
     // FIND BY ID
-    public function findById($id) {
-        $query = "SELECT * FROM Ingredientes WHERE idIngredientes = :id";
-
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":id", $id);
+    public function findById($id){
+        $stm = $this->con->prepare("SELECT * FROM Ingredientes WHERE idIngredientes = :id");
+        $stm->execute(['id' => $id]);
         
-        $stmt->execute();
-        
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $ingrediente = null;
+        $registro = $stm->fetch();
 
-        if ($row) {
-            $alergenos = explode(',', $row['alergenos']);
-            return new Ingredientes($row['idIngredientes'], $row['nombre'], $alergenos);
+        if ($registro) {
+            $alergenos = explode(',', $registro['alergenos']);
+            $ingrediente = new Ingredientes($registro['idIngredientes'], $registro['nombre'], $alergenos);
         }
-        
-        return null;
+
+        return $ingrediente;
     }
 
     // FIND ALL
-    public function findAll() {
-        $query = "SELECT * FROM Ingredientes";
+    public function findAll(): array {
+        $stm = $this->con->prepare("SELECT * FROM Ingredientes");
+        $stm->execute();
 
-        $stmt = $this->conn->prepare($query);
-        
-        $stmt->execute();
-        
         $ingredientes = [];
-        
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $alergenos = explode(',', $row['alergenos']);
-            $ingredientes[] = new Ingredientes($row['idIngredientes'], $row['nombre'], $alergenos);
+        while ($registro = $stm->fetch()) {
+            $alergenos = explode(',', $registro['alergenos']);
+            $ingrediente = new Ingredientes($registro['idIngredientes'], $registro['nombre'], $alergenos);
+            $ingredientes[] = $ingrediente;
         }
         
         return $ingredientes;
@@ -65,27 +58,24 @@ class RepositorioIngredientes {
 
     // UPDATE
     public function update($ingrediente) {
-        $query = "UPDATE Ingredientes SET nombre = :nombre, alergenos = :alergenos WHERE idIngredientes = :idIngredientes";
+        $stm = $this->con->prepare("UPDATE Ingredientes SET nombre = :nombre, alergenos = :alergenos WHERE idIngredientes = :idIngredientes");
 
-        $stmt = $this->conn->prepare($query);
-        
-        $stmt->bindParam(":idIngredientes", $ingrediente->getIDIngredientes());
-        $stmt->bindParam(":nombre", $ingrediente->getNombre());
         $alergenos = implode(',', $ingrediente->getAlergenos());
-        $stmt->bindParam(":alergenos", $alergenos);
-        
-        return $stmt->execute();
+        $stm->execute([
+            'idIngredientes' => $ingrediente->getIDIngredientes(),
+            'nombre' => $ingrediente->getNombre(),
+            'alergenos' => $alergenos
+        ]);
+
+        return $stm->rowCount() > 0;
     }
 
     // DELETE
-    public function delete($id) {
-        $query = "DELETE FROM Ingredientes WHERE idIngredientes = :id";
-        
-        $stmt = $this->conn->prepare($query);
-        
-        $stmt->bindParam(":id", $id);
-        
-        return $stmt->execute();
+    public function delete($id): bool {
+        $stm = $this->con->prepare("DELETE FROM Ingredientes WHERE idIngredientes = :id");
+        $stm->execute(['id' => $id]);
+
+        return $stm->rowCount() > 0;
     }
 }
 ?>

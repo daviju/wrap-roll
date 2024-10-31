@@ -1,90 +1,86 @@
 <?php
-require_once 'Database.php';
-require_once '../Clases/kebab.php';
 
-class KebabRepository {
+$base = $_SERVER['DOCUMENT_ROOT'];
+require_once "$base/Clases/Kebab.php";
 
-    private $conn;
+class RepositorioKebab {
+    private $con;
 
-    // CREAR CONEXION
-    public function __construct() {
-        $database = new Database();
-        $this->conn = $database->getConnection();
+    public function __construct($con){
+        $this->con = $con;
     }
 
     // CREATE
     public function create($kebab) {
-        $query = "INSERT INTO Kebab (idKebab, nombre, foto, precio) VALUES (:idKebab, :nombre, :foto, :precio)";
-
-        $stmt = $this->conn->prepare($query);
-
-        $stmt->bindParam(":idKebab", $kebab->getIDKebab());
-        $stmt->bindParam(":nombre", $kebab->getNombre());
-        $stmt->bindParam(":foto", $kebab->getFoto());
-        $stmt->bindParam(":precio", $kebab->getPrecio());
+        $stm = $this->con->prepare("INSERT INTO Kebab (idKebab, nombre, foto, precio) VALUES (:idKebab, :nombre, :foto, :precio)");
         
-        return $stmt->execute();
+        $stm->execute([
+            'idKebab' => $kebab->getIDKebab(),
+            'nombre' => $kebab->getNombre(),
+            'foto' => $kebab->getFoto(),
+            'precio' => $kebab->getPrecio()
+        ]);
+
+        return $stm->rowCount() > 0;
     }
 
     // FIND BY ID
     public function findById($id) {
-        $query = "SELECT * FROM Kebab WHERE idKebab = :id";
-
-        $stmt = $this->conn->prepare($query);
-    
-        $stmt->bindParam(":id", $id);
+        $stm = $this->con->prepare("SELECT * FROM Kebab WHERE idKebab = :id");
+        $stm->execute(['id' => $id]);
         
-        $stmt->execute();
+        $kebab = null;
+        $registro = $stm->fetch();
 
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        if ($row) {
-            return new Kebab($row['idKebab'], $row['nombre'], $row['foto'], $row['precio']);
+        if ($registro) {
+            $kebab = new Kebab(
+                $registro['idKebab'],
+                $registro['nombre'],
+                $registro['foto'],
+                $registro['precio']
+            );
         }
-    
-        return null;
+        return $kebab;
     }
 
     // FIND ALL
-    public function findAll() {
-        $query = "SELECT * FROM Kebab";
-    
-        $stmt = $this->conn->prepare($query);
-    
-        $stmt->execute();
-    
+    public function findAll(): array {
+        $stm = $this->con->prepare("SELECT * FROM Kebab");
+        $stm->execute();
+
         $kebabs = [];
-        
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $kebabs[] = new Kebab($row['idKebab'], $row['nombre'], $row['foto'], $row['precio']);
+        while ($registro = $stm->fetch()) {
+            $kebab = new Kebab(
+                $registro['idKebab'],
+                $registro['nombre'],
+                $registro['foto'],
+                $registro['precio']
+            );
+            $kebabs[] = $kebab;
         }
-        
         return $kebabs;
     }
 
     // UPDATE
     public function update($kebab) {
-        $query = "UPDATE Kebab SET nombre = :nombre, foto = :foto, precio = :precio WHERE idKebab = :idKebab";
-        
-        $stmt = $this->conn->prepare($query);
-        
-        $stmt->bindParam(":idKebab", $kebab->getIDKebab());
-        $stmt->bindParam(":nombre", $kebab->getNombre());
-        $stmt->bindParam(":foto", $kebab->getFoto());
-        $stmt->bindParam(":precio", $kebab->getPrecio());
-        
-        return $stmt->execute();
+        $stm = $this->con->prepare("UPDATE Kebab SET nombre = :nombre, foto = :foto, precio = :precio WHERE idKebab = :idKebab");
+
+        $stm->execute([
+            'idKebab' => $kebab->getIDKebab(),
+            'nombre' => $kebab->getNombre(),
+            'foto' => $kebab->getFoto(),
+            'precio' => $kebab->getPrecio()
+        ]);
+
+        return $stm->rowCount() > 0;
     }
 
     // DELETE
-    public function delete($id) {
-        $query = "DELETE FROM Kebab WHERE idKebab = :id";
-        
-        $stmt = $this->conn->prepare($query);
-        
-        $stmt->bindParam(":id", $id);
-        
-        return $stmt->execute();
+    public function delete($id): bool {
+        $stm = $this->con->prepare("DELETE FROM Kebab WHERE idKebab = :id");
+        $stm->execute(['id' => $id]);
+
+        return $stm->rowCount() > 0;
     }
 }
 ?>
