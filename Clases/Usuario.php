@@ -6,7 +6,6 @@ class Usuario {
     private $nombre;
     private $foto;
     private $contraseña;
-    private $direccion;
     private $monedero;
     private $email;
     private $carrito;
@@ -19,7 +18,6 @@ class Usuario {
         $this->nombre = $nombre;
         $this->foto = $foto;
         $this->contraseña = $contraseña;
-        $this->direccion = $direccion;
         $this->monedero = $monedero;
         $this->email = $email;
         $this->carrito = $carrito;
@@ -29,7 +27,7 @@ class Usuario {
     // Falta meter el carrito, como es json ni idea
     // To String
     public function __toString() {
-        return "Usuario [ID_Usuario = $this->ID_Usuario, nombre = $this->nombre, foto = $this->foto, dirección = $this->direccion, monedero = $this->monedero, email = $this->email, rol = $this->rol]";
+        return "Usuario [ID_Usuario = $this->ID_Usuario, nombre = $this->nombre, foto = $this->foto, monedero = $this->monedero, email = $this->email, rol = $this->rol]";
     }
 
 
@@ -48,10 +46,6 @@ class Usuario {
 
     public function getContraseña() {
         return $this->contraseña;
-    }
-
-    public function getDireccion() {
-        return $this->direccion;
     }
 
     public function getMonedero() {
@@ -86,10 +80,6 @@ class Usuario {
 
     public function setContraseña($contraseña) {
         $this->contraseña = $contraseña;
-    }
-
-    public function setDireccion($direccion) {
-        $this->direccion = $direccion;
     }
 
     public function setMonedero($monedero) {
