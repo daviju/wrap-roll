@@ -6,22 +6,24 @@ class Pedido {
     private $estado;
     private $direccion;
     private $preciototal;
+    private $fechaHora;
     private $ID_Usuario;
 
 
     // Constructor
-    public function __construct($ID_Pedido, $estado, $direccion, $preciototal, $ID_Usuario) {
+    public function __construct($ID_Pedido, $estado, $direccion, $preciototal, $fechaHora, $ID_Usuario) {
         $this->ID_Pedido = $ID_Pedido;
         $this->estado = $estado;
         $this->direccion = $direccion;
         $this->preciototal = $preciototal;
+        $this->fechaHora = $fechaHora;
         $this->ID_Usuario = $ID_Usuario;
     }
 
 
     // To String
     public function __toString() {
-        return "Pedido [ID_Pedido = $this->ID_Pedido, estado = $this->estado, dirección = $this->direccion, precio total = $this->preciototal, ID_Usuario = $this->ID_Usuario]";
+        return "Pedido [ID_Pedido = $this->ID_Pedido, estado = $this->estado, dirección = $this->direccion, precio total = $this->preciototal, fecha y hora = $this->fechaHora, ID_Usuario = $this->ID_Usuario]";
     }
 
 
@@ -40,6 +42,10 @@ class Pedido {
 
     public function getPrecioTotal() {
         return $this->preciototal;
+    }
+
+    public function getFechaHora() {
+        return $this->fechaHora;
     }
 
     public function getIDUsuario() {
@@ -62,6 +68,10 @@ class Pedido {
 
     public function setPrecioTotal($preciototal) {
         $this->preciototal = $preciototal;
+    }
+
+    public function setFechaHora($fechaHora) {
+        $this->fechaHora = $fechaHora;
     }
 
     public function setIDUsuario($ID_Usuario) {

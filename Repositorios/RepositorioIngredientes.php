@@ -9,14 +9,15 @@ class RepositorioIngredientes {
 
     // CREATE
     public function create($ingrediente) {
-        $stm = $this->con->prepare("INSERT INTO Ingredientes (idIngredientes, nombre, alergenos) VALUES (:idIngredientes, :nombre, :alergenos)");
-        
-        $alergenos = implode(',', $ingrediente->getAlergenos());
+        $stm = $this->con->prepare("INSERT INTO Ingredientes (idIngredientes, nombre, precio, tipo, foto) 
+                                    VALUES (:idIngredientes, :nombre, :precio, :tipo, :foto)");
         
         $stm->execute([
             'idIngredientes' => $ingrediente->getIDIngredientes(),
             'nombre' => $ingrediente->getNombre(),
-            'alergenos' => $alergenos
+            'precio' => $ingrediente->getPrecio(),
+            'tipo' => $ingrediente->getTipo(),
+            'foto' => $ingrediente->getFoto(),
         ]);
 
         return $stm->rowCount() > 0;
@@ -31,8 +32,7 @@ class RepositorioIngredientes {
         $registro = $stm->fetch();
 
         if ($registro) {
-            $alergenos = explode(',', $registro['alergenos']);
-            $ingrediente = new Ingredientes($registro['idIngredientes'], $registro['nombre'], $alergenos);
+            $ingrediente = new Ingredientes($registro['idIngredientes'], $registro['nombre'], $registro['precio'], $registro['tipo'], $registro['foto']);
         }
 
         return $ingrediente;
@@ -44,9 +44,10 @@ class RepositorioIngredientes {
         $stm->execute();
 
         $ingredientes = [];
+        
         while ($registro = $stm->fetch()) {
-            $alergenos = explode(',', $registro['alergenos']);
-            $ingrediente = new Ingredientes($registro['idIngredientes'], $registro['nombre'], $alergenos);
+            $ingrediente = new Ingredientes($registro['idIngredientes'], $registro['nombre'], $registro['precio'], $registro['tipo'], $registro['foto']);
+            
             $ingredientes[] = $ingrediente;
         }
         
@@ -55,13 +56,14 @@ class RepositorioIngredientes {
 
     // UPDATE
     public function update($ingrediente) {
-        $stm = $this->con->prepare("UPDATE Ingredientes SET nombre = :nombre, alergenos = :alergenos WHERE idIngredientes = :idIngredientes");
-
-        $alergenos = implode(',', $ingrediente->getAlergenos());
+        $stm = $this->con->prepare("UPDATE Ingredientes SET nombre = :nombre, precio = :precio, tipo = :tipo, foto = :foto WHERE idIngredientes = :idIngredientes");
+        
         $stm->execute([
             'idIngredientes' => $ingrediente->getIDIngredientes(),
             'nombre' => $ingrediente->getNombre(),
-            'alergenos' => $alergenos
+            'precio' => $ingrediente->getPrecio(),
+            'tipo' => $ingrediente->getTipo(),
+            'foto' => $ingrediente->getFoto(),
         ]);
 
         return $stm->rowCount() > 0;

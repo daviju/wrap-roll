@@ -11,6 +11,7 @@ class RepositorioLineaPedido {
     public function create($linea) {
         $sqlaco = "INSERT INTO LineaPedido (idLineaPedido, cantidad, descripcion, Pedidos_idPedidos, Kebab_idKebab) 
                    VALUES (:idLineaPedido, :cantidad, :descripcion, :idPedido, :idKebab)";
+
         $stm = $this->con->prepare($sqlaco);
         
         $stm->execute([
@@ -26,7 +27,9 @@ class RepositorioLineaPedido {
 
     // FIND BY ID
     public function findById($id) {
-        $sqlaco = "SELECT * FROM LineaPedido WHERE idLineaPedido = :id";
+        $sqlaco = "SELECT * FROM LineaPedido 
+                    WHERE idLineaPedido = :id";
+
         $stm = $this->con->prepare($sqlaco);
         $stm->execute(['id' => $id]);
         
@@ -48,10 +51,12 @@ class RepositorioLineaPedido {
     // FIND ALL
     public function findAll(): array {
         $sqlaco = "SELECT * FROM LineaPedido";
+
         $stm = $this->con->prepare($sqlaco);
         $stm->execute();
 
         $lineas = [];
+        
         while ($registro = $stm->fetch()) {
             $lineas[] = new LineaPedido(
                 $registro['idLineaPedido'],
@@ -67,8 +72,10 @@ class RepositorioLineaPedido {
 
     // UPDATE
     public function update($linea) {
-        $sqlaco = "UPDATE LineaPedido SET cantidad = :cantidad, descripcion = :descripcion, Pedidos_idPedidos = :idPedido, Kebab_idKebab = :idKebab 
+        $sqlaco = "UPDATE LineaPedido 
+                    SET cantidad = :cantidad, descripcion = :descripcion, Pedidos_idPedidos = :idPedido, Kebab_idKebab = :idKebab 
                    WHERE idLineaPedido = :idLineaPedido";
+        
         $stm = $this->con->prepare($sqlaco);
 
         $stm->execute([
@@ -84,7 +91,9 @@ class RepositorioLineaPedido {
 
     // DELETE
     public function delete($id): bool {
-        $sqlaco = "DELETE FROM LineaPedido WHERE idLineaPedido = :id";
+        $sqlaco = "DELETE FROM LineaPedido 
+                    WHERE idLineaPedido = :id";
+
         $stm = $this->con->prepare($sqlaco);
         $stm->execute(['id' => $id]);
 
