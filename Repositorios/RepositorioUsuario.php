@@ -9,14 +9,14 @@ class RepositorioUsuario {
 
     // CREATE
     public function create($usuario) {
-        $stm = $this->con->prepare("INSERT INTO Usuario (idUsuario, nombre, foto, contraseña, direccion, monedero, email, carrito, rol) VALUES (:idUsuario, :nombre, :foto, :contraseña, :direccion, :monedero, :email, :carrito, :rol)");
+        $stm = $this->con->prepare("INSERT INTO Usuario (idUsuario, nombre, foto, contraseña, monedero, email, carrito, rol) 
+                                    VALUES (:idUsuario, :nombre, :foto, :contraseña, :monedero, :email, :carrito, :rol)");
         
         $stm->execute([
             'idUsuario' => $usuario->getIDUsuario(),
             'nombre' => $usuario->getNombre(),
             'foto' => $usuario->getFoto(),
             'contraseña' => $usuario->getContraseña(),
-            'direccion' => $usuario->getDireccion(),
             'monedero' => $usuario->getMonedero(),
             'email' => $usuario->getEmail(),
             'carrito' => json_encode($usuario->getCarrtio()), // Convertimos el carrito a JSON
@@ -28,7 +28,9 @@ class RepositorioUsuario {
 
     // FIND BY ID
     public function findById($id){
-        $stm = $this->con->prepare("SELECT * FROM Usuario WHERE idUsuario = :id");
+        $stm = $this->con->prepare("SELECT * FROM Usuario 
+                                    WHERE idUsuario = :id");
+
         $stm->execute(['id' => $id]);
         
         $registro = $stm->fetch();
@@ -63,7 +65,6 @@ class RepositorioUsuario {
                 $registro['nombre'],
                 $registro['foto'],
                 $registro['contraseña'],
-                $registro['direccion'],
                 $registro['monedero'],
                 $registro['email'],
                 json_decode($registro['carrito'], true),
@@ -77,14 +78,15 @@ class RepositorioUsuario {
 
     // UPDATE
     public function update($usuario) {
-        $stm = $this->con->prepare("UPDATE Usuario SET nombre = :nombre, foto = :foto, contraseña = :contraseña, direccion = :direccion, monedero = :monedero, email = :email, carrito = :carrito, rol = :rol WHERE idUsuario = :idUsuario");
+        $stm = $this->con->prepare("UPDATE Usuario 
+                                    SET nombre = :nombre, foto = :foto, contraseña = :contraseña, monedero = :monedero, email = :email, carrito = :carrito, rol = :rol 
+                                    WHERE idUsuario = :idUsuario");
 
         $stm->execute([
             'idUsuario' => $usuario->getIDUsuario(),
             'nombre' => $usuario->getNombre(),
             'foto' => $usuario->getFoto(),
             'contraseña' => $usuario->getContraseña(),
-            'direccion' => $usuario->getDireccion(),
             'monedero' => $usuario->getMonedero(),
             'email' => $usuario->getEmail(),
             'carrito' => json_encode($usuario->getCarrtio()),

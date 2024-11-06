@@ -5,24 +5,27 @@ class LineaPedido {
     private $ID_LineaPedido;
     private $cantidad;
     private $descripcion;
+    private $producto;
 
     private $ID_Pedido;
     private $ID_Kebab;
 
 
     // Constructor
-    public function __construct($ID_LineaPedido, $cantidad, $descripcion, $ID_Pedido, $ID_Kebab) {
+    public function __construct($ID_LineaPedido, $cantidad, $descripcion, $producto, $ID_Pedido, $ID_Kebab) {
         $this->ID_LineaPedido = $ID_LineaPedido;
         $this->cantidad = $cantidad;
         $this->descripcion = $descripcion;
+        $this->producto = $producto;
+        
         $this->ID_Pedido = $ID_Pedido;
         $this->ID_Kebab = $ID_Kebab;
     }
 
-
+    
     // To String
     public function __toString() {
-        return "LineaPedido [ID_LineaPedido = $this->ID_LineaPedido, cantidad = $this->cantidad, descripcion = $this->descripcion, ID_Pedido = $this->ID_Pedido, ID_Kebab = $this->ID_Kebab]";
+        return "LineaPedido [ID_LineaPedido = $this->ID_LineaPedido, cantidad = $this->cantidad, descripcion = $this->descripcion, producto = " . json_encode($this->producto) . ", ID_Pedido = $this->ID_Pedido, ID_Kebab = $this->ID_Kebab]";
     }
 
 
@@ -39,6 +42,10 @@ class LineaPedido {
         return $this->descripcion;
     }
 
+    public function getProducto() {
+        return $this->producto;
+    }
+
     public function getIDPedido() {
         return $this->ID_Pedido;
     }
@@ -46,6 +53,7 @@ class LineaPedido {
     public function getIDKebab() {
         return $this->ID_Kebab;
     }
+
 
     // Métodos Setters
     public function setIDLineaPedido($ID_LineaPedido) {
@@ -58,6 +66,10 @@ class LineaPedido {
 
     public function setDescripcion($descripcion) {
         $this->descripcion = $descripcion;
+    }
+
+    public function setProducto($producto) {
+        $this->producto = $producto;
     }
 
     public function setIDPedido($ID_Pedido) {

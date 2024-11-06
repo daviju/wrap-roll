@@ -13,7 +13,7 @@ class Usuario {
 
 
     // Constructor
-    public function __construct($ID_Usuario, $nombre, $foto, $contraseña, $direccion, $monedero, $email, $carrito, $rol) {
+    public function __construct($ID_Usuario, $nombre, $foto, $contraseña, $monedero, $email, $carrito, $rol) {
         $this->ID_Usuario = $ID_Usuario;
         $this->nombre = $nombre;
         $this->foto = $foto;

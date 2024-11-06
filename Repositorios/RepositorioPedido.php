@@ -9,7 +9,8 @@ class RepositorioPedido {
 
     // CREATE
     public function create($pedido) {
-        $stm = $this->con->prepare("INSERT INTO Pedidos (idPedidos, estado, direccion, preciototal, fecha_hora, Usuario_idUsuario) VALUES (:idPedidos, :estado, :direccion, :preciototal, :fecha_hora, :idUsuario)");
+        $stm = $this->con->prepare("INSERT INTO Pedidos (idPedidos, estado, preciototal, fecha_hora, direccion, Usuario_idUsuario) 
+                                    VALUES (:idPedidos, :estado, :preciototal, :fecha_hora, :direccion, :idUsuario)");
         
         $stm->execute([
             'idPedidos' => $pedido->getIDPedido(),
@@ -69,7 +70,8 @@ class RepositorioPedido {
 
     // UPDATE
     public function update($pedido) {
-        $stm = $this->con->prepare("UPDATE Pedidos SET estado = :estado, direccion = :direccion, preciototal = :preciototal, Usuario_idUsuario = :idUsuario WHERE idPedidos = :idPedidos");
+        $stm = $this->con->prepare("UPDATE Pedidos SET estado = :estado, preciototal = :preciototal, direccion = :direccion, Usuario_idUsuario = :idUsuario 
+                                    WHERE idPedidos = :idPedidos");
 
         $stm->execute([
             'idPedidos' => $pedido->getIDPedido(),
@@ -84,7 +86,9 @@ class RepositorioPedido {
 
     // DELETE
     public function delete($id): bool {
-        $stm = $this->con->prepare("DELETE FROM Pedidos WHERE idPedidos = :id");
+        $stm = $this->con->prepare("DELETE FROM Pedidos 
+                                    WHERE idPedidos = :id");
+
         $stm->execute(['id' => $id]);
 
         return $stm->rowCount() > 0;
