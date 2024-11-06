@@ -1,6 +1,6 @@
 <?php
 
-Class Direccion{
+Class Direccion {
 
     // Atributos
     private $ID_Direccion;

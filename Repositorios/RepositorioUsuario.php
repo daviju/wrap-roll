@@ -98,7 +98,9 @@ class RepositorioUsuario {
 
     // DELETE
     public function delete($id): bool {
-        $stm = $this->con->prepare("DELETE FROM Usuario WHERE idUsuario = :id");
+        $stm = $this->con->prepare("DELETE FROM Usuario 
+                                    WHERE idUsuario = :id");
+                                    
         $stm->execute(['id' => $id]);
 
         return $stm->rowCount() > 0;
