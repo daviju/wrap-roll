@@ -5,6 +5,7 @@ class LineaPedido {
     private $ID_LineaPedido;
     private $cantidad;
     private $descripcion;
+
     private $ID_Pedido;
     private $ID_Kebab;
 

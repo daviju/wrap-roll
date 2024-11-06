@@ -4,21 +4,24 @@ class Ingredientes {
     // Atributos
     private $ID_Ingredientes;
     private $nombre;
-    private $alergenos;
+    private $precio;
+    private $tipo;
+    private $foto;
 
 
     // Constructor
-    public function __construct($ID_Ingredientes, $nombre, array $alergenos) {
+    public function __construct($ID_Ingredientes, $nombre, $precio, $tipo, $foto) {
         $this->ID_Ingredientes = $ID_Ingredientes;
         $this->nombre = $nombre;
-        $this->alergenos = $alergenos;
+        $this->precio = $precio;
+        $this->tipo = $tipo;
+        $this->foto = $foto;
     }
 
 
     // To String
     public function __toString() {
-        $alergenosStr = implode(", ", $this->alergenos);
-        return "Ingrediente [ID_Ingredientes = $this->ID_Ingredientes, nombre = $this->nombre, alérgenos = $alergenosStr]";
+        return "Ingrediente [ID_Ingredientes = $this->ID_Ingredientes, nombre = $this->nombre, precio = $this->precio, tipo = $this->tipo, foto = $this->foto]";
     }
 
 
@@ -31,11 +34,19 @@ class Ingredientes {
         return $this->nombre;
     }
 
-    public function getAlergenos() {
-        return $this->alergenos;
+    public function getPrecio() {
+        return $this->precio;
     }
 
+    public function getTipo() {
+        return $this->tipo;
+    }
+
+    public function getFoto() {
+        return $this->foto;
+    }
     
+
     // Métodos para establecer los valores de los atributos
     public function setIDIngredientes($ID_Ingredientes) {
         $this->ID_Ingredientes = $ID_Ingredientes;
@@ -45,8 +56,16 @@ class Ingredientes {
         $this->nombre = $nombre;
     }
 
-    public function setAlergenos(array $alergenos) {
-        $this->alergenos = $alergenos;
+    public function setPrecio($precio) {
+        $this->precio = $precio;
+    }
+
+    public function setTipo($tipo) {
+        $this->tipo = $tipo;
+    }
+
+    public function setFoto($foto) {
+        $this->foto = $foto;
     }
 }
 ?>

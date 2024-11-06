@@ -9,30 +9,30 @@ class RepositorioIngredientesAlergenos {
 
     // CREATE
     public function create($ingredienteAlergeno) {
-        $sqlaco = "INSERT INTO IngredientesAlergenos (Ingredientes_idIngredientes, Alergenos_idAlergenos, Alergenos_tipo, Alergenos_foto) 
+        $sqlaco = "INSERT INTO IngredientesAlergenos (Ingredientes_idIngredientes, Alergenos_idAlergenos) 
                    VALUES (:idIngredientes, :idAlergenos, :tipo, :foto)";
+
         $stm = $this->con->prepare($sqlaco);
         
         $stm->execute([
             'idIngredientes' => $ingredienteAlergeno->getIDIngredientes(),
             'idAlergenos' => $ingredienteAlergeno->getIDAlergenos(),
-            'tipo' => $ingredienteAlergeno->getTipoAlergenos(),
-            'foto' => $ingredienteAlergeno->getFotoAlergenos()
         ]);
 
         return $stm->rowCount() > 0;
     }
 
     // FIND BY ID
-    public function findById($idIngredientes, $idAlergenos, $tipo, $foto) {
-        $sqlaco = "SELECT * FROM IngredientesAlergenos WHERE Ingredientes_idIngredientes = :idIngredientes AND Alergenos_idAlergenos = :idAlergenos AND Alergenos_tipo = :tipo AND Alergenos_foto = :foto";
+    public function findById($idIngredientes, $idAlergenos) {
+        $sqlaco = "SELECT *
+                 FROM IngredientesAlergenos 
+                 WHERE Ingredientes_idIngredientes = :idIngredientes AND Alergenos_idAlergenos = :idAlergenos";
+
         $stm = $this->con->prepare($sqlaco);
         
         $stm->execute([
             'idIngredientes' => $idIngredientes,
             'idAlergenos' => $idAlergenos,
-            'tipo' => $tipo,
-            'foto' => $foto
         ]);
         
         $registro = $stm->fetch();
@@ -41,8 +41,6 @@ class RepositorioIngredientesAlergenos {
             return new IngredientesAlergenos(
                 $registro['Ingredientes_idIngredientes'],
                 $registro['Alergenos_idAlergenos'],
-                $registro['Alergenos_tipo'],
-                $registro['Alergenos_foto']
             );
         }
 
@@ -52,17 +50,17 @@ class RepositorioIngredientesAlergenos {
     // FIND ALL
     public function findAll(): array {
         $sqlaco = "SELECT * FROM IngredientesAlergenos";
+        
         $stm = $this->con->prepare($sqlaco);
         $stm->execute();
 
         $ingredientesAlergenos = [];
+
         while ($registro = $stm->fetch()) {
 
             $ingredientesAlergenos[] = new IngredientesAlergenos(
                 $registro['Ingredientes_idIngredientes'],
                 $registro['Alergenos_idAlergenos'],
-                $registro['Alergenos_tipo'],
-                $registro['Alergenos_foto']
             );
         }
         
@@ -71,30 +69,28 @@ class RepositorioIngredientesAlergenos {
 
     // UPDATE
     public function update($ingredienteAlergeno) {
-        $sqlaco = "UPDATE IngredientesAlergenos SET Alergenos_idAlergenos = :idAlergenos, Alergenos_tipo = :tipo, Alergenos_foto = :foto 
+        $sqlaco = "UPDATE IngredientesAlergenos 
+                    SET Alergenos_idAlergenos = :idAlergenos
                    WHERE Ingredientes_idIngredientes = :idIngredientes";
+        
         $stm = $this->con->prepare($sqlaco);
 
         $stm->execute([
             'idIngredientes' => $ingredienteAlergeno->getIDIngredientes(),
             'idAlergenos' => $ingredienteAlergeno->getIDAlergenos(),
-            'tipo' => $ingredienteAlergeno->getTipoAlergenos(),
-            'foto' => $ingredienteAlergeno->getFotoAlergenos()
         ]);
 
         return $stm->rowCount() > 0;
     }
 
     // DELETE
-    public function delete($idIngredientes, $idAlergenos, $tipo, $foto): bool {
+    public function delete($idIngredientes, $idAlergenos): bool {
         $sqlaco = "DELETE FROM IngredientesAlergenos WHERE Ingredientes_idIngredientes = :idIngredientes AND Alergenos_idAlergenos = :idAlergenos AND Alergenos_tipo = :tipo AND Alergenos_foto = :foto";
         $stm = $this->con->prepare($sqlaco);
         
         $stm->execute([
             'idIngredientes' => $idIngredientes,
             'idAlergenos' => $idAlergenos,
-            'tipo' => $tipo,
-            'foto' => $foto
         ]);
 
         return $stm->rowCount() > 0;
