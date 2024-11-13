@@ -3,6 +3,7 @@ class Alergenos {
 
     // Atributos
     private $ID_Alergenos;
+
     private $tipo;
     private $foto;
 
@@ -10,6 +11,7 @@ class Alergenos {
     // Constructor
     public function __construct($ID_Alergenos, $tipo, $foto) {
         $this->ID_Alergenos = $ID_Alergenos;
+        
         $this->tipo = $tipo;
         $this->foto = $foto;
     }

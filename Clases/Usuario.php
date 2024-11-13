@@ -3,6 +3,7 @@ class Usuario {
 
     // Atributos
     private $ID_Usuario;
+
     private $nombre;
     private $foto;
     private $contraseña;
@@ -15,6 +16,7 @@ class Usuario {
     // Constructor
     public function __construct($ID_Usuario, $nombre, $foto, $contraseña, $monedero, $email, $carrito, $rol) {
         $this->ID_Usuario = $ID_Usuario;
+    
         $this->nombre = $nombre;
         $this->foto = $foto;
         $this->contraseña = $contraseña;

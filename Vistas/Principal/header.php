@@ -30,18 +30,18 @@
       </div>
 
       <nav>
-        <a class="item">Inicio</a>
+        <a class="item" href="#inicio">Inicio</a>
         <div class="item">
           Kebabs
           <div class="dropdown">
             <div>
-              <a>De la casa</a>
-              <a>Al gusto</a>
+              <a href="#casa">De la casa</a>
+              <a href="#gusto">Al gusto</a>
             </div>
           </div>
         </div>
-        <a class="item">Sobre nosotros</a>
-        <a class="item">Contacto</a>
+        <a class="item" href="#nosotros">Sobre nosotros</a>
+        <a class="item" href="#contacto">Contacto</a>
         <div class="underline"></div>
       </nav>
     </div>

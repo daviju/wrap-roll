@@ -4,6 +4,7 @@ Class Direccion {
 
     // Atributos
     private $ID_Direccion;
+
     private $nombrevia;
     private $numero;
     private $tipovia;
@@ -18,6 +19,7 @@ Class Direccion {
     // Constructor
     public function __construct($ID_Direccion, $nombrevia, $numero, $tipovia, $puerta, $escalera, $planta, $localidad, $ID_Usuario) {
         $this->ID_Direccion = $ID_Direccion;
+    
         $this->nombrevia = $nombrevia;
         $this->numero = $numero;
         $this->tipovia = $tipovia;
@@ -25,6 +27,7 @@ Class Direccion {
         $this->escalera = $escalera;
         $this->planta = $planta;
         $this->localidad = $localidad;
+        
         $this->ID_Usuario = $ID_Usuario;
     }
 

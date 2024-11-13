@@ -9,8 +9,8 @@ class RepositorioLineaPedido {
 
     // CREATE
     public function create($linea) {
-        $sqlaco = "INSERT INTO LineaPedido (idLineaPedido, cantidad, descripcion, producto, Pedidos_idPedidos, Kebab_idKebab) 
-                   VALUES (:idLineaPedido, :cantidad, :descripcion, :producto, :idPedido, :idKebab)";
+        $sqlaco = "INSERT INTO LineaPedido (idLineaPedido, cantidad, descripcion, producto, Pedidos_idPedidos) 
+                   VALUES (:idLineaPedido, :cantidad, :descripcion, :producto, :idPedido)";
 
         $stm = $this->con->prepare($sqlaco);
         
@@ -20,7 +20,6 @@ class RepositorioLineaPedido {
             'descripcion' => $linea->getDescripcion(),
             'producto' => json_encode($linea->getProducto()), // Encode producto -> JSON
             'idPedido' => $linea->getIDPedido(),
-            'idKebab' => $linea->getIDKebab()
         ]);
 
         return $stm->rowCount() > 0;
@@ -42,8 +41,7 @@ class RepositorioLineaPedido {
                 $registro['cantidad'],
                 $registro['descripcion'],
                 json_decode($registro['producto'], true), // Decode producto -> JSON
-                $registro['Pedidos_idPedidos'],
-                $registro['Kebab_idKebab']
+                $registro['Pedidos_idPedidos']
             );
         }
 
@@ -66,7 +64,6 @@ class RepositorioLineaPedido {
                 $registro['descripcion'],
                 json_decode($registro['producto'], true), // Decode producto -> JSON
                 $registro['Pedidos_idPedidos'],
-                $registro['Kebab_idKebab']
             );
         }
         
@@ -76,7 +73,7 @@ class RepositorioLineaPedido {
     // UPDATE
     public function update($linea) {
         $sqlaco = "UPDATE LineaPedido 
-                    SET cantidad = :cantidad, descripcion = :descripcion, producto = :producto, Pedidos_idPedidos = :idPedido, Kebab_idKebab = :idKebab 
+                    SET cantidad = :cantidad, descripcion = :descripcion, producto = :producto, Pedidos_idPedidos = :idPedido 
                    WHERE idLineaPedido = :idLineaPedido";
         
         $stm = $this->con->prepare($sqlaco);
@@ -87,7 +84,6 @@ class RepositorioLineaPedido {
             'descripcion' => $linea->getDescripcion(),
             'producto' => json_encode($linea->getProducto()), // Encode producto -> JSON
             'idPedido' => $linea->getIDPedido(),
-            'idKebab' => $linea->getIDKebab()
         ]);
 
         return $stm->rowCount() > 0;

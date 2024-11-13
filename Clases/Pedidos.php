@@ -3,10 +3,12 @@ class Pedido {
 
     // Atributos
     private $ID_Pedido;
+    
     private $estado;
     private $direccion;
     private $preciototal;
     private $fechaHora;
+
     private $ID_Usuario;
 
 

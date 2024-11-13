@@ -3,6 +3,7 @@ class Ingredientes {
     
     // Atributos
     private $ID_Ingredientes;
+
     private $nombre;
     private $precio;
     private $tipo;
@@ -12,6 +13,7 @@ class Ingredientes {
     // Constructor
     public function __construct($ID_Ingredientes, $nombre, $precio, $tipo, $foto) {
         $this->ID_Ingredientes = $ID_Ingredientes;
+        
         $this->nombre = $nombre;
         $this->precio = $precio;
         $this->tipo = $tipo;
