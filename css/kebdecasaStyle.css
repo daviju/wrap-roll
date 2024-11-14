@@ -1,0 +1,96 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #171a21;
+}
+
+.menu-container {
+    width: 90%;
+    max-width: 1400px; /* Más ancho para permitir productos más grandes */
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h2 {
+    color: #333;
+    font-size: 2.5rem; /* Tamaño de fuente mayor */
+    margin-bottom: 10px;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columnas para mostrar solo cuatro productos por fila */
+    gap: 20px;
+    margin-top: 20px;
+    align-items: stretch;
+}
+
+.product-item {
+    text-decoration: none;
+    color: #333;
+    background: #fff;
+    padding: 20px; /* Aumenta el padding para agrandar la tarjeta */
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.product-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos de las imágenes */
+.sidebar-image {
+    width: 100%;
+    height: 250px; /* Aumenta la altura de las imágenes */
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+/* Imágenes específicas de cada producto */
+.image01 .sidebar-image {
+    background-image: url('../images/completo01.jpg') !important;
+}
+
+.image02 .sidebar-image {
+    background-image: url('../images/especial01.jpeg') !important;
+}
+
+.image03 .sidebar-image {
+    background-image: url('../images/kebabgato.PNG') !important;
+}
+
+.image04 .sidebar-image {
+    background-image: url('../images/kebabporro.jpg') !important;
+}
+
+.image05 .sidebar-image {
+    background-image: url('../images/pita01.png') !important;
+}
+
+.image06 .sidebar-image {
+    background-image: url('../images/rollo01.png') !important;
+}
+
+.product-item h3 {
+    font-size: 1.5rem; /* Tamaño de fuente mayor para el título */
+    color: #D33;
+    margin: 15px 0;
+    text-align: center;
+}
+
+.product-item p {
+    font-size: 1.2rem; /* Tamaño de fuente mayor para el precio */
+    color: #666;
+}

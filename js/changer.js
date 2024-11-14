@@ -87,8 +87,8 @@ function loadContent(page) {
                     .catch(error => console.error('Error al cargar carrito.php:', error));
                 break;
 
-            case "#adminKebab":
-                fetch('../app/views/AdminKebab.php')
+            case "#casa":
+                fetch('Vistas/Main/kebdecasa.php')
                     .then(response => response.text())
                     .then(data => {
                         mainContent.innerHTML = data;
@@ -97,7 +97,7 @@ function loadContent(page) {
                             mainContent.classList.add("fade-in");
                         }, 50);
                     })
-                    .catch(error => console.error('Error al cargar administrar-kebab.php:', error));
+                    .catch(error => console.error('Error al cargar kebdecasa.php:', error));
                 break;
 
             default:
