@@ -10,7 +10,8 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css" />
+    
+    <link rel="stylesheet" href="./css/estiloso.css">
   </head>
 
   <body>
@@ -23,13 +24,13 @@
         </div>
 
         <div class="icons">
-          <img src="./images/user.png" alt="Logo Usuario" width="40px" height="40px" style="border-radius: 50%; object-fit: cover;">
-          <img src="./images/cart.png" alt="Logo carrito" width="40px" height="40px" style="border-radius: 50%; object-fit: cover;">
+          <img src="./images/user.png" alt="Logo Usuario" width="40px" height="40px" style="border-radius: 50%; object-fit: cover;" href="#user">
+          <img src="./images/cart.png" alt="Logo carrito" width="40px" height="40px" style="border-radius: 50%; object-fit: cover;" href="#cart">
         </div>
         
       </div>
 
-      <nav>
+      <nav class="navbar">
         <a class="item" href="#inicio">Inicio</a>
         <div class="item">
           Kebabs
@@ -46,42 +47,6 @@
       </nav>
     </div>
 
-
-
-
-    <!-- Main Content Section -->
-    <div class="main-content">
-      
-      <!-- Carousel Section -->
-      <div class="carousel">
-        
-        <div class="carousel-slide carousel-bg">
-          <span class="tag">DISTRIBUIDOR MAYORISTA ONLINE DE PRODUCTOS COMO CARNE DE KEBAB.</span>
-          <h2>La carne de mejor calidad<br>Producción y distribución de kebab.</h2>
-          <button>COMPRA AHORA →</button>
-        </div>
-
-
-      </div>
-
-      <!-- Sidebar Section -->
-      <div class="sidebar">
-        <div class="sidebar-item">
-          <div class="sidebar-image" id="image01"></div>
-          <div class="sidebar-text">
-            <h4>Kebab de la Casa</h4>
-            <p>Carne 100% HALAL ;)</p>
-          </div>
-        </div>
-        <div class="sidebar-item">
-          <div class="sidebar-image" id="image02"></div>
-          <div class="sidebar-text">
-            <h4>Kebab al Gusto</h4>
-            <p>Personaliza tu kebab con tus ingredientes favoritos</p>
-          </div>
-        </div>
-      </div>
-    </div>
 
   </body>
 </html>

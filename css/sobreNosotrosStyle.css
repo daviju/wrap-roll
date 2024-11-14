@@ -1,0 +1,70 @@
+/* Estilos generales */
+* {
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: "Euclid Circular A", "Poppins", sans-serif;
+    background-color: #171a20;
+    color: white;
+    margin: 0;
+    height: 100vh;
+    display: block; /* Para evitar conflictos con el header */
+  }
+  
+  /* Contenedor de la sección 'Sobre Nosotros' */
+  #sobre-nosotros {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto; /* Ajuste para que la tarjeta no se estire */
+    padding: 20px;
+    margin-top: 20px; /* Espaciado desde el header */
+  }
+  
+  /* Estilo de la tarjeta */
+  .card {
+    background-color: #e1d8b8;
+    width: 80%;
+    max-width: 800px;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    color: #333;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transición de animación */
+  }
+  
+  /* Título de la tarjeta */
+  .card h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #4a4a4a;
+  }
+  
+  /* Estilo del contenido */
+  .card p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Estilo para la primera palabra en negrita */
+  .card strong {
+    color: #2f67ec;
+  }
+  
+  /* Efecto hover para la tarjeta */
+  .card:hover {
+    transform: translateY(-10px); /* Eleva la tarjeta al pasar el cursor */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Animación al salir el cursor (cuando el hover se quita) */
+  .card:not(:hover) {
+    transform: translateY(0); /* Regresa la tarjeta a su posición original */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Mantiene el box-shadow original */
+  }
+  
