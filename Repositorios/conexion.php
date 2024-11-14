@@ -2,8 +2,8 @@
 
 class Database {
 
-    private $host = "localhost"; // cambiar :)
-    private $db_name = "KebabDB";
+    private $host = "localhost";
+    private $db_name = "mydb";
     private $username = "root";
     private $password = "";
     public $conn;

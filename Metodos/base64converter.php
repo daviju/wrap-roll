@@ -18,8 +18,10 @@ function imageToBase64($imagePath) {
     return 'data:' . $mimeType . ';base64,' . $base64;
 }
 
-// Uso
-$imagePath = 'ruta/a/tu/imagen.jpg';
-echo imageToBase64($imagePath);
-
-?>
+function base64ToImage($base64String, $outputFile) {
+    $fileData = explode(',', $base64String);
+    $ifp = fopen($outputFile, 'wb');
+    fwrite($ifp, base64_decode($fileData[1]));
+    fclose($ifp);
+    return $outputFile;
+}

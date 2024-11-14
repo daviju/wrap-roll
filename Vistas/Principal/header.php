@@ -24,10 +24,9 @@
         </div>
 
         <div class="icons">
-          <img src="./images/user.png" alt="Logo Usuario" width="40px" height="40px" style="border-radius: 50%; object-fit: cover;" href="#user">
-          <img src="./images/cart.png" alt="Logo carrito" width="40px" height="40px" style="border-radius: 50%; object-fit: cover;" href="#cart">
+          <a href="#user"><img src="./images/user.png" alt="Logo Usuario" width="40px" height="40px" style="border-radius: 50%; object-fit: cover;"></a>
+          <a href="#cart"><img src="./images/cart.png" alt="Logo carrito" width="40px" height="40px" style="border-radius: 50%; object-fit: cover;"></a>
         </div>
-        
       </div>
 
       <nav class="navbar">
