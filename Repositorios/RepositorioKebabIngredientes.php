@@ -9,7 +9,8 @@ class RepositorioKebabIngredientes {
 
     // CREATE
     public function create($kebabIngredientes) {
-        $stm = $this->con->prepare("INSERT INTO KebabIngredientes (Kebab_idKebab, Ingredientes_idIngredientes) VALUES (:idKebab, :idIngrediente)");
+        $stm = $this->con->prepare("INSERT INTO KebabIngredientes (Kebab_idKebab, Ingredientes_idIngredientes) 
+                                    VALUES (:idKebab, :idIngrediente)");
         
         $stm->execute([
             'idKebab' => $kebabIngredientes->getIDKebab(),
@@ -21,7 +22,11 @@ class RepositorioKebabIngredientes {
 
     // FIND BY IDs
     public function findByIds($idKebab, $idIngrediente) {
-        $stm = $this->con->prepare("SELECT * FROM KebabIngredientes WHERE Kebab_idKebab = :idKebab AND Ingredientes_idIngredientes = :idIngrediente");
+        $stm = $this->con->prepare("SELECT * 
+                                    FROM KebabIngredientes 
+                                    WHERE Kebab_idKebab = :idKebab 
+                                    AND Ingredientes_idIngredientes = :idIngrediente");
+
         $stm->execute([
             'idKebab' => $idKebab,
             'idIngrediente' => $idIngrediente
@@ -57,7 +62,9 @@ class RepositorioKebabIngredientes {
 
     // UPDATE
     public function update($kebabIngredientes) {
-        $stm = $this->con->prepare("UPDATE KebabIngredientes SET Ingredientes_idIngredientes = :idIngrediente WHERE Kebab_idKebab = :idKebab");
+        $stm = $this->con->prepare("UPDATE KebabIngredientes 
+                                    SET Ingredientes_idIngredientes = :idIngrediente 
+                                    WHERE Kebab_idKebab = :idKebab");
 
         $stm->execute([
             'idKebab' => $kebabIngredientes->getIDKebab(),
@@ -69,7 +76,11 @@ class RepositorioKebabIngredientes {
 
     // DELETE
     public function delete($idKebab, $idIngrediente): bool {
-        $stm = $this->con->prepare("DELETE FROM KebabIngredientes WHERE Kebab_idKebab = :idKebab AND Ingredientes_idIngredientes = :idIngrediente");
+        $stm = $this->con->prepare("DELETE 
+                                    FROM KebabIngredientes 
+                                    WHERE Kebab_idKebab = :idKebab 
+                                    AND Ingredientes_idIngredientes = :idIngrediente");
+                                    
         $stm->execute([
             'idKebab' => $idKebab,
             'idIngrediente' => $idIngrediente

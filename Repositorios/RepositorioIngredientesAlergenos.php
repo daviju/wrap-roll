@@ -9,7 +9,7 @@ class RepositorioIngredientesAlergenos {
 
     // CREATE
     public function create($ingredienteAlergeno) {
-        $sqlaco = "INSERT INTO IngredientesAlergenos (Ingredientes_idIngredientes, Alergenos_idAlergenos) 
+        $sqlaco = "INSERT INTO Ingredientes_Alergenos (Ingredientes_idIngredientes, Alergenos_idAlergenos) 
                    VALUES (:idIngredientes, :idAlergenos, :tipo, :foto)";
 
         $stm = $this->con->prepare($sqlaco);
@@ -25,7 +25,7 @@ class RepositorioIngredientesAlergenos {
     // FIND BY ID
     public function findById($idIngredientes, $idAlergenos) {
         $sqlaco = "SELECT *
-                 FROM IngredientesAlergenos 
+                 FROM Ingredientes_Alergenos 
                  WHERE Ingredientes_idIngredientes = :idIngredientes AND Alergenos_idAlergenos = :idAlergenos";
 
         $stm = $this->con->prepare($sqlaco);
@@ -49,7 +49,7 @@ class RepositorioIngredientesAlergenos {
 
     // FIND ALL
     public function findAll(): array {
-        $sqlaco = "SELECT * FROM IngredientesAlergenos";
+        $sqlaco = "SELECT * FROM Ingredientes_Alergenos";
         
         $stm = $this->con->prepare($sqlaco);
         $stm->execute();
@@ -69,7 +69,7 @@ class RepositorioIngredientesAlergenos {
 
     // UPDATE
     public function update($ingredienteAlergeno) {
-        $sqlaco = "UPDATE IngredientesAlergenos 
+        $sqlaco = "UPDATE Ingredientes_Alergenos 
                     SET Alergenos_idAlergenos = :idAlergenos
                    WHERE Ingredientes_idIngredientes = :idIngredientes";
         
@@ -85,7 +85,12 @@ class RepositorioIngredientesAlergenos {
 
     // DELETE
     public function delete($idIngredientes, $idAlergenos): bool {
-        $sqlaco = "DELETE FROM IngredientesAlergenos WHERE Ingredientes_idIngredientes = :idIngredientes AND Alergenos_idAlergenos = :idAlergenos AND Alergenos_tipo = :tipo AND Alergenos_foto = :foto";
+        $sqlaco = "DELETE FROM Ingredientes_Alergenos 
+                    WHERE Ingredientes_idIngredientes = :idIngredientes 
+                    AND Alergenos_idAlergenos = :idAlergenos 
+                    AND Alergenos_tipo = :tipo 
+                    AND Alergenos_foto = :foto";
+                    
         $stm = $this->con->prepare($sqlaco);
         
         $stm->execute([

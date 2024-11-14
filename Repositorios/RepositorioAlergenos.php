@@ -9,7 +9,8 @@ class RepositorioIngredientes {
 
     // CREATE
     public function create($alergeno) {
-        $stm = $this->con->prepare("INSERT INTO Alergenos (idAlergenos, tipo, foto) VALUES (:idAlergenos, :tipo, :foto)");
+        $stm = $this->con->prepare("INSERT INTO Alergenos (idAlergenos, tipo, foto) 
+                                    VALUES (:idAlergenos, :tipo, :foto)");
         
         $stm->execute([
             'idAlergenos' => $alergeno->getIDAlergenos(),
@@ -22,7 +23,10 @@ class RepositorioIngredientes {
 
     // FIND BY ID
     public function findById($id){
-        $stm = $this->con->prepare("SELECT * FROM Alergenos WHERE idAlergenos = :id");
+        $stm = $this->con->prepare("SELECT * 
+                                    FROM Alergenos 
+                                    WHERE idAlergenos = :id");
+
         $stm->execute(['id' => $id]);
         
         $alergeno = null;
@@ -51,7 +55,9 @@ class RepositorioIngredientes {
 
     // UPDATE
     public function update($alergeno) {
-        $stm = $this->con->prepare("UPDATE Alergenos SET tipo = :tipo, foto = :foto WHERE idAlergenos = :idAlergenos");
+        $stm = $this->con->prepare("UPDATE Alergenos 
+                                    SET tipo = :tipo, foto = :foto 
+                                    WHERE idAlergenos = :idAlergenos");
 
         $stm->execute([
             'idAlergenos' => $alergeno->getIDAlergenos(),
@@ -64,7 +70,10 @@ class RepositorioIngredientes {
 
     // DELETE
     public function delete($id): bool {
-        $stm = $this->con->prepare("DELETE FROM Alergenos WHERE idAlergenos = :id");
+        $stm = $this->con->prepare("DELETE 
+                                    FROM Alergenos 
+                                    WHERE idAlergenos = :id");
+                                    
         $stm->execute(['id' => $id]);
 
         return $stm->rowCount() > 0;

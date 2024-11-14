@@ -9,7 +9,8 @@ class RepositorioKebab {
 
     // CREATE
     public function create($kebab) {
-        $stm = $this->con->prepare("INSERT INTO Kebab (idKebab, nombre, foto, precio) VALUES (:idKebab, :nombre, :foto, :precio)");
+        $stm = $this->con->prepare("INSERT INTO Kebab (idKebab, nombre, foto, precio) 
+                                    VALUES (:idKebab, :nombre, :foto, :precio)");
         
         $stm->execute([
             'idKebab' => $kebab->getIDKebab(),
@@ -23,7 +24,10 @@ class RepositorioKebab {
 
     // FIND BY ID
     public function findById($id) {
-        $stm = $this->con->prepare("SELECT * FROM Kebab WHERE idKebab = :id");
+        $stm = $this->con->prepare("SELECT * 
+                                    FROM Kebab 
+                                    WHERE idKebab = :id");
+                                    
         $stm->execute(['id' => $id]);
         
         $kebab = null;

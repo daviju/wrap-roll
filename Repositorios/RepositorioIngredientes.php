@@ -25,7 +25,10 @@ class RepositorioIngredientes {
 
     // FIND BY ID
     public function findById($id){
-        $stm = $this->con->prepare("SELECT * FROM Ingredientes WHERE idIngredientes = :id");
+        $stm = $this->con->prepare("SELECT * 
+                                    FROM Ingredientes 
+                                    WHERE idIngredientes = :id");
+
         $stm->execute(['id' => $id]);
         
         $ingrediente = null;
@@ -56,7 +59,9 @@ class RepositorioIngredientes {
 
     // UPDATE
     public function update($ingrediente) {
-        $stm = $this->con->prepare("UPDATE Ingredientes SET nombre = :nombre, precio = :precio, tipo = :tipo, foto = :foto WHERE idIngredientes = :idIngredientes");
+        $stm = $this->con->prepare("UPDATE Ingredientes 
+                                    SET nombre = :nombre, precio = :precio, tipo = :tipo, foto = :foto 
+                                    WHERE idIngredientes = :idIngredientes");
         
         $stm->execute([
             'idIngredientes' => $ingrediente->getIDIngredientes(),
@@ -71,7 +76,10 @@ class RepositorioIngredientes {
 
     // DELETE
     public function delete($id): bool {
-        $stm = $this->con->prepare("DELETE FROM Ingredientes WHERE idIngredientes = :id");
+        $stm = $this->con->prepare("DELETE 
+                                    FROM Ingredientes 
+                                    WHERE idIngredientes = :id");
+                                    
         $stm->execute(['id' => $id]);
 
         return $stm->rowCount() > 0;
