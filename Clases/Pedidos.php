@@ -2,14 +2,14 @@
 class Pedido {
 
     // Atributos
-    private $ID_Pedido;
+    public $ID_Pedido;
     
-    private $estado;
-    private $direccion;
-    private $preciototal;
-    private $fechaHora;
+    public $estado;
+    public $direccion;
+    public $preciototal;
+    public $fechaHora;
 
-    private $ID_Usuario;
+    public $ID_Usuario;
 
 
     // Constructor

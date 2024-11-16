@@ -2,10 +2,10 @@
 class Kebab {
     
     // Atributos
-    private $ID_Kebab;
-    private $nombre;
-    private $foto;
-    private $precio;
+    public $ID_Kebab;
+    public $nombre;
+    public $foto;
+    public $precio;
 
 
     // Constructor

@@ -2,8 +2,8 @@
 header("Content-Type: application/json");
 
 // Incluye las clases desde la ubicación correcta
-require_once __DIR__ . '/../Clases/Usuario.php';
-require_once __DIR__ . '/../Repositorios/RepositorioUsuario.php';
+require_once __DIR__ . '/../Clases/Pedido.php';
+require_once __DIR__ . '/../Repositorios/RepositorioPedido.php';
 require_once __DIR__ . '/../cargadores/Autocargador.php';
 require_once __DIR__ . '/../Repositorios/conexion.php';
 
@@ -12,49 +12,49 @@ Autocargador::autocargar();
 // Crear conexión utilizando tu clase Database
 $database = new Database();
 $db = $database->getConnection();
-$repositorioUsuario = new RepositorioUsuario($db);
+$repositorioPedido = new RepositorioPedido($db);
 
 $method = $_SERVER['REQUEST_METHOD'];
 
 // Ajustar el manejo de la ruta
 $path = explode('/', trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'));
-$path = array_slice($path, 3); // Ajustar según el número de segmentos en la URL antes de 'api/user'
+$path = array_slice($path, 3); // Ajustar según el número de segmentos en la URL antes de 'api/pedido'
 
 switch ($method) {
     case 'GET':
         if (isset($path[0]) && is_numeric($path[0])) {
-            // Obtener un usuario por ID
-            $usuario = $repositorioUsuario->findById($path[0]);
-            echo json_encode($usuario);
+            // Obtener un pedido por ID
+            $pedido = $repositorioPedido->findById($path[0]);
+            echo json_encode($pedido);
         } else {
-            // Obtener todos los usuarios
-            $usuarios = $repositorioUsuario->findAll();
-            echo json_encode($usuarios);
+            // Obtener todos los pedidos
+            $pedidos = $repositorioPedido->findAll();
+            echo json_encode($pedidos);
         }
         break;
 
     case 'POST':
-        // Crear un nuevo usuario
+        // Crear un nuevo pedido
         $input = json_decode(file_get_contents('php://input'), true);
-        $usuario = new Usuario(null, $input['nombre'], $input['foto'], $input['contraseña'], $input['monedero'], $input['email'], $input['carrito'], $input['rol']);
-        $success = $repositorioUsuario->create($usuario);
+        $pedido = new Pedido(null, $input['estado'], $input['direccion'], $input['preciototal'], $input['fechaHora'], $input['ID_Usuario']);
+        $success = $repositorioPedido->create($pedido);
         echo json_encode(['success' => $success]);
         break;
 
     case 'PUT':
         if (isset($path[0]) && is_numeric($path[0])) {
-            // Actualizar un usuario
+            // Actualizar un pedido
             $input = json_decode(file_get_contents('php://input'), true);
-            $usuario = new Usuario($path[0], $input['nombre'], $input['foto'], $input['contraseña'], $input['monedero'], $input['email'], $input['carrito'], $input['rol']);
-            $success = $repositorioUsuario->update($usuario);
+            $pedido = new Pedido($path[0], $input['estado'], $input['direccion'], $input['preciototal'], $input['fechaHora'], $input['ID_Usuario']);
+            $success = $repositorioPedido->update($pedido);
             echo json_encode(['success' => $success]);
         }
         break;
 
     case 'DELETE':
         if (isset($path[0]) && is_numeric($path[0])) {
-            // Eliminar un usuario
-            $success = $repositorioUsuario->delete($path[0]);
+            // Eliminar un pedido
+            $success = $repositorioPedido->delete($path[0]);
             echo json_encode(['success' => $success]);
         }
         break;

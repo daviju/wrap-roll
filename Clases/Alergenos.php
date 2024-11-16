@@ -2,10 +2,10 @@
 class Alergenos {
 
     // Atributos
-    private $ID_Alergenos;
+    public $ID_Alergenos;
 
-    private $tipo;
-    private $foto;
+    public $tipo;
+    public $foto;
 
 
     // Constructor

@@ -3,8 +3,8 @@
 class AlergenosUsuario {
 
     // Atributos
-    private $id_alergenos;
-    private $id_usuarios;
+    public $id_alergenos;
+    public $id_usuarios;
 
     // Constructor
     public function __construct($id_alergenos, $id_usuarios) {

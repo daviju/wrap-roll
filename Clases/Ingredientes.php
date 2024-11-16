@@ -2,12 +2,12 @@
 class Ingredientes {
     
     // Atributos
-    private $ID_Ingredientes;
+    public $ID_Ingredientes;
 
-    private $nombre;
-    private $precio;
-    private $tipo;
-    private $foto;
+    public $nombre;
+    public $precio;
+    public $tipo;
+    public $foto;
 
 
     // Constructor

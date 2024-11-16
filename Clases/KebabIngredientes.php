@@ -3,8 +3,8 @@
 class KebabIngredientes {
 
     // Atributos
-    private $ID_Kebab;
-    private $ID_Ingrediente;
+    public $ID_Kebab;
+    public $ID_Ingrediente;
 
     
     // Constructor

@@ -3,8 +3,8 @@
 class IngredientesAlergenos {
 
     // Atributos
-    private $ID_Ingredientes;
-    private $ID_Alergenos;
+    public $ID_Ingredientes;
+    public $ID_Alergenos;
 
 
     // Constructor

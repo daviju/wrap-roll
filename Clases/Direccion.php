@@ -3,17 +3,17 @@
 Class Direccion {
 
     // Atributos
-    private $ID_Direccion;
+    public $ID_Direccion;
 
-    private $nombrevia;
-    private $numero;
-    private $tipovia;
-    private $puerta;
-    private $escalera;
-    private $planta;
-    private $localidad;
+    public $nombrevia;
+    public $numero;
+    public $tipovia;
+    public $puerta;
+    public $escalera;
+    public $planta;
+    public $localidad;
 
-    private $ID_Usuario;
+    public $ID_Usuario;
 
 
     // Constructor

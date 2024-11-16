@@ -2,13 +2,13 @@
 class LineaPedido {
 
     // Atributos
-    private $ID_LineaPedido;
+    public $ID_LineaPedido;
 
-    private $cantidad;
-    private $descripcion;
-    private $producto;
+    public $cantidad;
+    public $descripcion;
+    public $producto;
 
-    private $ID_Pedido;
+    public $ID_Pedido;
 
     // Constructor
     public function __construct($ID_LineaPedido, $cantidad, $descripcion, $producto, $ID_Pedido) {

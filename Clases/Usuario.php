@@ -2,15 +2,15 @@
 class Usuario {
 
     // Atributos
-    private $ID_Usuario;
+    public $ID_Usuario;
 
-    private $nombre;
-    private $foto;
-    private $contraseña;
-    private $monedero;
-    private $email;
-    private $carrito;
-    private $rol;
+    public $nombre;
+    public $foto;
+    public $contraseña;
+    public $monedero;
+    public $email;
+    public $carrito;
+    public $rol;
 
 
     // Constructor
