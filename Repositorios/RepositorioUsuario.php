@@ -9,8 +9,8 @@ class RepositorioUsuario {
 
     // CREATE
     public function create($usuario) {
-        $stm = $this->con->prepare("INSERT INTO Usuario (idUsuario, nombre, foto, contraseña, monedero, email, carrito, rol) 
-                                    VALUES (:idUsuario, :nombre, :foto, :contraseña, :monedero, :email, :carrito, :rol)");
+        $stm = $this->con->prepare("INSERT INTO Usuario (idUsuario, nombre, foto, contraseña, monedero, carrito, rol) 
+                                    VALUES (:idUsuario, :nombre, :foto, :contraseña, :monedero, :carrito, :rol)");
         
         $stm->execute([
             'idUsuario' => $usuario->getIDUsuario(),
@@ -18,7 +18,6 @@ class RepositorioUsuario {
             'foto' => $usuario->getFoto(),
             'contraseña' => $usuario->getContraseña(),
             'monedero' => $usuario->getMonedero(),
-            'email' => $usuario->getEmail(),
             'carrito' => json_encode($usuario->getCarrtio()), // Convertimos el carrito a JSON
             'rol' => $usuario->getRol()
         ]);
@@ -28,25 +27,43 @@ class RepositorioUsuario {
 
     // FIND BY ID
     public function findById($id){
-        $stm = $this->con->prepare("SELECT * FROM Usuario 
-                                    WHERE idUsuario = :id");
+        $stm = $this->con->prepare("SELECT Usuario.*, Direccion.* 
+                                    FROM Usuario 
+                                    LEFT JOIN Direccion ON Usuario.idUsuario = Direccion.Usuario_idUsuario 
+                                    WHERE Usuario.idUsuario = :id");
 
         $stm->execute(['id' => $id]);
         
         $registro = $stm->fetch();
 
         if ($registro) {
+            // Crear un objeto de Usuario
             $usuario = new Usuario(
                 $registro['idUsuario'],
                 $registro['nombre'],
                 $registro['foto'],
                 $registro['contraseña'],
-                $registro['direccion'],
                 $registro['monedero'],
-                $registro['email'],
-                json_decode($registro['carrito'], true), // Decodificamos el JSON a un array
+                json_decode($registro['carrito'], true), // Decodificamos el carrito a un array
                 $registro['rol']
             );
+
+            // Agregar la dirección al usuario si existe
+            $direccion = null;
+            if ($registro['nombrevia']) {
+                $direccion = [
+                    'nombrevia' => $registro['nombrevia'],
+                    'numero' => $registro['numero'],
+                    'tipovia' => $registro['tipovia'],
+                    'puerta' => $registro['puerta'],
+                    'escalera' => $registro['escalera'],
+                    'planta' => $registro['planta'],
+                    'localidad' => $registro['localidad']
+                ];
+            }
+
+            $usuario->setDireccion($direccion);
+
             return $usuario;
         }
 
@@ -66,7 +83,6 @@ class RepositorioUsuario {
                 $registro['foto'],
                 $registro['contraseña'],
                 $registro['monedero'],
-                $registro['email'],
                 json_decode($registro['carrito'], true),
                 $registro['rol']
             );
@@ -79,7 +95,7 @@ class RepositorioUsuario {
     // UPDATE
     public function update($usuario) {
         $stm = $this->con->prepare("UPDATE Usuario 
-                                    SET nombre = :nombre, foto = :foto, contraseña = :contraseña, monedero = :monedero, email = :email, carrito = :carrito, rol = :rol 
+                                    SET nombre = :nombre, foto = :foto, contraseña = :contraseña, monedero = :monedero, carrito = :carrito, rol = :rol 
                                     WHERE idUsuario = :idUsuario");
 
         $stm->execute([
@@ -88,7 +104,6 @@ class RepositorioUsuario {
             'foto' => $usuario->getFoto(),
             'contraseña' => $usuario->getContraseña(),
             'monedero' => $usuario->getMonedero(),
-            'email' => $usuario->getEmail(),
             'carrito' => json_encode($usuario->getCarrtio()),
             'rol' => $usuario->getRol()
         ]);
@@ -106,3 +121,5 @@ class RepositorioUsuario {
         return $stm->rowCount() > 0;
     }
 }
+
+?>

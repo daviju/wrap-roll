@@ -1,5 +1,19 @@
 <?php
+
+/*
+    Get -> funcionan los dos
+    Post -> crea bien
+    Put -> actualia bien
+    Delete -> elimina bien
+*/
+
 header("Content-Type: application/json");
+
+require_once __DIR__ . '/../Clases/Kebab.php';
+require_once __DIR__ . '/../Repositorios/RepositorioKebab.php';
+require_once __DIR__ . '/../cargadores/Autocargador.php';
+require_once __DIR__ . '/../Repositorios/conexion.php';
+
 Autocargador::autocargar();
 
 // Crear conexión utilizando tu clase Database
@@ -7,48 +21,107 @@ $database = new Database();
 $db = $database->getConnection();
 $repositorioKebab = new RepositorioKebab($db);
 
+// Obtener el método HTTP
 $method = $_SERVER['REQUEST_METHOD'];
+$input = json_decode(file_get_contents('php://input'), true);
 
-// Ajustar el manejo de la ruta
-$path = explode('/', trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'));
-$path = array_slice($path, 3); // Ajustar según el número de segmentos en la URL antes de 'api/kebabs'
+// Verificar si el JSON es válido
+if ($method != 'GET' && json_last_error() !== JSON_ERROR_NONE) {
+    http_response_code(400); // Bad Request
+    echo json_encode(["error" => "JSON malformado."]);
+    exit;
+}
 
 switch ($method) {
     case 'GET':
-        if (isset($path[0]) && is_numeric($path[0])) {
+        // Obtener el parámetro 'id_kebab' desde la URL
+        if (isset($_GET['id_kebab'])) {
             // Obtener un kebab por ID
-            $kebab = $repositorioKebab->findById($path[0]);
-            echo json_encode($kebab);
+            $kebab = $repositorioKebab->findById($_GET['id_kebab']);
+            if ($kebab) {
+                http_response_code(200);
+                echo json_encode($kebab);
+            } else {
+                http_response_code(404);
+                echo json_encode(["error" => "Kebab no encontrado."]);
+            }
         } else {
             // Obtener todos los kebabs
             $kebabs = $repositorioKebab->findAll();
+            http_response_code(200);
             echo json_encode($kebabs);
         }
         break;
+
     case 'POST':
         // Crear un nuevo kebab
-        $input = json_decode(file_get_contents('php://input'), true);
-        $kebab = new Kebab(null, $input['nombre'], $input['foto'], $input['precio']);
-        $success = $repositorioKebab->create($kebab);
-        echo json_encode(['success' => $success]);
+        if (isset($input['nombre'], $input['foto'], $input['precio'])) {
+            $kebab = new Kebab(
+                null,  // ID será auto-generado
+                $input['nombre'],
+                $input['foto'],
+                $input['precio']
+            );
+
+            $result = $repositorioKebab->create($kebab);
+            if ($result) {
+                http_response_code(201);
+                echo json_encode(["message" => "Kebab creado exitosamente."]);
+            } else {
+                http_response_code(500);
+                echo json_encode(["error" => "Error al crear el kebab."]);
+            }
+        } else {
+            http_response_code(400);
+            echo json_encode(["error" => "Datos incompletos para crear el kebab."]);
+        }
         break;
+
     case 'PUT':
-        if (isset($path[0]) && is_numeric($path[0])) {
-            // Actualizar un kebab
-            $input = json_decode(file_get_contents('php://input'), true);
-            $kebab = new Kebab($path[0], $input['nombre'], $input['foto'], $input['precio']);
-            $success = $repositorioKebab->update($kebab);
-            echo json_encode(['success' => $success]);
+        // Actualizar un kebab existente
+        if (isset($input['id_kebab'], $input['nombre'], $input['foto'], $input['precio'])) {
+            $kebab = new Kebab(
+                $input['id_kebab'],
+                $input['nombre'],
+                $input['foto'],
+                $input['precio']
+            );
+
+            $result = $repositorioKebab->update($kebab);
+            if ($result) {
+                http_response_code(200); // OK
+                echo json_encode(["success" => true, "mensaje" => "Kebab actualizado correctamente."]);
+            } else {
+                http_response_code(500); // Internal Server Error
+                echo json_encode(["error" => "Error al actualizar el kebab."]);
+            }
+        } else {
+            http_response_code(400); // Bad Request
+            echo json_encode(["error" => "Datos insuficientes para actualizar el kebab."]);
         }
         break;
+
     case 'DELETE':
-        if (isset($path[0]) && is_numeric($path[0])) {
-            // Eliminar un kebab
-            $success = $repositorioKebab->delete($path[0]);
-            echo json_encode(['success' => $success]);
+        // Eliminar un kebab por ID
+        if (isset($input['id_kebab']) && !empty($input['id_kebab'])) {
+            $id_kebab = $input['id_kebab'];
+            $result = $repositorioKebab->delete($id_kebab);
+            if ($result) {
+                http_response_code(200); // OK
+                echo json_encode(["success" => true, "mensaje" => "Kebab eliminado correctamente."]);
+            } else {
+                http_response_code(500); // Internal Server Error
+                echo json_encode(["error" => "Error al eliminar el kebab."]);
+            }
+        } else {
+            http_response_code(400); // Bad Request
+            echo json_encode(["error" => "ID del kebab no proporcionado."]);
         }
         break;
+
     default:
-        echo json_encode(['error' => 'Método no soportado']);
+        http_response_code(405); // Método no permitido
+        echo json_encode(["error" => "Método no soportado."]);
+        break;
 }
 ?>

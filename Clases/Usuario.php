@@ -3,35 +3,31 @@ class Usuario {
 
     // Atributos
     public $ID_Usuario;
-
     public $nombre;
     public $foto;
     public $contraseña;
     public $monedero;
-    public $email;
     public $carrito;
     public $rol;
+    public $direccion;  // Nuevo atributo para la dirección
 
 
     // Constructor
-    public function __construct($ID_Usuario, $nombre, $foto, $contraseña, $monedero, $email, $carrito, $rol) {
+    public function __construct($ID_Usuario, $nombre, $foto, $contraseña, $monedero, $carrito, $rol, $direccion = null) {
         $this->ID_Usuario = $ID_Usuario;
-    
         $this->nombre = $nombre;
         $this->foto = $foto;
         $this->contraseña = $contraseña;
         $this->monedero = $monedero;
-        $this->email = $email;
         $this->carrito = $carrito;
         $this->rol = $rol;
+        $this->direccion = $direccion;  // Asignar la dirección, si existe
     }
 
-    // Falta meter el carrito, como es json ni idea
     // To String
     public function __toString() {
-        return "Usuario [ID_Usuario = $this->ID_Usuario, nombre = $this->nombre, foto = $this->foto, monedero = $this->monedero, email = $this->email, rol = $this->rol]";
+        return "Usuario [ID_Usuario = $this->ID_Usuario, nombre = $this->nombre, foto = $this->foto, monedero = $this->monedero, rol = $this->rol, direccion = " . json_encode($this->direccion) . "]";
     }
-
 
     // Métodos Getters
     public function getIDUsuario() {
@@ -54,11 +50,7 @@ class Usuario {
         return $this->monedero;
     }
 
-    public function getEmail() {
-        return $this->email;
-    }
-
-    public function getCarrtio(){
+    public function getCarrito(){
         return $this->carrito;
     }
 
@@ -66,6 +58,9 @@ class Usuario {
         return $this->rol;
     }
 
+    public function getDireccion() {
+        return $this->direccion;
+    }
 
     // Métodos Setters
     public function setIDUsuario($ID_Usuario) {
@@ -88,16 +83,16 @@ class Usuario {
         $this->monedero = $monedero;
     }
 
-    public function setEmail($email) {
-        $this->email = $email;
-    }
-
     public function setCarrito($carrito){
         $this->carrito = $carrito;
     }
 
     public function setRol($rol){
         $this->rol = $rol;
+    }
+
+    public function setDireccion($direccion) {
+        $this->direccion = $direccion;
     }
 }
 ?>
