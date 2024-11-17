@@ -1,12 +1,5 @@
 <?php
 header("Content-Type: application/json");
-
-// Incluye las clases desde la ubicación correcta
-require_once __DIR__ . '/../Clases/Kebab.php';
-require_once __DIR__ . '/../Repositorios/RepositorioKebab.php';
-require_once __DIR__ . '/../cargadores/Autocargador.php';
-require_once __DIR__ . '/../Repositorios/conexion.php';  // Incluir la clase Database
-
 Autocargador::autocargar();
 
 // Crear conexión utilizando tu clase Database
