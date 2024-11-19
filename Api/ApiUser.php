@@ -4,14 +4,13 @@ header("Content-Type: application/json");
 require_once __DIR__ . '/../Clases/Usuario.php';
 require_once __DIR__ . '/../Repositorios/RepositorioUsuario.php';
 require_once __DIR__ . '/../cargadores/Autocargador.php';
-require_once __DIR__ . '/../Repositorios/conexion.php';
+require_once __DIR__ . '/../Repositorios/Database.php';
 
 Autocargador::autocargar();
 
 // Crear conexión utilizando tu clase Database
-$database = new Database();
-$db = $database->getConnection();
-$repositorioUsuario = new RepositorioUsuario($db);
+$con = Database::getConection();
+$repositorioUsuario = new RepositorioUsuario($con);
 
 // Obtener el método HTTP
 $method = $_SERVER['REQUEST_METHOD'];
@@ -47,16 +46,17 @@ switch ($method) {
 
     case 'POST':
         // Crear un nuevo usuario
-        if (isset($input['nombre'], $input['foto'], $input['contraseña'], $input['monedero'], $input['email'], $input['carrito'], $input['rol'])) {
+        if (isset($input['nombre'], $input['foto'], $input['contraseña'], $input['monedero'], $input['telefono'], $input['email'], $input['carrito'], $input['rol'])) {
             $usuario = new Usuario(
                 null,  // ID será auto-generado
                 $input['nombre'],
                 $input['foto'],
                 $input['contraseña'],
                 $input['monedero'],
-                $input['email'],
+                $input['telefono'],
                 $input['carrito'],
-                $input['rol']
+                $input['rol'],
+                $input['email']
             );
 
             $success = $repositorioUsuario->create($usuario);
@@ -75,13 +75,14 @@ switch ($method) {
 
     case 'PUT':
         // Actualizar un usuario existente
-        if (isset($input['id_usuario'], $input['nombre'], $input['foto'], $input['contraseña'], $input['monedero'], $input['email'], $input['carrito'], $input['rol'])) {
+        if (isset($input['id_usuario'], $input['nombre'], $input['foto'], $input['contraseña'], $input['monedero'], $·input['telefono'], $input['email'], $input['carrito'], $input['rol'])) {
             $usuario = new Usuario(
                 $input['id_usuario'],
                 $input['nombre'],
                 $input['foto'],
                 $input['contraseña'],
                 $input['monedero'],
+                $input['telefono'],
                 $input['email'],
                 $input['carrito'],
                 $input['rol']

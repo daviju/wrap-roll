@@ -12,13 +12,12 @@ header("Content-Type: application/json");
 require_once __DIR__ . '/../Clases/Kebab.php';
 require_once __DIR__ . '/../Repositorios/RepositorioKebab.php';
 require_once __DIR__ . '/../cargadores/Autocargador.php';
-require_once __DIR__ . '/../Repositorios/conexion.php';
+require_once __DIR__ . '/../Repositorios/Database.php';
 
 Autocargador::autocargar();
 
 // Crear conexión utilizando tu clase Database
-$database = new Database();
-$db = $database->getConnection();
+$db = Database::getConection();
 $repositorioKebab = new RepositorioKebab($db);
 
 // Obtener el método HTTP

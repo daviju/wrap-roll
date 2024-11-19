@@ -10,22 +10,48 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
-    
-    <link rel="stylesheet" href="./css/estiloso.css">
+    <link rel="stylesheet" href="./css/estiloso.css" />
   </head>
 
   <body>
     <div class="tusmuertos">
       <div class="titulo">
-        
         <div class="logo-titulo">
-          <img src="./images/Wrap&Roll.png" alt="Logo Kebab" width="100px" height="100px" style="border-radius: 50%; object-fit: cover;">
+          <img
+            src="./images/Wrap&Roll.png"
+            alt="Logo Kebab"
+            width="100px"
+            height="100px"
+            style="border-radius: 50%; object-fit: cover;"
+          />
           <h1>Wrap & Roll</h1>
         </div>
 
         <div class="icons">
-          <a href="#user"><img src="./images/user.png" alt="Logo Usuario" width="40px" height="40px" style="border-radius: 50%; object-fit: cover;"></a>
-          <a href="#cart"><img src="./images/cart.png" alt="Logo carrito" width="40px" height="40px" style="border-radius: 50%; object-fit: cover;"></a>
+          <!-- Menú de usuario con desplegable -->
+          <div class="user-menu">
+              <img
+                src="./images/user.png"
+                alt="Logo Usuario"
+                width="40px"
+                height="40px"
+                style="border-radius: 50%; object-fit: cover;"
+              />
+            <div class="dropdown-menu">
+              <a href="#mi-cuenta">Mi cuenta</a>
+              <a href="#cerrar-sesion">Cerrar sesión</a>
+            </div>
+          </div>
+
+          <a href="#cart">
+            <img
+              src="./images/cart.png"
+              alt="Logo carrito"
+              width="40px"
+              height="40px"
+              style="border-radius: 50%; object-fit: cover;"
+            />
+          </a>
         </div>
       </div>
 
@@ -42,7 +68,7 @@
         </div>
         <a class="item" href="#nosotros">Sobre nosotros</a>
         <a class="item" href="#contacto">Contacto</a>
-        
+
         <div class="item">
           Mantenimiento
           <div class="dropdown">
@@ -57,7 +83,5 @@
         <div class="underline"></div>
       </nav>
     </div>
-
-
   </body>
 </html>

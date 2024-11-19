@@ -118,7 +118,7 @@ nav a:hover {
   background: var(--color-primary);
   position: absolute;
   bottom: 0;
-  width: 20%; /* Ajustado para que llegue al último elemento */
+  width: 20%;
   z-index: 2;
   pointer-events: none;
   transition: 0.35s;
@@ -128,23 +128,42 @@ nav .item:hover > .dropdown > div {
   transform: translate(0);
 }
 
-/* Ajuste de desplazamiento para cada elemento */
-nav .item:nth-child(1):hover ~ .underline {
-  transform: translate(0, 0);
+@media (max-width: 768px) {
+  nav {
+    flex-direction: column;
+  }
+  .user-menu .dropdown-menu {
+    top: auto;
+    right: 0;
+    left: 0;
+    width: 100%;
+  }
 }
 
-nav .item:nth-child(2):hover ~ .underline {
-  transform: translate(100%, 0);
+/* Estilo del menú de usuario */
+.user-menu {
+  position: relative;
+  display: inline-block;
 }
 
-nav .item:nth-child(3):hover ~ .underline {
-  transform: translate(200%, 0);
+.user-menu .dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: auto; /* Ajuste para mover a la izquierda */
+  left: -120px; /* Ajuste para mover a la izquierda */
+  background: #ac3729; /* Cambiar color de fondo */
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-nav .item:nth-child(4):hover ~ .underline {
-  transform: translate(300%, 0);
+.user-menu .dropdown-menu a {
+  display: block;
+  padding: 10px;
+  color: white; /* Mantener texto en blanco */
+  text-decoration: none;
 }
 
-nav .item:nth-child(5):hover ~ .underline {
-  transform: translate(392%, 0); /* Ajuste para el último elemento */
+.user-menu .dropdown-menu a:hover {
+  background: #d14836; /* Color más oscuro para hover */
 }

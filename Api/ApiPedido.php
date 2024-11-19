@@ -1,12 +1,13 @@
 <?php
 header("Content-Type: application/json");
 
+require_once __DIR__ . '/../Repositorios/Database.php';
+
 Autocargador::autocargar();
 
 // Crear conexión utilizando tu clase Database
-$database = new Database();
-$db = $database->getConnection();
-$repositorioPedido = new RepositorioPedido($db);
+$con = Database::getConection();
+$repositorioPedido = new RepositorioPedido($con);
 
 $method = $_SERVER['REQUEST_METHOD'];
 

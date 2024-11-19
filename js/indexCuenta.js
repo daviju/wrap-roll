@@ -1,6 +1,3 @@
-// indexCuenta.js
-console.log("Archivo indexCuenta.js cargado correctamente");
-
 // Capturar el botón por id y agregar el event listener
 document.addEventListener("DOMContentLoaded", function() {
     document.body.addEventListener('click', function(event) {

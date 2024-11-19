@@ -10,7 +10,7 @@ body {
     max-width: 1400px; /* Más ancho para permitir productos más grandes */
     margin: 20px auto;
     padding: 20px;
-    background: white;
+    background: #e1d8b7;
     border-radius: 8px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
     text-align: center;
@@ -56,31 +56,6 @@ h2 {
     background-position: center;
     border-radius: 8px;
     margin-bottom: 15px;
-}
-
-/* Imágenes específicas de cada producto */
-.image01 .sidebar-image {
-    background-image: url('../images/completo01.jpg') !important;
-}
-
-.image02 .sidebar-image {
-    background-image: url('../images/especial01.jpeg') !important;
-}
-
-.image03 .sidebar-image {
-    background-image: url('../images/kebabgato.PNG') !important;
-}
-
-.image04 .sidebar-image {
-    background-image: url('../images/kebabporro.jpg') !important;
-}
-
-.image05 .sidebar-image {
-    background-image: url('../images/pita01.png') !important;
-}
-
-.image06 .sidebar-image {
-    background-image: url('../images/rollo01.png') !important;
 }
 
 .product-item h3 {

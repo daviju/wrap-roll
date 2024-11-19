@@ -5,13 +5,12 @@ header("Content-Type: application/json");
 require_once __DIR__ . '/../Clases/Ingredientes.php';
 require_once __DIR__ . '/../Repositorios/RepositorioIngredientes.php';
 require_once __DIR__ . '/../cargadores/Autocargador.php';
-require_once __DIR__ . '/../Repositorios/conexion.php';
+require_once __DIR__ . '/../Repositorios/Database.php';
 
 Autocargador::autocargar();
 
 // Crear conexión utilizando tu clase Database
-$database = new Database();
-$db = $database->getConnection();
+$con = Database::getConection();
 $repositorioIngredientes = new RepositorioIngredientes($db);
 
 // Obtener el método HTTP

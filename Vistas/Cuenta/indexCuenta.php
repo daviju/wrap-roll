@@ -1,12 +1,5 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Información de Cuenta</title>
-    <link rel="stylesheet" href="./css/indexCuentaStyle.css">
-</head>
-<body>
+<link rel="stylesheet" href="./css/indexCuentaStyle.css">
+
     <section id="info-cuenta">
         <div class="card">
             <div class="perfil-header">
@@ -32,7 +25,3 @@
             <button id="btn-cerrar-modal">Cerrar</button>
         </div>
     </div>
-
-    <script src="./js/indexCuenta.js" defer></script>
-</body>
-</html>

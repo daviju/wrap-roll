@@ -1,57 +1,53 @@
-document.addEventListener("DOMContentLoaded", function() {
-    // Log para confirmar que el script se está ejecutando
-    console.log("Página cargada, intentando cargar kebabs...");
+window.addEventListener('load', cargarKebabs());
 
-    // Hacemos la solicitud a la API
+// Función para cargar los kebabs desde la API
+function cargarKebabs() {
     fetch('./Api/ApiKebab.php')
-    .then(response => {
-        console.log("Respuesta recibida de la API:", response);  // Log para verificar si la respuesta es correcta
-        
-        if (!response.ok) {
-            throw new Error('Error al cargar los datos');
-        }
-        return response.json();
-    })
-    .then(kebabs => {
-        // Mostrar los datos recibidos en la consola
-        console.log("Datos de kebabs:", kebabs);  // Esto nos mostrará el array de kebabs en la consola
-        mostrarKebabs(kebabs);  // Llamamos a la función para mostrar los kebabs
-    })
-    .catch(error => {
-        // Si ocurre un error en la solicitud o en la conversión de JSON
-        console.error('Error al cargar los kebabs:', error);
-    });
-});
+        .then(response => response.json())
+        .then(data => {
+            if (Array.isArray(data)) {
+                mostrarKebabs(data); // Llamar a la función para mostrar los kebabs
+            } else {
+                console.error("La respuesta no es un array de kebabs:", data);
+            }
+        })
+        .catch(error => {
+            console.error("Error al cargar los kebabs:", error);
+        });
+}
 
-// Función para mostrar los kebabs en la página
+// Función para mostrar las tarjetas de los kebabs en la cuadrícula
 function mostrarKebabs(kebabs) {
-    // Seleccionamos el contenedor de los productos
-    const productGrid = document.querySelector('.product-grid');
-    productGrid.innerHTML = ''; // Limpiamos cualquier contenido previo
+    const contenedor = document.querySelector('.product-grid');
 
-    // Recorremos todos los kebabs recibidos
+    // Limpiar tarjetas de kebabs existentes
+    const tarjetasKebabs = contenedor.querySelectorAll('.product-item');
+    tarjetasKebabs.forEach(tarjeta => tarjeta.remove());
+
     kebabs.forEach(kebab => {
-        // Creamos el contenedor para cada kebab
-        const productItem = document.createElement('a');
-        productItem.classList.add('product-item');
+        const tarjeta = document.createElement('a');
+        tarjeta.classList.add('product-item');
+        tarjeta.setAttribute('data-id', kebab.id_kebab);
 
-        // Creamos el contenedor para la imagen del kebab
+        // Crear estructura HTML de la tarjeta
         const sidebarImage = document.createElement('div');
         sidebarImage.classList.add('sidebar-image');
-        sidebarImage.style.backgroundImage = `url('./images/${kebab.foto}')`;  // Ruta de la imagen
-        productItem.appendChild(sidebarImage);
+        sidebarImage.style.backgroundImage = `url('http://localhost/SERVIDOR/wrap&roll/images/${kebab.foto}')`;
 
-        // Creamos el nombre del kebab
         const kebabName = document.createElement('h3');
         kebabName.textContent = kebab.nombre;
-        productItem.appendChild(kebabName);
 
-        // Creamos el precio del kebab
         const kebabPrice = document.createElement('p');
         kebabPrice.textContent = `${kebab.precio} €`;
-        productItem.appendChild(kebabPrice);
 
-        // Añadimos el kebab al grid de productos
-        productGrid.appendChild(productItem);
+        // Agregar todo al item de kebab
+        tarjeta.appendChild(sidebarImage);
+        tarjeta.appendChild(kebabName);
+        tarjeta.appendChild(kebabPrice);
+
+        // Insertar el item de kebab en el contenedor
+        contenedor.appendChild(tarjeta);
     });
 }
+
+
