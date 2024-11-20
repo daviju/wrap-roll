@@ -20,12 +20,12 @@ class RepositorioUsuario {
                     $registro['idUsuario'],
                     $registro['nombre'],
                     $registro['foto'],
-                    $registro['contraseña'],
+                    $registro['contrasena'],
                     $registro['monedero'],
-                    $registro['telefono'],
+                    $registro['email'],
                     json_decode($registro['carrito'], true),
                     $registro['rol'],
-                    $registro['email']
+                    $registro['telefono'],
                 );
             } else {
                 echo json_encode(["error" => "Usuario no encontrado."]);
@@ -37,21 +37,21 @@ class RepositorioUsuario {
         }
     }
 
-    // Método para verificar un usuario por email y contraseña
+    // Método para verificar un usuario por email y contrasena
     public function verifyUser($email, $password) {
         try {
             $usuario = $this->findUserByEmail($email);
-            if ($usuario && password_verify($password, $usuario['contraseña'])) {
+            if ($usuario && password_verify($password, $usuario['contrasena'])) {
                 return new Usuario(
                     $usuario['idUsuario'],
                     $usuario['nombre'],
                     $usuario['foto'],
-                    $usuario['contraseña'],
+                    $usuario['contrasena'],
                     $usuario['monedero'],
-                    $usuario['telefono'],
+                    $usuario['email'],
                     json_decode($usuario['carrito'], true),
                     $usuario['rol'],
-                    $usuario['email']
+                    $usuario['telefono']
                 );
             }
             return null;
@@ -78,33 +78,18 @@ class RepositorioUsuario {
     public function create(Usuario $usuario) {
         try {
             $carrito = json_encode($usuario->getCarrito());
-            $sql = "INSERT INTO Usuario (nombre, foto, contraseña, monedero, telefono, email, carrito, rol)
-                    VALUES (:nombre, :foto, :contraseña, :monedero, :telefono, :email, :carrito, :rol)";
+            $sql = "INSERT INTO Usuario (nombre, foto, contrasena, monedero, email, carrito, rol, telefono)
+                    VALUES (:nombre, :foto, :contrasena, :monedero, :email, :carrito, :rol, :telefono)";
             $stm = $this->con->prepare($sql);
     
             $stm->bindValue(':nombre', $usuario->getNombre());
             $stm->bindValue(':foto', $usuario->getFoto());
-            $stm->bindValue(':contraseña', $usuario->getContraseña());
+            $stm->bindValue(':contrasena', $usuario->getContrasena());
             $stm->bindValue(':monedero', $usuario->getMonedero());
-            $stm->bindValue(':telefono', $usuario->getTelefono());
             $stm->bindValue(':email', $usuario->getEmail());
             $stm->bindValue(':carrito', $carrito);
             $stm->bindValue(':rol', $usuario->getRol());
-    
-            /*
-            // Imprimir valores para depuración
-            print_r([
-                ':nombre' => $usuario->getNombre(),
-                ':foto' => $usuario->getFoto(),
-                ':contraseña' => $usuario->getContraseña(),
-                ':monedero' => $usuario->getMonedero(),
-                ':telefono' => $usuario->getTelefono(),
-                ':email' => $usuario->getEmail(),
-                ':carrito' => $carrito,
-                ':rol' => $usuario->getRol()
-            ]);
-            exit; // Detener la ejecución después de imprimir los valores para depuración
-            */
+            $stm->bindValue(':telefono', $usuario->getTelefono());
 
             return $stm->execute();
         } catch (PDOException $e) {
@@ -118,7 +103,7 @@ class RepositorioUsuario {
     public function update(Usuario $usuario) {
         try {
             $carrito = json_encode($usuario->getCarrito());
-            $sql = "UPDATE Usuario SET nombre = :nombre, foto = :foto, contraseña = :contraseña,
+            $sql = "UPDATE Usuario SET nombre = :nombre, foto = :foto, contrasena = :contrasena,
                     monedero = :monedero, telefono = :telefono, email = :email, carrito = :carrito, rol = :rol
                     WHERE idUsuario = :idUsuario";
             $stm = $this->con->prepare($sql);
@@ -126,7 +111,7 @@ class RepositorioUsuario {
             $stm->bindValue(':idUsuario', $usuario->getIDUsuario());
             $stm->bindValue(':nombre', $usuario->getNombre());
             $stm->bindValue(':foto', $usuario->getFoto());
-            $stm->bindValue(':contraseña', $usuario->getContraseña());
+            $stm->bindValue(':contrasena', $usuario->getcontrasena());
             $stm->bindValue(':monedero', $usuario->getMonedero());
             $stm->bindValue(':email', $usuario->getEmail());
             $stm->bindValue(':carrito', json_encode($usuario->getCarrito() ?? []));
@@ -165,7 +150,7 @@ class RepositorioUsuario {
                     $registro['idUsuario'],
                     $registro['nombre'],
                     $registro['foto'],
-                    $registro['contraseña'],
+                    $registro['contrasena'],
                     $registro['monedero'],
                     $registro['telefono'],
                     json_decode($registro['carrito'], true),

@@ -46,17 +46,17 @@ switch ($method) {
 
     case 'POST':
         // Crear un nuevo usuario
-        if (isset($input['nombre'], $input['foto'], $input['contraseña'], $input['monedero'], $input['telefono'], $input['email'], $input['carrito'], $input['rol'])) {
+        if (isset($input['nombre'], $input['foto'], $input['contrasena'], $input['monedero'], $input['email'], $input['carrito'], $input['rol'], $input['telefono'])) {
             $usuario = new Usuario(
                 null,  // ID será auto-generado
                 $input['nombre'],
                 $input['foto'],
-                $input['contraseña'],
+                $input['contrasena'],
                 $input['monedero'],
-                $input['telefono'],
+                $input['email'],
                 $input['carrito'],
                 $input['rol'],
-                $input['email']
+                $input['telefono']
             );
 
             $success = $repositorioUsuario->create($usuario);

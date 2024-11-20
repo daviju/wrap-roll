@@ -5,7 +5,7 @@ class Usuario {
     public $idUsuario;
     public $nombre;
     public $foto;
-    public $contraseña;
+    public $contrasena;
     public $monedero;
     public $telefono;
     public $carrito;
@@ -13,21 +13,21 @@ class Usuario {
     public $email;
 
     // Constructor
-    public function __construct($idUsuario, $nombre, $foto, $contraseña, $monedero, $telefono, $carrito, $rol, $email) {
+    public function __construct($idUsuario, $nombre, $foto, $contrasena, $monedero, $email, $carrito, $rol, $telefono) {
         $this->idUsuario = $idUsuario;
         $this->nombre = $nombre;
         $this->foto = $foto;
-        $this->contraseña = $contraseña;
+        $this->contrasena = $contrasena;
         $this->monedero = $monedero;
-        $this->telefono = $telefono;
+        $this->setEmail($email);
         $this->setCarrito($carrito);
         $this->rol = $rol;
-        $this->setEmail($email);
+        $this->telefono = $telefono;
     }
-
+    
     // Método __toString
     public function __toString() {
-        return "Usuario [idUsuario = $this->idUsuario, nombre = $this->nombre, foto = $this->foto, contraseña = $this->contraseña, monedero = $this->monedero, telefono = $this->telefono, rol = $this->rol, email = $this->email]";
+        return "Usuario [idUsuario = $this->idUsuario, nombre = $this->nombre, foto = $this->foto, contrasena = $this->contrasena, monedero = $this->monedero, telefono = $this->telefono, rol = $this->rol, email = $this->email]";
     }
 
     // Métodos Getters
@@ -43,8 +43,8 @@ class Usuario {
         return $this->foto;
     }
 
-    public function getContraseña() {
-        return $this->contraseña;
+    public function getcontrasena() {
+        return $this->contrasena;
     }
 
     public function getMonedero() {
@@ -80,8 +80,8 @@ class Usuario {
         $this->foto = $foto;
     }
 
-    public function setContraseña($contraseña) {
-        $this->contraseña = $contraseña;
+    public function setcontrasena($contrasena) {
+        $this->contrasena = $contrasena;
     }
 
     public function setMonedero($monedero) {
@@ -101,12 +101,7 @@ class Usuario {
     }
 
     public function setEmail($email) {
-        // Validación de email
-        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $this->email = $email;
-        } else {
-            throw new Exception("El email proporcionado no es válido: $email");
-        }
+        $this->email = $email;
     }
 }
 ?>
