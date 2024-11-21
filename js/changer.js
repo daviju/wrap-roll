@@ -15,11 +15,20 @@ document.addEventListener("DOMContentLoaded", function () {
     `;
     document.head.appendChild(style);
 
+    function handleNavigation(event) {
+        event.preventDefault();
+        loadContent(event.target.getAttribute("href"));
+    }
+
     document.querySelectorAll(".navbar a, .icons a").forEach(function (link) {
-        link.addEventListener("click", function (event) {
-            event.preventDefault();
-            loadContent(link.getAttribute("href"));
-        });
+        link.addEventListener("click", handleNavigation);
+    });
+
+    // Event listener global para enlaces dentro de main-content
+    document.getElementById('main-content').addEventListener('click', function (event) {
+        if (event.target.tagName === 'A' && event.target.getAttribute("href").startsWith("#")) {
+            handleNavigation(event);
+        }
     });
 
     // Toggle menú desplegable de usuario
@@ -116,6 +125,31 @@ function loadContent(page) {
                         document.body.appendChild(kebabScript);
                     })
                     .catch(error => console.error('Error al cargar kebdecasa.php:', error));
+                break;
+
+            case "#ing":
+                fetch('Vistas/Admin/modIngredientes.php')
+                    .then(response => response.text())
+                    .then(data => {
+                        mainContent.innerHTML = data;
+                        animateFadeIn(mainContent);
+
+                        // Cargar script adicional dinámico
+                        let modIngScript = document.createElement("script");
+                        modIngScript.src = "js/clasesjs/Ingredientes.js";
+                        document.body.appendChild(modIngScript);
+                    })
+                    .catch(error => console.error('Error al cargar modIngredientes.php:', error));
+                break;
+                
+            case "#crearIng":
+                fetch('Vistas/Admin/crearIngredientes.php')
+                    .then(response => response.text())
+                    .then(data => {
+                        mainContent.innerHTML = data;
+                        animateFadeIn(mainContent);
+                    })
+                    .catch(error => console.error('Error al cargar crearIngredientes.php:', error));
                 break;
 
             default:

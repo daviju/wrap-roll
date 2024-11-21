@@ -3,86 +3,113 @@
 class RepositorioIngredientes {
     private $con;
 
-    public function __construct($con){
+    public function __construct($con) {
         $this->con = $con;
     }
 
-    // CREATE
-    public function create($ingrediente) {
-        $stm = $this->con->prepare("INSERT INTO Ingredientes (idIngredientes, nombre, precio, tipo, foto) 
-                                    VALUES (:idIngredientes, :nombre, :precio, :tipo, :foto)");
-        
-        $stm->execute([
-            'idIngredientes' => $ingrediente->getIDIngredientes(),
-            'nombre' => $ingrediente->getNombre(),
-            'precio' => $ingrediente->getPrecio(),
-            'tipo' => $ingrediente->getTipo(),
-            'foto' => $ingrediente->getFoto(),
-        ]);
+    // Método para obtener un ingrediente por ID
+    public function findById($id) {
+        try {
+            $sql = "SELECT * FROM Ingredientes WHERE idIngredientes = :id";
+            $stm = $this->con->prepare($sql);
+            $stm->execute(['id' => $id]);
+            $registro = $stm->fetch(PDO::FETCH_ASSOC);
 
-        return $stm->rowCount() > 0;
-    }
-
-    // FIND BY ID
-    public function findById($id){
-        $stm = $this->con->prepare("SELECT * 
-                                    FROM Ingredientes 
-                                    WHERE idIngredientes = :id");
-
-        $stm->execute(['id' => $id]);
-        
-        $ingrediente = null;
-        $registro = $stm->fetch();
-
-        if ($registro) {
-            $ingrediente = new Ingredientes($registro['idIngredientes'], $registro['nombre'], $registro['precio'], $registro['tipo'], $registro['foto']);
+            if ($registro) {
+                return new Ingredientes(
+                    $registro['idIngredientes'],
+                    $registro['nombre'],
+                    $registro['precio'],
+                    $registro['tipo'],
+                    $registro['foto']
+                );
+            } else {
+                echo json_encode(["error" => "Ingrediente no encontrado."]);
+                return null;
+            }
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al obtener el ingrediente: " . $e->getMessage()]);
+            return null;
         }
-
-        return $ingrediente;
     }
 
-    // FIND ALL
-    public function findAll(): array {
-        $stm = $this->con->prepare("SELECT * FROM Ingredientes");
-        $stm->execute();
+    // Método para crear un nuevo ingrediente
+    public function create(Ingredientes $ingrediente) {
+        try {
+            $sql = "INSERT INTO Ingredientes (idIngredientes, nombre, precio, tipo, foto)
+                    VALUES (:idIngredientes, :nombre, :precio, :tipo, :foto)";
+            $stm = $this->con->prepare($sql);
 
-        $ingredientes = [];
-        
-        while ($registro = $stm->fetch()) {
-            $ingrediente = new Ingredientes($registro['idIngredientes'], $registro['nombre'], $registro['precio'], $registro['tipo'], $registro['foto']);
-            
-            $ingredientes[] = $ingrediente;
+            $stm->bindValue(':idIngredientes', $ingrediente->getIDIngredientes());
+            $stm->bindValue(':nombre', $ingrediente->getNombre());
+            $stm->bindValue(':precio', $ingrediente->getPrecio());
+            $stm->bindValue(':tipo', $ingrediente->getTipo());
+            $stm->bindValue(':foto', $ingrediente->getFoto());
+
+            return $stm->execute();
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al crear el ingrediente: " . $e->getMessage()]);
+            return false;
         }
-        
-        return $ingredientes;
     }
 
-    // UPDATE
-    public function update($ingrediente) {
-        $stm = $this->con->prepare("UPDATE Ingredientes 
-                                    SET nombre = :nombre, precio = :precio, tipo = :tipo, foto = :foto 
-                                    WHERE idIngredientes = :idIngredientes");
-        
-        $stm->execute([
-            'idIngredientes' => $ingrediente->getIDIngredientes(),
-            'nombre' => $ingrediente->getNombre(),
-            'precio' => $ingrediente->getPrecio(),
-            'tipo' => $ingrediente->getTipo(),
-            'foto' => $ingrediente->getFoto(),
-        ]);
+    // Método para actualizar un ingrediente
+    public function update(Ingredientes $ingrediente) {
+        try {
+            $sql = "UPDATE Ingredientes SET nombre = :nombre, precio = :precio, tipo = :tipo, foto = :foto
+                    WHERE idIngredientes = :idIngredientes";
+            $stm = $this->con->prepare($sql);
 
-        return $stm->rowCount() > 0;
+            $stm->bindValue(':idIngredientes', $ingrediente->getIDIngredientes());
+            $stm->bindValue(':nombre', $ingrediente->getNombre());
+            $stm->bindValue(':precio', $ingrediente->getPrecio());
+            $stm->bindValue(':tipo', $ingrediente->getTipo());
+            $stm->bindValue(':foto', $ingrediente->getFoto());
+
+            return $stm->execute();
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al actualizar el ingrediente: " . $e->getMessage()]);
+            return false;
+        }
     }
 
-    // DELETE
-    public function delete($id): bool {
-        $stm = $this->con->prepare("DELETE 
-                                    FROM Ingredientes 
-                                    WHERE idIngredientes = :id");
-                                    
-        $stm->execute(['id' => $id]);
+    // Método para eliminar un ingrediente
+    public function delete($id) {
+        try {
+            $sql = "DELETE FROM Ingredientes WHERE idIngredientes = :id";
+            $stm = $this->con->prepare($sql);
+            $stm->execute(['id' => $id]);
+            return $stm->rowCount() > 0;
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al eliminar el ingrediente: " . $e->getMessage()]);
+            return false;
+        }
+    }
 
-        return $stm->rowCount() > 0;
+    // Método para obtener todos los ingredientes
+    public function findAll() {
+        try {
+            $sql = "SELECT * FROM Ingredientes";
+            $stm = $this->con->prepare($sql);
+            $stm->execute();
+            $ingredientes = [];
+
+            while ($registro = $stm->fetch(PDO::FETCH_ASSOC)) {
+                $ingredientes[] = new Ingredientes(
+                    $registro['idIngredientes'],
+                    $registro['nombre'],
+                    $registro['precio'],
+                    $registro['tipo'],
+                    $registro['foto']
+                );
+            }
+
+            return $ingredientes;
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al obtener los ingredientes: " . $e->getMessage()]);
+            return [];
+        }
     }
 }
+
 ?>

@@ -3,80 +3,105 @@
 class RepositorioIngredientes {
     private $con;
 
-    public function __construct($con){
+    public function __construct($con) {
         $this->con = $con;
     }
 
-    // CREATE
-    public function create($alergeno) {
-        $stm = $this->con->prepare("INSERT INTO Alergenos (idAlergenos, tipo, foto) 
-                                    VALUES (:idAlergenos, :tipo, :foto)");
-        
-        $stm->execute([
-            'idAlergenos' => $alergeno->getIDAlergenos(),
-            'tipo' => $alergeno->getTipo(),
-            'foto' => $alergeno->getFoto(),
-        ]);
+    // Método para obtener un alérgeno por ID
+    public function findById($id) {
+        try {
+            $sql = "SELECT * FROM Alergenos WHERE idAlergenos = :id";
+            $stm = $this->con->prepare($sql);
+            $stm->execute(['id' => $id]);
+            $registro = $stm->fetch(PDO::FETCH_ASSOC);
 
-        return $stm->rowCount() > 0;
-    }
-
-    // FIND BY ID
-    public function findById($id){
-        $stm = $this->con->prepare("SELECT * 
-                                    FROM Alergenos 
-                                    WHERE idAlergenos = :id");
-
-        $stm->execute(['id' => $id]);
-        
-        $alergeno = null;
-        $registro = $stm->fetch();
-
-        if ($registro) {
-            $alergeno = new Alergenos($registro['idAlergenos'], $registro['tipo'], $registro['foto']);
+            if ($registro) {
+                return new Alergenos(
+                    $registro['idAlergenos'],
+                    $registro['tipo'],
+                    $registro['foto']
+                );
+            } else {
+                echo json_encode(["error" => "Alergeno no encontrado."]);
+                return null;
+            }
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al obtener el alérgeno: " . $e->getMessage()]);
+            return null;
         }
-
-        return $alergeno;
     }
 
-    // FIND ALL
-    public function findAll(): array {
-        $stm = $this->con->prepare("SELECT * FROM Alergenos");
-        $stm->execute();
+    // Método para crear un nuevo alérgeno
+    public function create(Alergenos $alergeno) {
+        try {
+            $sql = "INSERT INTO Alergenos (idAlergenos, tipo, foto)
+                    VALUES (:idAlergenos, :tipo, :foto)";
+            $stm = $this->con->prepare($sql);
 
-        $alergenos = [];
-        while ($registro = $stm->fetch()) {
-            $alergeno = new Alergenos($registro['idAlergenos'], $registro['tipo'], $registro['foto']);
-            $alergenos[] = $alergeno;
+            $stm->bindValue(':idAlergenos', $alergeno->getIDAlergenos());
+            $stm->bindValue(':tipo', $alergeno->getTipo());
+            $stm->bindValue(':foto', $alergeno->getFoto());
+
+            return $stm->execute();
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al crear el alérgeno: " . $e->getMessage()]);
+            return false;
         }
-        
-        return $alergenos;
     }
 
-    // UPDATE
-    public function update($alergeno) {
-        $stm = $this->con->prepare("UPDATE Alergenos 
-                                    SET tipo = :tipo, foto = :foto 
-                                    WHERE idAlergenos = :idAlergenos");
+    // Método para actualizar un alérgeno
+    public function update(Alergenos $alergeno) {
+        try {
+            $sql = "UPDATE Alergenos SET tipo = :tipo, foto = :foto
+                    WHERE idAlergenos = :idAlergenos";
+            $stm = $this->con->prepare($sql);
 
-        $stm->execute([
-            'idAlergenos' => $alergeno->getIDAlergenos(),
-            'tipo' => $alergeno->getTipo(),
-            'foto' => $alergeno->getFoto(),
-        ]);
+            $stm->bindValue(':idAlergenos', $alergeno->getIDAlergenos());
+            $stm->bindValue(':tipo', $alergeno->getTipo());
+            $stm->bindValue(':foto', $alergeno->getFoto());
 
-        return $stm->rowCount() > 0;
+            return $stm->execute();
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al actualizar el alérgeno: " . $e->getMessage()]);
+            return false;
+        }
     }
 
-    // DELETE
-    public function delete($id): bool {
-        $stm = $this->con->prepare("DELETE 
-                                    FROM Alergenos 
-                                    WHERE idAlergenos = :id");
-                                    
-        $stm->execute(['id' => $id]);
+    // Método para eliminar un alérgeno
+    public function delete($id) {
+        try {
+            $sql = "DELETE FROM Alergenos WHERE idAlergenos = :id";
+            $stm = $this->con->prepare($sql);
+            $stm->execute(['id' => $id]);
+            return $stm->rowCount() > 0;
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al eliminar el alérgeno: " . $e->getMessage()]);
+            return false;
+        }
+    }
 
-        return $stm->rowCount() > 0;
+    // Método para obtener todos los alérgenos
+    public function findAll() {
+        try {
+            $sql = "SELECT * FROM Alergenos";
+            $stm = $this->con->prepare($sql);
+            $stm->execute();
+            $alergenos = [];
+
+            while ($registro = $stm->fetch(PDO::FETCH_ASSOC)) {
+                $alergenos[] = new Alergenos(
+                    $registro['idAlergenos'],
+                    $registro['tipo'],
+                    $registro['foto']
+                );
+            }
+
+            return $alergenos;
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al obtener los alérgenos: " . $e->getMessage()]);
+            return [];
+        }
     }
 }
+
 ?>

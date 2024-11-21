@@ -29,10 +29,9 @@ body {
 
 /* Estilos para el logo-titulo */
 .logo-titulo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #ac3729;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
 }
 
 .icons {
@@ -43,9 +42,10 @@ body {
   gap: 20px;
 }
 
-.titulo h1 {
+.titulo-kebab {
   margin: 0;
   font-size: 3rem;
+  color: #ac3729 !important;
 }
 
 /* Estilos para el nav */

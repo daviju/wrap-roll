@@ -24,7 +24,7 @@
             height="100px"
             style="border-radius: 50%; object-fit: cover;"
           />
-          <h1>Wrap & Roll</h1>
+          <h1 class="titulo-kebab"><strong>Wrap & Roll</strong></h1>
         </div>
 
         <div class="icons">

@@ -11,7 +11,7 @@ Autocargador::autocargar();
 
 // Crear conexión utilizando tu clase Database
 $con = Database::getConection();
-$repositorioIngredientes = new RepositorioIngredientes($db);
+$repositorioIngredientes = new RepositorioIngredientes($con);
 
 // Obtener el método HTTP
 $method = $_SERVER['REQUEST_METHOD'];

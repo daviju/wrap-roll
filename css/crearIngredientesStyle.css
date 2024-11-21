@@ -1,0 +1,197 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1a1a1a; /* Fondo oscuro elegante */
+    margin: 0;
+    padding: 0;
+    color: #fff; /* Texto blanco para contraste */
+}
+
+/* Contenedor específico del formulario Drag and Drop */
+.drag-drop-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 80px); /* Ajusta la altura sin modificar el header */
+    background-color: #1a1a1a; /* Fondo que combina con el sitio */
+    padding: 20px 0;
+}
+
+.container {
+    background-color: #e1d8b7; /* Beige para armonizar con el logo */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra elegante */
+    width: 90%;
+    max-width: 1300px;
+    margin-top: -20px; /* Subir el contenedor un poco */
+}
+
+/* Título principal */
+h2 {
+    text-align: center;
+    color: #a53b25; /* Rojo Wrap & Roll */
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* Contenedor de entradas dividido en dos columnas */
+.input-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    position: relative;
+    gap: 20px; /* Espacio entre columnas */
+}
+
+/* Columnas izquierda y derecha */
+.left-column,
+.right-column {
+    width: 48%;
+}
+
+/* Barra divisoria vertical */
+.divider {
+    width: 2%;
+    background-color: #ccc; /* Color gris claro */
+    border-radius: 4px;
+    height: auto;
+    position: relative;
+}
+
+/* Estilos específicos para cada columna */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #1a1a1a; /* Texto oscuro */
+}
+
+.input-group input[type="text"],
+.input-group input[type="file"],
+.input-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.input-group input[type="file"] {
+    background-color: #c08a80; /* Color de fondo personalizado */
+    width: 100%; /* Hacer el input de archivo más ancho */
+}
+
+.input-group input[type="text"]:focus,
+.input-group input[type="file"]:focus,
+.input-group textarea:focus {
+    outline: none;
+    border-color: #a53b25; /* Resalta con rojo */
+    box-shadow: 0 0 5px rgba(165, 59, 37, 0.5);
+}
+
+textarea {
+    resize: none; /* Evitar redimensionamiento */
+    height: 100px;
+}
+
+/* Lista de ingredientes */
+.list-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.list {
+    width: 45%;
+    background-color: #f9f9f9; /* Fondo claro pero no blanco puro */
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Suavizar */
+}
+
+.list h3 {
+    text-align: center;
+    color: #1a1a1a; /* Texto oscuro para contraste */
+    margin-bottom: 10px;
+}
+
+.list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.list li {
+    background-color: #c08a80;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: grab;
+    color: #1a1a1a; /* Texto negro */
+    font-weight: bold;
+}
+
+.list li:active {
+    cursor: grabbing;
+}
+
+hr {
+    background-color: #a53b25;
+}
+
+/* Botón */
+.btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #af352d; /* Rojo Wrap & Roll */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.btn:hover {
+    background-color: #8b2b25; /* Rojo más oscuro para hover */
+}
+
+.space-filler {
+    height: 300px; /* Ajusta la altura a lo que necesites */
+}
+
+#foto{
+    height: 7em;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+
+    .container {
+        padding-top: 20%;
+    }
+    .input-container {
+        flex-direction: column; /* Cambia a disposición vertical */
+    }
+
+    .left-column,
+    .right-column {
+        width: 100%;
+    }
+
+    .list-container {
+        flex-direction: column; /* Las listas se apilan */
+        gap: 10px;
+    }
+
+    .list {
+        width: 100%;
+    }
+}

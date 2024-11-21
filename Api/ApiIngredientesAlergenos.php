@@ -2,6 +2,7 @@
 header("Content-Type: application/json");
 
 require_once __DIR__ . '/../Repositorios/Database.php';
+require_once __DIR__ . '/../Repositorios/RepositorioIngredientesAlergenos.php';
 
 Autocargador::autocargar();
 
