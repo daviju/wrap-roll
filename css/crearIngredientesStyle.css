@@ -23,8 +23,11 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra elegante */
     width: 90%;
     max-width: 1300px;
-    margin-top: -20px; /* Subir el contenedor un poco */
+    margin-top: 50%;
+    min-height: 600px; /* Establece un mínimo de altura */
+    overflow: auto; /* Habilita el scroll si el contenido sobrepasa el espacio */
 }
+
 
 /* Título principal */
 h2 {
@@ -111,6 +114,7 @@ textarea {
     width: 45%;
     background-color: #f9f9f9; /* Fondo claro pero no blanco puro */
     padding: 10px;
+    margin: 10px 0;
     border-radius: 8px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Suavizar */
 }
@@ -163,10 +167,6 @@ hr {
     background-color: #8b2b25; /* Rojo más oscuro para hover */
 }
 
-.space-filler {
-    height: 300px; /* Ajusta la altura a lo que necesites */
-}
-
 #foto{
     height: 7em;
 }
@@ -194,4 +194,19 @@ hr {
     .list {
         width: 100%;
     }
+}
+
+
+.list {
+    color:#1a1a1a;
+
+}
+
+div .list-items{
+    min-height: 500px !important;
+}
+
+.list-items .list {
+    width: 446px;
+    background-color: #c08981;   
 }

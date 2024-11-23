@@ -34,27 +34,24 @@
             <hr>
 
             <div class="list-container">
+                <!-- Lista de alérgenos seleccionados -->
                 <div class="list" id="list2">
                     <h3>Alergenos Seleccionados</h3>
-                    <ul>
-                        <!-- Items will be dropped here -->
-                    </ul>
+                    <div class="list-items">
+                        <!-- Los alérgenos seleccionados se colocarán aquí -->
+                    </div>
                 </div>
 
+                <!-- Lista de alérgenos disponibles -->
                 <div class="list" id="list1">
                     <h3>Alergenos</h3>
-                    <ul>
-                        <li draggable="true">Item 1</li>
-                        <li draggable="true">Item 2</li>
-                        <li draggable="true">Item 3</li>
-                        <li draggable="true">Item 4</li>
-                    </ul>
+                    <div class="list-items">
+                        <!-- Los alérgenos disponibles se cargarán aquí -->
+                    </div>
                 </div>
             </div>
+
             <button type="submit" class="btn">Crear</button>
         </form>
     </div>
-
-    <div class="space-filler"></div> <!-- Contenedor vacío para el espacio -->
 </div>
-

@@ -20,9 +20,9 @@ document.addEventListener("DOMContentLoaded", function () {
         loadContent(event.target.getAttribute("href"));
     }
 
-    document.querySelectorAll(".navbar a, .icons a").forEach(function (link) {
+    document.querySelectorAll(".navbar a, .icons a, .new-card a, .new-card a span").forEach(function (link) {
         link.addEventListener("click", handleNavigation);
-    });
+    });    
 
     // Event listener global para enlaces dentro de main-content
     document.getElementById('main-content').addEventListener('click', function (event) {
@@ -148,6 +148,11 @@ function loadContent(page) {
                     .then(data => {
                         mainContent.innerHTML = data;
                         animateFadeIn(mainContent);
+                        console.log('Cargando...');
+                        // Cargar script adicional dinámico
+                        let crearIngScript = document.createElement("script");
+                        crearIngScript.src = "js/clasesjs/crearIngredientes.js";
+                        document.body.appendChild(crearIngScript);
                     })
                     .catch(error => console.error('Error al cargar crearIngredientes.php:', error));
                 break;

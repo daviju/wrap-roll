@@ -4,7 +4,6 @@ function cargarIngredientes() {
     fetch('./Api/ApiIngredientes.php')
         .then(response => response.json())
         .then(data => {
-            console.log("Ingredientes obtenidos:", data); // Ver los ingredientes en la consola
 
             if (Array.isArray(data)) {
                 mostrarIngredientes(data); // Llamar a la función para mostrar los ingredientes
