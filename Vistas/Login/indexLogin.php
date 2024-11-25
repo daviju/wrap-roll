@@ -1,11 +1,7 @@
-<link rel="stylesheet" href="../../css/indexLoginStyle.css">
+<link rel="stylesheet" href="./css/indexLoginStyle.css">
 
 <div class="container">
     
-    <div class="image-container">
-        <div class="sidebar-image"></div>
-    </div>
-
     <div class="login-container">
         <h2>Iniciar Sesión</h2>
         

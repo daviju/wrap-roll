@@ -40,6 +40,7 @@
             <div class="dropdown-menu">
               <a href="#mi-cuenta">Mi cuenta</a>
               <a href="#cerrar-sesion">Cerrar sesión</a>
+              <a href="#login">Login</a>
             </div>
           </div>
 

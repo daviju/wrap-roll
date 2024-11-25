@@ -143,6 +143,49 @@ h1 {
     height: 100px; /* Ajusta la altura a lo que necesites */
 }
 
+
+/* Contenedor de los alérgenos */
+.alergenos-container {
+    display: flex;
+    flex-wrap: wrap; /* Permitir que se ajusten a la línea */
+    justify-content: center; /* Centrar los alérgenos dentro de la tarjeta */
+    gap: 8px; /* Espacio entre los alérgenos */
+    margin-top: 10px; /* Separación con el texto anterior */
+    padding: 5px;
+    background-color: #f9f3e3; /* Fondo suave para destacar */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+/* Estilo para los alérgenos individuales */
+.alergeno-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; /* Tamaño pequeño para las imágenes */
+    height: 40px;
+    border: 1px solid #ccc; /* Borde alrededor de cada alergeno */
+    border-radius: 50%; /* Hacer las imágenes circulares */
+    background-color: #fff;
+    overflow: hidden; /* Asegurar que las imágenes no sobresalgan */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
+
+/* Estilo para la imagen de los alérgenos */
+.alergeno-img {
+    width: 100%; /* Imagen ocupa el contenedor */
+    height: 100%; /* Imagen ocupa el contenedor */
+    object-fit: cover; /* Asegurar que la imagen se ajuste sin deformarse */
+}
+
+/* Texto alternativo (si no hay imagen) */
+.alergeno-item span {
+    font-size: 10px; /* Texto pequeño */
+    color: #514d4e;
+    text-align: center;
+}
+
+
+
 /* Asegurar máximo 4 tarjetas por fila en pantallas grandes */
 @media (min-width: 768px) {
     .product-item {

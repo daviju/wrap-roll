@@ -25,8 +25,31 @@ if ($method != 'GET' && json_last_error() !== JSON_ERROR_NONE) {
 
 switch ($method) {
     case 'GET':
-        // Obtener un usuario por ID o todos los usuarios
-        if (isset($_GET['id_usuario'])) {
+        // Verificar si es una solicitud de login
+        if (isset($_GET['email'], $_GET['password'])) {
+            $email = $_GET['email'];
+            $password = $_GET['password'];
+
+            // Lógica para verificar usuario en la base de datos
+            $usuario = $repositorioUsuario->verifyUser($email, $password);
+
+            if ($usuario) {
+                // Usuario encontrado y autenticado
+                http_response_code(200);
+                echo json_encode([
+                    "success" => true,
+                    "message" => "Inicio de sesión exitoso.",
+                    "user" => $usuario // Opcional: devolver datos del usuario
+                ]);
+            } else {
+                // Credenciales inválidas
+                http_response_code(401);
+                echo json_encode([
+                    "success" => false,
+                    "error" => "Correo electrónico o contraseña incorrectos."
+                ]);
+            }
+        } elseif (isset($_GET['id_usuario'])) {
             // Obtener un usuario por ID
             $usuario = $repositorioUsuario->findById($_GET['id_usuario']);
             if ($usuario) {

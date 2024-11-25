@@ -21,16 +21,20 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%; /* Ocupa todo el ancho disponible */
+    max-width: 900px; /* Ancho máximo aumentado */
+    padding: 0 20px; /* Espacio a los lados */
+    padding-top: 60px; /* Aumentamos el espacio superior */
 }
 
 /* Contenedor de la imagen redonda */
 .image-container {
-    width: 100px;
-    height: 100px;
+    width: 120px; /* Más grande para que la imagen se destaque */
+    height: 120px;
     border-radius: 50%;
     overflow: hidden;
     position: absolute;
-    top: -50px; /* Ajusta esta posición para que quede centrada sobre el formulario */
+    top: -60px; /* Centrada sobre el formulario, sin que se sobreponga */
 }
 
 /* Imagen redonda */
@@ -45,18 +49,18 @@ body {
 /* Estilo para el formulario de registro */
 .register-container {
     background-color: #fff;
-    padding: 30px;
+    padding: 40px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
+    width: 100%; /* Asegura que ocupe el 100% del contenedor */
+    max-width: 800px; /* Aumentado para hacerlo más ancho */
     text-align: center;
-    margin-top: 60px; /* Mueve el formulario hacia abajo para dar espacio a la imagen */
+    margin-top: 1%; /* Más espacio abajo de la imagen */
 }
 
 h2 {
     margin-bottom: 20px;
-    font-size: 24px;
+    font-size: 28px; /* Título más prominente */
     color: #333;
 }
 
@@ -68,14 +72,14 @@ h2 {
 
 .input-group label {
     display: block;
-    font-size: 14px;
+    font-size: 16px; /* Más legible */
     color: #555;
     margin-bottom: 5px;
 }
 
 .input-group input {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 16px;
@@ -90,13 +94,14 @@ h2 {
 /* Botón de registro */
 .btn {
     width: 100%;
-    padding: 10px;
+    padding: 14px;
     background-color: #4a90e2;
     border: none;
     border-radius: 5px;
     color: #fff;
-    font-size: 16px;
+    font-size: 18px; /* Botón más llamativo */
     cursor: pointer;
+    margin-top: 30px; /* Para alejar el botón hacia abajo */
 }
 
 .btn:hover {
@@ -109,7 +114,7 @@ h2 {
 }
 
 .links a {
-    font-size: 14px;
+    font-size: 15px;
     color: #4a90e2;
     text-decoration: none;
     margin: 5px;
@@ -117,4 +122,72 @@ h2 {
 
 .links a:hover {
     text-decoration: underline;
+}
+
+/* Campos tipo textarea */
+.input-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+    resize: vertical;
+    min-height: 70px;
+}
+
+.input-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #333;
+}
+
+.input-group input[type="file"] {
+    padding: 5px;
+    font-size: 14px;
+    border: none;
+}
+
+/* Contenedor de columnas */
+.form-columns {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; /* Espacio entre columnas */
+}
+
+/* Columnas individuales */
+.column {
+    flex: 1;
+}
+
+/* Separador visual */
+.separator {
+    width: 2px;
+    background-color: #ddd;
+    margin: 0 10px;
+}
+
+/* Media queries para pantallas pequeñas */
+@media (max-width: 768px) {
+    /* Hacemos que el formulario y la imagen no se superpongan */
+    .image-container {
+        position: static; /* Cambiamos la posición de la imagen */
+        margin-bottom: 20px; /* Añadimos espacio debajo de la imagen */
+    }
+
+    .register-container {
+        padding: 20px; /* Menos padding en pantallas pequeñas */
+        margin-top: 50px; /* Espaciado adicional bajo la imagen */
+    }
+
+    .btn {
+        margin-top: 20px; /* Menos margen superior en pantallas pequeñas */
+    }
+
+    .container {
+        padding-top: 0; /* Eliminamos el padding extra */
+    }
 }

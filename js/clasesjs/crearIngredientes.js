@@ -117,21 +117,26 @@ console.log('Paso 1: La página ha cargado.');
     }
 
 // Enviar el formulario
-form.addEventListener('submit', function (event) {
+form.addEventListener('submit', async function (event) {
     event.preventDefault(); // Prevenir el envío por defecto del formulario
 
     // Obtener los datos del formulario
     const nombre = document.getElementById('nombre').value;
-    const foto = document.getElementById('foto').files[0]; // Se toma el archivo de imagen
-    const precio = document.getElementById('precio').value;
+    const fotoFile = document.getElementById('foto').files[0]; // Se toma el archivo de imagen
+    const precio = parseFloat(document.getElementById('precio').value);
     const tipo = document.getElementById('tipo').value;
 
     // Obtener los IDs de los alérgenos seleccionados en list2
     const selectedAlergenos = Array.from(list2.querySelectorAll('div')).map(div => div.dataset.id);
 
     // Validar que haya datos necesarios
-    if (!nombre || !precio || !tipo) {
+    if (!nombre || isNaN(precio) || !tipo) {
         console.error('Error: Todos los campos del formulario son obligatorios.');
+        return;
+    }
+
+    if (!fotoFile) {
+        console.error('Error: Debes seleccionar una imagen.');
         return;
     }
 
@@ -140,17 +145,24 @@ form.addEventListener('submit', function (event) {
         return;
     }
 
-    // Crear el FormData para enviar los datos del ingrediente
-    const formData = new FormData();
-    formData.append('nombre', nombre);
-    formData.append('foto', foto); // Enviar archivo de imagen
-    formData.append('precio', precio);
-    formData.append('tipo', tipo);
+    // Crear el JSON para enviar (fotoFile.name es el nombre del archivo seleccionado)
+    const ingredienteData = {
+        nombre,
+        precio,
+        tipo,
+        foto: fotoFile.name // Envía solo el nombre del archivo
+    };
+
+    // Log para verificar el JSON creado
+    console.log('Enviando JSON:', JSON.stringify(ingredienteData));
 
     // Llamar a la API para crear el ingrediente
     fetch('./Api/ApiIngredientes.php', {
         method: 'POST',
-        body: formData
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(ingredienteData)
     })
         .then(response => {
             if (!response.ok) {
@@ -175,6 +187,8 @@ form.addEventListener('submit', function (event) {
         })
         .catch(error => console.error('Error al crear ingrediente o relacionar alérgenos:', error));
 });
+
+
 
 // Función para relacionar el ingrediente con los alérgenos seleccionados
 function relateIngredienteAlergenos(ingredienteId, alergenos) {

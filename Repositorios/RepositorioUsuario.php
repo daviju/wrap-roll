@@ -152,10 +152,10 @@ class RepositorioUsuario {
                     $registro['foto'],
                     $registro['contrasena'],
                     $registro['monedero'],
-                    $registro['telefono'],
+                    $registro['email'],
                     json_decode($registro['carrito'], true),
                     $registro['rol'],
-                    $registro['email']
+                    $registro['telefono']
                 );
             }
 

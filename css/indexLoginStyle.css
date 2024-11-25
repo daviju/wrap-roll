@@ -1,49 +1,32 @@
 /* Reset para márgenes y rellenos */
-* {
+#main-content * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
 /* Cuerpo y contenedor principal */
-body {
+#main-content {
     font-family: 'Arial', sans-serif;
     background-color: #171a21;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh; /* Asegura que se centra dentro del contenido principal */
 }
 
 /* Contenedor de todo (imagen + formulario) */
-.container {
+#main-content .container {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: -20%;
 }
 
-/* Contenedor de la imagen redonda */
-.image-container {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    overflow: hidden;
-    position: absolute;
-    top: -50px; /* Ajusta esta posición para que quede centrada sobre el formulario */
-}
-
-/* Imagen redonda */
-.sidebar-image {
-    background-image: url('../images/Wrap&Roll.png'); /* Ruta a la imagen */
-    background-size: cover;
-    background-position: center;
-    width: 100%;
-    height: 100%;
-}
 
 /* Estilo para el formulario de login */
-.login-container {
+#main-content .login-container {
     background-color: #fff;
     padding: 30px;
     border-radius: 10px;
@@ -54,26 +37,26 @@ body {
     margin-top: 60px; /* Mueve el formulario hacia abajo para dar espacio a la imagen */
 }
 
-h2 {
+#main-content .login-container h2 {
     margin-bottom: 20px;
     font-size: 24px;
     color: #333;
 }
 
 /* Estilo de los campos de entrada */
-.input-group {
+#main-content .input-group {
     margin-bottom: 20px;
     text-align: left;
 }
 
-.input-group label {
+#main-content .input-group label {
     display: block;
     font-size: 14px;
     color: #555;
     margin-bottom: 5px;
 }
 
-.input-group input {
+#main-content .input-group input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
@@ -82,13 +65,13 @@ h2 {
     color: #333;
 }
 
-.input-group input:focus {
+#main-content .input-group input:focus {
     border-color: #4a90e2;
     outline: none;
 }
 
 /* Botón de login */
-.btn {
+#main-content .btn {
     width: 100%;
     padding: 10px;
     background-color: #4a90e2;
@@ -99,22 +82,22 @@ h2 {
     cursor: pointer;
 }
 
-.btn:hover {
+#main-content .btn:hover {
     background-color: #357ab7;
 }
 
 /* Estilo para los enlaces */
-.links {
+#main-content .links {
     margin-top: 15px;
 }
 
-.links a {
+#main-content .links a {
     font-size: 14px;
     color: #4a90e2;
     text-decoration: none;
     margin: 5px;
 }
 
-.links a:hover {
+#main-content .links a:hover {
     text-decoration: underline;
 }

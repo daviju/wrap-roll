@@ -16,12 +16,23 @@ class RepositorioIngredientes {
             $registro = $stm->fetch(PDO::FETCH_ASSOC);
 
             if ($registro) {
+                // Obtener los alérgenos asociados a este ingrediente
+                $sqlAlergenos = "SELECT a.idAlergenos, a.tipo, a.foto
+                                 FROM Alergenos a
+                                 JOIN Ingredientes_Alergenos ia ON a.idAlergenos = ia.Alergenos_idAlergenos
+                                 WHERE ia.Ingredientes_idIngredientes = :id";
+                                 
+                $stmAlergenos = $this->con->prepare($sqlAlergenos);
+                $stmAlergenos->execute(['id' => $id]);
+                $alergenos = $stmAlergenos->fetchAll(PDO::FETCH_ASSOC);
+
                 return new Ingredientes(
                     $registro['idIngredientes'],
                     $registro['nombre'],
                     $registro['precio'],
                     $registro['tipo'],
-                    $registro['foto']
+                    $registro['foto'],
+                    $alergenos // Devuelve los alérgenos asociados
                 );
             } else {
                 echo json_encode(["error" => "Ingrediente no encontrado."]);
@@ -33,49 +44,97 @@ class RepositorioIngredientes {
         }
     }
 
-    // Método para crear un nuevo ingrediente
+    // Método para crear un nuevo ingrediente con sus alérgenos
     public function create(Ingredientes $ingrediente) {
         try {
-            $sql = "INSERT INTO Ingredientes (idIngredientes, nombre, precio, tipo, foto)
-                    VALUES (:idIngredientes, :nombre, :precio, :tipo, :foto)";
+            $sql = "INSERT INTO Ingredientes (nombre, precio, tipo, foto)
+                    VALUES (:nombre, :precio, :tipo, :foto)";
             $stm = $this->con->prepare($sql);
 
-            $stm->bindValue(':idIngredientes', $ingrediente->getIDIngredientes());
             $stm->bindValue(':nombre', $ingrediente->getNombre());
             $stm->bindValue(':precio', $ingrediente->getPrecio());
             $stm->bindValue(':tipo', $ingrediente->getTipo());
             $stm->bindValue(':foto', $ingrediente->getFoto());
 
-            return $stm->execute();
+            if ($stm->execute()) {
+                $ingredienteId = $this->con->lastInsertId();
+
+                // Insertar los alérgenos asociados
+                foreach ($ingrediente->getAlergenos() as $idAlergeno) {
+                    $this->asignarAlergeno($ingredienteId, $idAlergeno);
+                }
+
+                return $ingredienteId;
+            } else {
+                return false;
+            }
         } catch (PDOException $e) {
             echo json_encode(["error" => "Error al crear el ingrediente: " . $e->getMessage()]);
             return false;
         }
     }
 
-    // Método para actualizar un ingrediente
+    // Método para asignar un alérgeno a un ingrediente
+    public function asignarAlergeno($ingredienteId, $alergenoId) {
+        try {
+            $sql = "INSERT INTO Ingredientes_Alergenos (Ingredientes_idIngredientes, Alergenos_idAlergenos)
+                    VALUES (:ingrediente_id, :alergeno_id)";
+            $stm = $this->con->prepare($sql);
+            $stm->bindValue(':ingrediente_id', $ingredienteId);
+            $stm->bindValue(':alergeno_id', $alergenoId);
+            $stm->execute();
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al asignar alérgeno: " . $e->getMessage()]);
+        }
+    }
+
+    // Método para eliminar los alérgenos de un ingrediente
+    public function eliminarAlergenos($ingredienteId) {
+        try {
+            $sql = "DELETE FROM Ingredientes_Alergenos WHERE Ingredientes_idIngredientes = :ingrediente_id";
+            $stm = $this->con->prepare($sql);
+            $stm->execute(['ingrediente_id' => $ingredienteId]);
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al eliminar los alérgenos: " . $e->getMessage()]);
+        }
+    }
+
+    // Método para actualizar un ingrediente y sus alérgenos
     public function update(Ingredientes $ingrediente) {
         try {
             $sql = "UPDATE Ingredientes SET nombre = :nombre, precio = :precio, tipo = :tipo, foto = :foto
-                    WHERE idIngredientes = :idIngredientes";
+                    WHERE idIngredientes = :id";
             $stm = $this->con->prepare($sql);
 
-            $stm->bindValue(':idIngredientes', $ingrediente->getIDIngredientes());
+            $stm->bindValue(':id', $ingrediente->getIDIngredientes());
             $stm->bindValue(':nombre', $ingrediente->getNombre());
             $stm->bindValue(':precio', $ingrediente->getPrecio());
             $stm->bindValue(':tipo', $ingrediente->getTipo());
             $stm->bindValue(':foto', $ingrediente->getFoto());
 
-            return $stm->execute();
+            if ($stm->execute()) {
+                // Actualizar los alérgenos del ingrediente
+                $this->eliminarAlergenos($ingrediente->getIDIngredientes());
+                foreach ($ingrediente->getAlergenos() as $idAlergeno) {
+                    $this->asignarAlergeno($ingrediente->getIDIngredientes(), $idAlergeno);
+                }
+
+                return true;
+            } else {
+                return false;
+            }
         } catch (PDOException $e) {
             echo json_encode(["error" => "Error al actualizar el ingrediente: " . $e->getMessage()]);
             return false;
         }
     }
 
-    // Método para eliminar un ingrediente
+    // Método para eliminar un ingrediente y sus alérgenos
     public function delete($id) {
         try {
+            // Eliminar los alérgenos antes de eliminar el ingrediente
+            $this->eliminarAlergenos($id);
+
             $sql = "DELETE FROM Ingredientes WHERE idIngredientes = :id";
             $stm = $this->con->prepare($sql);
             $stm->execute(['id' => $id]);
@@ -95,12 +154,22 @@ class RepositorioIngredientes {
             $ingredientes = [];
 
             while ($registro = $stm->fetch(PDO::FETCH_ASSOC)) {
+                // Obtener los alérgenos asociados a cada ingrediente
+                $sqlAlergenos = "SELECT a.idAlergenos, a.tipo, a.foto
+                                 FROM Alergenos a
+                                 JOIN Ingredientes_Alergenos ia ON a.idAlergenos = ia.Alergenos_idAlergenos
+                                 WHERE ia.Ingredientes_idIngredientes = :id";
+                $stmAlergenos = $this->con->prepare($sqlAlergenos);
+                $stmAlergenos->execute(['id' => $registro['idIngredientes']]);
+                $alergenos = $stmAlergenos->fetchAll(PDO::FETCH_ASSOC);
+
                 $ingredientes[] = new Ingredientes(
                     $registro['idIngredientes'],
                     $registro['nombre'],
                     $registro['precio'],
                     $registro['tipo'],
-                    $registro['foto']
+                    $registro['foto'],
+                    $alergenos
                 );
             }
 

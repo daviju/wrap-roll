@@ -112,6 +112,21 @@ function loadContent(page) {
                     .catch(error => console.error('Error al cargar indexCuenta.php:', error));
                 break;
 
+            case "#login":
+                fetch('Vistas/Login/indexLogin.php')
+                    .then(response => response.text())
+                    .then(data => {
+                        mainContent.innerHTML = data;
+                        animateFadeIn(mainContent);
+    
+                        // Cargar script adicional dinámico
+                        let LoginScript = document.createElement("script");
+                        LoginScript.src = "js/LogIn.js";
+                        document.body.appendChild(LoginScript);
+                    })
+                    .catch(error => console.error('Error al cargar indexLogin.php:', error));
+                break;
+
             case "#casa":
                 fetch('Vistas/Main/kebdecasa.php')
                     .then(response => response.text())
@@ -156,7 +171,7 @@ function loadContent(page) {
                     })
                     .catch(error => console.error('Error al cargar crearIngredientes.php:', error));
                 break;
-
+   
             default:
                 fetch('Vistas/Main/inisio.php')
                     .then(response => response.text())
