@@ -24,7 +24,7 @@ h2 {
 
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 columnas para mostrar solo cuatro productos por fila */
+    grid-template-columns: repeat(4, 1fr); /* 4 columnas en pantallas grandes */
     gap: 20px;
     margin-top: 20px;
     align-items: stretch;
@@ -72,4 +72,38 @@ h2 {
 
 .space-filler {
     height: 100px; /* Ajusta la altura a lo que necesites */
+}
+
+/* Media queries para adaptarse a pantallas medianas */
+@media (max-width: 1024px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 columnas para tablets y laptops pequeñas */
+    }
+
+    h2 {
+        font-size: 2rem; /* Reduce ligeramente el tamaño del título */
+    }
+
+    .sidebar-image {
+        height: 200px; /* Ajusta la altura de las imágenes */
+    }
+}
+
+/* Media queries para adaptarse a pantallas pequeñas */
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columnas para móviles grandes */
+    }
+
+    .product-item {
+        padding: 15px; /* Reduce el padding para las tarjetas */
+    }
+
+    h2 {
+        font-size: 1.8rem; /* Reduce más el tamaño del título */
+    }
+
+    .sidebar-image {
+        height: 180px; /* Ajusta la altura de las imágenes */
+    }
 }

@@ -1,114 +1,140 @@
 /* Nueva sección del contenido principal */
 .main-content {
-    display: flex;
-    margin-top: -4%;
-    padding: 20px;
+  display: flex;
+  margin-top: -4%;
+  padding: 20px;
+  gap: 20px; /* Espacio entre carrusel y barra lateral */
+}
+
+/* Sección del carrusel */
+.carousel {
+  flex: 2;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: left;
+  position: relative;
+}
+
+.carousel-bg {
+  background-image: url('../images/carneperro.jpg') !important;
+  background-size: cover;
+  background-position: center;
+  height: 100%;
+}
+
+.carousel-slide {
+  position: relative;
+  color: white;
+  background-image: url('./images/placeholder.jpg');
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  padding: 40px;
+}
+
+.carousel-slide .tag {
+  display: inline-block;
+  background-color: #2f67ec;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.carousel-slide h2 {
+  font-size: 24px;
+  line-height: 1.5;
+  margin: 0 0 20px;
+}
+
+.carousel-slide button {
+  background-color: #2f67ec;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* Sección de la barra lateral */
+.sidebar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-left: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  justify-content: flex-start;
+  width: 100%;
+  height: 20vh;
+  margin-bottom: 20px;
+}
+
+.sidebar-image {
+  flex-shrink: 0;
+  width: 15vw;
+  height: 15vh;
+  background-color: #ddd;
+  border-radius: 5px;
+  margin-right: 10px;
+  background-position: center;
+  background-size: cover;
+}
+
+.sidebar-image#image01 {
+  background-image: url('../images/kebabCasa.jpeg') !important;
+}
+
+.sidebar-image#image02 {
+  background-image: url('../images/kebabGusto.jpg') !important;
+}
+
+.sidebar-text h4 {
+  font-size: 14px;
+  color: #2f67ec;
+  margin: 0;
+}
+
+.sidebar-text p {
+  font-size: 12px;
+  color: #333;
+  margin: 5px 0 0;
+}
+
+/* Responsive para pantallas medianas */
+@media (max-width: 768px) {
+  .main-content {
+      flex-direction: column; /* Cambia el layout a vertical */
   }
-  
-  /* Sección del carrusel */
+
   .carousel {
-    flex: 2;
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    text-align: left;
-    position: relative;
+      margin-bottom: 20px; /* Añade espacio debajo del carrusel */
   }
-  
-  .carousel-bg {
-    background-image: url('../images/carneperro.jpg') !important;
-    background-size: cover;
-    background-position: center;
-    height: 100%;
-  }
-  
-  .carousel-slide {
-    position: relative;
-    color: white;
-    background-image: url('./images/placeholder.jpg');
-    background-size: cover;
-    background-position: center;
-    border-radius: 10px;
-    padding: 40px;
-  }
-  
-  .carousel-slide .tag {
-    display: inline-block;
-    background-color: #2f67ec;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 12px;
-    font-weight: 500;
-    margin-bottom: 10px;
-  }
-  
-  .carousel-slide h2 {
-    font-size: 24px;
-    line-height: 1.5;
-    margin: 0 0 20px;
-  }
-  
-  .carousel-slide button {
-    background-color: #2f67ec;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: 500;
-  }
-  
-  /* Sección de la barra lateral */
+
   .sidebar {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    margin-left: 20px;
-    justify-content: center; /* Centra los items verticalmente */
-    align-items: center; /* Centra los items horizontalmente */
+      margin-left: 0; /* Elimina el margen izquierdo */
+      width: 100%; /* Ocupa todo el ancho */
   }
-  
+
   .sidebar-item {
-    display: flex;
-    align-items: center;
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 10px;
-    justify-content: flex-start; /* Mantiene la imagen a la izquierda */
-    width: 100%; /* Asegura que todos los items tengan el mismo ancho */
-    height: 20vh; /* Asegura que todos los items tengan la misma altura */
-    margin-bottom: 20px; /* Espacio entre los items */
+      flex-direction: row; /* Mantén el diseño horizontal para los items */
+      width: 100%;
   }
-  
+
   .sidebar-image {
-    flex-shrink: 0;
-    width: 15vw; /* Tamaño ajustado según el contenedor */
-    height: 15vh; /* Tamaño ajustado según el contenedor */
-    background-color: #ddd;
-    border-radius: 5px;
-    margin-right: 10px;
-    background-position: center;
-    background-size: cover;
+      width: 100px;
+      height: 100px;
   }
-  
-  .sidebar-image#image01 {
-    background-image: url('../images/kebabCasa.jpeg') !important;
-  }
-  
-  .sidebar-image#image02 {
-    background-image: url('../images/kebabGusto.jpg') !important;
-  }
-  
-  .sidebar-text h4 {
-    font-size: 14px;
-    color: #2f67ec;
-    margin: 0;
-  }
-  
-  .sidebar-text p {
-    font-size: 12px;
-    color: #333;
-    margin: 5px 0 0;
-  }
-  
+}
