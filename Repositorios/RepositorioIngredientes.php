@@ -75,29 +75,35 @@ class RepositorioIngredientes {
     }
 
     // Método para asignar un alérgeno a un ingrediente
-    public function asignarAlergeno($ingredienteId, $alergenoId) {
-        try {
-            $sql = "INSERT INTO Ingredientes_Alergenos (Ingredientes_idIngredientes, Alergenos_idAlergenos)
-                    VALUES (:ingrediente_id, :alergeno_id)";
-            $stm = $this->con->prepare($sql);
-            $stm->bindValue(':ingrediente_id', $ingredienteId);
-            $stm->bindValue(':alergeno_id', $alergenoId);
-            $stm->execute();
-        } catch (PDOException $e) {
-            echo json_encode(["error" => "Error al asignar alérgeno: " . $e->getMessage()]);
-        }
-    }
+public function asignarAlergeno($ingredienteId, $alergenoId) {
+    try {
+        // Verificar si el alérgeno existe en la base de datos
+        $sqlCheck = "SELECT COUNT(*) FROM Alergenos WHERE idAlergenos = :alergenoId";
+        $stmCheck = $this->con->prepare($sqlCheck);
+        $stmCheck->bindValue(':alergenoId', $alergenoId);
+        $stmCheck->execute();
+        $count = $stmCheck->fetchColumn();
 
-    // Método para eliminar los alérgenos de un ingrediente
-    public function eliminarAlergenos($ingredienteId) {
-        try {
-            $sql = "DELETE FROM Ingredientes_Alergenos WHERE Ingredientes_idIngredientes = :ingrediente_id";
-            $stm = $this->con->prepare($sql);
-            $stm->execute(['ingrediente_id' => $ingredienteId]);
-        } catch (PDOException $e) {
-            echo json_encode(["error" => "Error al eliminar los alérgenos: " . $e->getMessage()]);
+        if ($count == 0) {
+            echo json_encode(["error" => "El alérgeno con ID $alergenoId no existe."]);
+            return false;
         }
+
+        // Si el alérgeno existe, insertar la relación
+        $sql = "INSERT INTO Ingredientes_Alergenos (Ingredientes_idIngredientes, Alergenos_idAlergenos)
+                VALUES (:ingrediente_id, :alergeno_id)";
+        $stm = $this->con->prepare($sql);
+        $stm->bindValue(':ingrediente_id', $ingredienteId);
+        $stm->bindValue(':alergeno_id', $alergenoId);
+        $stm->execute();
+
+        return true;
+    } catch (PDOException $e) {
+        echo json_encode(["error" => "Error al asignar alérgeno: " . $e->getMessage()]);
+        return false;
     }
+}
+
 
     // Método para actualizar un ingrediente y sus alérgenos
     public function update(Ingredientes $ingrediente) {
@@ -177,6 +183,38 @@ class RepositorioIngredientes {
         } catch (PDOException $e) {
             echo json_encode(["error" => "Error al obtener los ingredientes: " . $e->getMessage()]);
             return [];
+        }
+    }
+
+
+    public function eliminarAlergenos($ingredienteId)
+    {
+        try {
+            $sql = "DELETE FROM Ingredientes_Alergenos 
+                    WHERE Ingredientes_idIngredientes = :idIngredientes";
+            
+            $stm = $this->con->prepare($sql);
+            $stm->execute(['ingrediente_id' => $ingredienteId]);
+
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al eliminar alérgenos asociados: " . $e->getMessage()]);
+        }
+    }
+
+    // Método para eliminar un ingrediente
+    public function eliminar($id)
+    {
+        try {
+            $this->eliminarAlergenos($id);
+            $sql = "DELETE FROM Ingredientes 
+                    WHERE idIngredientes = :id";
+
+            $stm = $this->con->prepare($sql);
+            return $stm->execute(['id' => $id]);
+            
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al eliminar el ingrediente: " . $e->getMessage()]);
+            return false;
         }
     }
 }

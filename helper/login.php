@@ -1,18 +1,20 @@
 <?php
 class Login
 {
-    public static function Identifica(string $usuario,string $contrasena,bool $recuerdame)
+
+
+
+    public static function login($user)
     {
-        
+        $_SESSION['user'] = $user;
     }
 
-    private static function ExisteUsuario(string $usuario,string $contrasena=null)
-    {
-        
-    }
+    public static function Identifica(string $usuario, string $contrasena, bool $recuerdame) {}
+
+    private static function ExisteUsuario(string $usuario, string $contrasena = null) {}
 
     public static function UsuarioEstaLogueado()
     {
-        
+        return isset($_SESSION['user']);
     }
 }

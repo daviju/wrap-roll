@@ -1,5 +1,6 @@
 window.addEventListener('load', cargarIngredientes());
 
+
 function cargarIngredientes() {
     fetch('./Api/ApiIngredientes.php')
         .then(response => response.json())
@@ -113,12 +114,17 @@ function modificarIngrediente(id) {
 }
 
 // Función para borrar un ingrediente
+
+/*
 function borrarIngrediente(id) {
     const confirmacion = confirm('¿Estás seguro de que quieres borrar este ingrediente?');
     if (confirmacion) {
-        fetch(`./Api/ApiIngredientes.php?id=${id}`, {
+        fetch(`http://www.daviju.es/Api/ApiIngredientes.php?ID_Ingredientes=${id}`, {
             method: 'DELETE', // Método para borrar el ingrediente
-        })
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })        
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -132,5 +138,35 @@ function borrarIngrediente(id) {
         .catch(error => {
             console.error('Error al borrar el ingrediente:', error);
         });
+    }
+}*/
+
+// Función para borrar un ingrediente
+function borrarIngrediente(id) {
+    const confirmacion = confirm('¿Estás seguro de que quieres borrar este ingrediente?');
+    if (confirmacion) {
+        const url = `http://www.daviju.es/Api/ApiIngredientes.php?ID_Ingredientes=${id}`;
+        const options = {
+            method: 'DELETE', // Método para borrar el ingrediente
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+
+        fetch(url, options)
+            .then(response => {
+                console.log('Estado de la respuesta:', response.status, response.statusText);
+                return response.text();
+            })
+            .then(data => {
+                console.log("miau",data);
+                if (data) {
+                    // Recargar los ingredientes después de borrar
+                    cargarIngredientes();
+                }
+            })
+            .catch(error => {
+                console.error('Error al borrar el ingrediente:', error);
+            });
     }
 }

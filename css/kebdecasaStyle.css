@@ -67,27 +67,21 @@ h2 {
 
 .product-item p {
     font-size: 1.2rem; /* Tamaño de fuente mayor para el precio */
-    color: #666;
+    color: #026700 !important;
 }
 
 .space-filler {
     height: 100px; /* Ajusta la altura a lo que necesites */
 }
 
-/* Media queries para adaptarse a pantallas medianas */
-@media (max-width: 1024px) {
-    .product-grid {
-        grid-template-columns: repeat(3, 1fr); /* 3 columnas para tablets y laptops pequeñas */
-    }
-
-    h2 {
-        font-size: 2rem; /* Reduce ligeramente el tamaño del título */
-    }
-
-    .sidebar-image {
-        height: 200px; /* Ajusta la altura de las imágenes */
-    }
+.ingredients-text {
+    font-size: 1rem;
+    color: #666;
+    margin-top: 5px; /* Separación entre el precio y los ingredientes */
+    text-align: center;
 }
+
+
 
 /* Media queries para adaptarse a pantallas pequeñas */
 @media (max-width: 768px) {

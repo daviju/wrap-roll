@@ -1,4 +1,5 @@
 console.log('Paso 3: Ejecutando LogIn.js...');
+// Aqui lo que hago es gestionar el login del php que tengo
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -16,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Por favor, completa todos los campos.");
             return;
         }
-
+        // Yo aqui lo que haria es si tienes un formulario lo que haces es verificar en el caso de
         try {
             // Realizar la petición GET a la API de validación
             const response = await fetch(`./Api/ApiUser.php?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);

@@ -122,12 +122,20 @@ form.addEventListener('submit', async function (event) {
 
     // Obtener los datos del formulario
     const nombre = document.getElementById('nombre').value;
-    const fotoFile = document.getElementById('foto').files[0]; // Se toma el archivo de imagen
+    const fotoFile = document.getElementById('foto').files[0]; // Archivo de imagen seleccionado
     const precio = parseFloat(document.getElementById('precio').value);
     const tipo = document.getElementById('tipo').value;
 
     // Obtener los IDs de los alérgenos seleccionados en list2
     const selectedAlergenos = Array.from(list2.querySelectorAll('div')).map(div => div.dataset.id);
+
+    // Mostrar los datos extraídos del formulario
+    console.log('Formulario extraído:');
+    console.log('Nombre:', nombre);
+    console.log('Foto seleccionada:', fotoFile ? fotoFile.name : 'No se seleccionó imagen');
+    console.log('Precio:', precio);
+    console.log('Tipo:', tipo);
+    console.log('Alérgenos seleccionados:', selectedAlergenos);
 
     // Validar que haya datos necesarios
     if (!nombre || isNaN(precio) || !tipo) {
@@ -150,43 +158,48 @@ form.addEventListener('submit', async function (event) {
         nombre,
         precio,
         tipo,
-        foto: fotoFile.name // Envía solo el nombre del archivo
+        foto: fotoFile.name, // Envía solo el nombre del archivo
+        selectedAlergenos
     };
 
     // Log para verificar el JSON creado
-    console.log('Enviando JSON:', JSON.stringify(ingredienteData));
+    console.log('Enviando JSON al servidor:', JSON.stringify(ingredienteData));
 
     // Llamar a la API para crear el ingrediente
-    fetch('./Api/ApiIngredientes.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(ingredienteData)
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Ingrediente creado correctamente:', data);
+    try {
+        const response = await fetch('./Api/ApiIngredientes.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(ingredienteData)
+        });
 
-            // Obtener el ID del ingrediente creado
-            const ingredienteId = data.idIngredientes;
+        console.log('Respuesta del servidor al crear ingrediente:', response);
 
-            // Relacionar el ingrediente con los alérgenos seleccionados
-            return relateIngredienteAlergenos(ingredienteId, selectedAlergenos);
-        })
-        .then(() => {
-            alert('Ingrediente creado exitosamente con sus alérgenos relacionados');
-            // Limpiar los campos del formulario y la lista de alérgenos seleccionados
-            form.reset();
-            list2.innerHTML = '';
-        })
-        .catch(error => console.error('Error al crear ingrediente o relacionar alérgenos:', error));
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Ingrediente creado correctamente en la API:', data);
+
+        // Obtener el ID del ingrediente creado
+        const ingredienteId = data.idIngredientes;
+
+        console.log('ID del ingrediente creado:', ingredienteId);
+
+        // Relacionar el ingrediente con los alérgenos seleccionados
+        await relateIngredienteAlergenos(ingredienteId, selectedAlergenos);
+
+        // Limpiar los campos del formulario y la lista de alérgenos seleccionados
+        form.reset();
+        list2.innerHTML = '';
+    } catch (error) {
+        console.error('Error al crear ingrediente o relacionar alérgenos:', error);
+    }
 });
+
 
 
 
@@ -217,9 +230,43 @@ function relateIngredienteAlergenos(ingredienteId, alergenos) {
 }
 
 
-    // Asignar eventos para las listas
-    list1.addEventListener('dragover', handleDragOver);
-    list1.addEventListener('drop', (event) => handleDrop(event, list1));
+// Asignar eventos para las listas
+list1.addEventListener('dragover', handleDragOver);
+list1.addEventListener('drop', (event) => handleDrop(event, list1));
 
-    list2.addEventListener('dragover', handleDragOver);
-    list2.addEventListener('drop', (event) => handleDrop(event, list2));
+list2.addEventListener('dragover', handleDragOver);
+list2.addEventListener('drop', (event) => handleDrop(event, list2));
+
+
+
+// Evento para activar el input de archivo al hacer clic en el contenedor
+document.querySelector('.preview-container').addEventListener('click', () => {
+    document.getElementById('foto').click(); // Simula un clic en el input de tipo "file"
+});
+
+// Evento para mostrar la vista previa de la imagen seleccionada
+document.getElementById('foto').addEventListener('change', mostrarVistaPrevia);
+
+// Función para mostrar la vista previa de la imagen
+function mostrarVistaPrevia(event) {
+    const file = event.target.files[0]; // Obtener el archivo seleccionado
+
+    if (file) {
+        const reader = new FileReader(); // Crear un lector de archivos
+        reader.onload = function (e) {
+            const previewContainer = document.querySelector('.preview-container');
+            previewContainer.style.backgroundImage = `url(${e.target.result})`;
+            previewContainer.style.backgroundSize = 'cover';
+            previewContainer.style.backgroundPosition = 'center';
+
+            const span = previewContainer.querySelector('span');
+            if (span) span.style.display = 'none'; // Ocultar texto inicial
+        };
+        reader.readAsDataURL(file); // Leer archivo como Data URL
+    } else {
+        const previewContainer = document.querySelector('.preview-container');
+        previewContainer.style.backgroundImage = ''; // Reiniciar el fondo
+        const span = previewContainer.querySelector('span');
+        if (span) span.style.display = 'block'; // Mostrar texto inicial
+    }
+}

@@ -12,10 +12,16 @@
                         <label for="nombre">Nombre:</label>
                         <input type="text" id="nombre" name="nombre" required placeholder="Introduce el nombre del ingrediente"> 
                     </div>
+
                     <div class="input-group">
                         <label for="foto">Foto:</label>
-                        <input type="file" id="foto" name="foto" required> 
+                        <div class="preview-container">
+                            <span>Subir o arrastrar imagen aquí</span>
+                            <input type="file" id="foto" name="foto" required accept="image/*" style="display: none;">
+                        </div>
+
                     </div>
+
                 </div>
 
                 <!-- Columna derecha -->
@@ -55,3 +61,5 @@
         </form>
     </div>
 </div>
+
+<script src="./js/clasesjs/crearIngredientes.js" defer></script>

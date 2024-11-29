@@ -3,33 +3,46 @@ class Autocargador
 {
     public static function autocargar()
     {
-        spl_autoload_register('self::autocarga');
-    }
+        spl_autoload_register(function ($clase) {
+            // Directorio raíz del proyecto
+            $rootDir = $_SERVER['DOCUMENT_ROOT'];
 
-    private static function autocarga($name)
-    {
-        // Lista de directorios donde buscar las clases
-        $directories = [
-            __DIR__ . '/../Api/',
-            __DIR__ . '/../cargadores/',
-            __DIR__ . '/../Clases/',
-            __DIR__ . '/../css/',
-            __DIR__ . '/../helper/',
-            __DIR__ . '/../images/',
-            __DIR__ . '/../js/',
-            __DIR__ . '/../Metodos/',
-            __DIR__ . '/../Repositorios/',
-            __DIR__ . '/../Vistas/'
-        ];
+            // Rutas de las carpetas donde están las clases
+            $directories = [
+                '/Api/',
+                '/cargadores/',
+                '/Clases/',
+                '/css/',
+                '/helper/',
+                '/images/',
+                '/js/',
+                '/js/clasesjs/',
+                '/Metodos/',
+                '/Repositorios/',
+                '/Vistas/',
+                '/Vistas/Admin/',
+                '/Vistas/Cuenta/',
+                '/Vistas/Login/',
+                '/Vistas/Mantenimiento/',
+                '/Vistas/Principal/',
+                '/Vistas/Register/',
+            ];
 
-        // Recorre cada directorio para ver si existe el archivo de la clase
-        foreach ($directories as $directory) {
-            $file = $directory . $name . '.php';
-            if (file_exists($file)) {
-                require_once $file;
-                return;
+            // Recorremos los directorios para buscar la clase
+            foreach ($directories as $directory) {
+                $fichero = $rootDir . $directory . $clase . '.php';
+
+                // Si el archivo existe, lo incluimos
+                if (file_exists($fichero)) {
+                    require_once $fichero;
+                    return;
+                }
             }
-        }
+
+            // Si no se encuentra el archivo, se lanza una excepción
+            throw new UnexpectedValueException("No se pudo cargar la clase: $clase");
+        });
     }
 }
-?>
+
+Autocargador::autocargar();

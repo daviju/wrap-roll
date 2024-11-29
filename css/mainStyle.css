@@ -1,7 +1,7 @@
 /* Nueva sección del contenido principal */
 .main-content {
   display: flex;
-  margin-top: -4%;
+  margin-top: -2%;
   padding: 20px;
   gap: 20px; /* Espacio entre carrusel y barra lateral */
 }
@@ -31,6 +31,13 @@
   background-position: center;
   border-radius: 10px;
   padding: 40px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transición suave */
+}
+
+/* Efecto al pasar por encima del slide */
+.carousel-slide:hover {
+  transform: scale(1.02); /* Escala ligeramente el slide */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada */
 }
 
 .carousel-slide .tag {
@@ -57,6 +64,13 @@
   border-radius: 5px;
   cursor: pointer;
   font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Efecto de cambio en el fondo */
+}
+
+/* Efecto al pasar por encima del botón */
+.carousel-slide button:hover {
+  background-color: #1d4db0; /* Cambiar color de fondo */
+  transform: translateY(-3px); /* Levantar ligeramente el botón */
 }
 
 /* Sección de la barra lateral */
@@ -78,14 +92,21 @@
   padding: 10px;
   justify-content: flex-start;
   width: 100%;
-  height: 20vh;
+  height: 20vh; /* Ajusta la altura para que sea igual para ambos elementos */
   margin-bottom: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transición suave */
+}
+
+/* Efecto al pasar por encima de los items de la barra lateral */
+.sidebar-item:hover {
+  transform: scale(1.05); /* Escala ligeramente el div */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidad */
 }
 
 .sidebar-image {
   flex-shrink: 0;
   width: 15vw;
-  height: 15vh;
+  height: 100%; /* Ajusta la altura para que sea igual al contenedor del sidebar-item */
   background-color: #ddd;
   border-radius: 5px;
   margin-right: 10px;
@@ -112,6 +133,22 @@
   color: #333;
   margin: 5px 0 0;
 }
+
+/* Eliminar estilos predefinidos del enlace */
+a {
+  text-decoration: none;  /* Elimina el subrayado */
+  color: inherit;         /* Hereda el color del texto o establece un color específico */
+  background: none;       /* Elimina cualquier fondo */
+  border: none;           /* Elimina el borde si existe */
+}
+
+/* Si deseas aplicar un estilo específico al pasar el mouse */
+a:hover {
+  text-decoration: underline;  /* Agregar subrayado solo al pasar el mouse */
+  color: #2f67ec;              /* Cambiar color al pasar el mouse */
+}
+
+
 
 /* Responsive para pantallas medianas */
 @media (max-width: 768px) {

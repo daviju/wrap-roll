@@ -25,6 +25,8 @@ body {
   min-height: 16vh;
   margin-bottom: 0;
   background-color: #e1d8b8;
+  flex-direction: column; /* Apilar título y navegación verticalmente */
+  gap: 10px; /* Espacio entre título y nav */
 }
 
 /* Estilos para el logo-titulo */
@@ -48,40 +50,53 @@ body {
   color: #ac3729 !important;
 }
 
-/* Estilos para el nav */
+/* Estilos generales del menú */
 nav {
   position: relative;
   background: #4A4A4A;
-  font-weight: 400;
-  font-size: 0;
   display: flex;
-  padding: 0;
-  width: 100%;
-  margin-top: 0;
+  justify-content: center;
+  padding: 10px;
+  width: 100%; /* Asegurar que el nav tome el ancho completo */
+}
+
+nav .menu {
+  display: flex;
+  gap: 20px;
 }
 
 nav .item {
-  font-size: 0.75rem;
-  display: inline-block;
+  font-size: 1rem;
   position: relative;
-  padding: 0 10px;
   cursor: pointer;
-  z-index: 5;
-  min-width: 20%;
-  height: 50px;
-  line-height: 50px;
   text-align: center;
+  padding: 10px 15px;
 }
 
-/* Estilo para los enlaces dentro del nav */
 nav a {
   color: white;
   text-decoration: none;
+  position: relative;
 }
 
 nav a:hover {
-  color: white;
-  text-decoration: none;
+  color: var(--color-primary);
+}
+
+/* Subrayado con ::after */
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 0; /* Comienza con ancho 0 */
+  height: 3px;
+  background: var(--color-primary);
+  transition: width 0.3s ease-in-out; /* Transición suave */
+}
+
+nav a:hover::after {
+  width: 100%; /* Se extiende al ancho total del enlace */
 }
 
 .dropdown {
@@ -111,17 +126,6 @@ nav a:hover {
 
 .dropdown a:hover {
   background: #254fb5;
-}
-
-.underline {
-  height: 4px;
-  background: var(--color-primary);
-  position: absolute;
-  bottom: 0;
-  width: 20%;
-  z-index: 2;
-  pointer-events: none;
-  transition: 0.35s;
 }
 
 nav .item:hover > .dropdown > div {
@@ -166,4 +170,25 @@ nav .item:hover > .dropdown > div {
 
 .user-menu .dropdown-menu a:hover {
   background: #d14836; /* Color más oscuro para hover */
+}
+
+/* Estilos para los botones */
+.botones-invitado {
+  position: absolute;
+  right: 40px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.botones-invitado button {
+  background-color: #af352d; /* Rojo Wrap & Roll */
+  color: #fff; /* Texto blanco */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.botones-invitado button:hover {
+  background-color: #8b2b25; /* Rojo más oscuro para hover */
 }

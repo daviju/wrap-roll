@@ -49,9 +49,9 @@ switch ($method) {
                     "error" => "Correo electrónico o contraseña incorrectos."
                 ]);
             }
-        } elseif (isset($_GET['id_usuario'])) {
+        } elseif (isset($_GET['idUsuario'])) {
             // Obtener un usuario por ID
-            $usuario = $repositorioUsuario->findById($_GET['id_usuario']);
+            $usuario = $repositorioUsuario->findById($_GET['idUsuario']);
             if ($usuario) {
                 http_response_code(200);
                 echo json_encode($usuario);
@@ -78,7 +78,7 @@ switch ($method) {
                 $input['monedero'],
                 $input['email'],
                 $input['carrito'],
-                $input['rol'],
+                $input['rol'] ?? "Cliente",
                 $input['telefono']
             );
 
@@ -98,9 +98,9 @@ switch ($method) {
 
     case 'PUT':
         // Actualizar un usuario existente
-        if (isset($input['id_usuario'], $input['nombre'], $input['foto'], $input['contraseña'], $input['monedero'], $·input['telefono'], $input['email'], $input['carrito'], $input['rol'])) {
+        if (isset($input['idUsuario'], $input['nombre'], $input['foto'], $input['contraseña'], $input['monedero'], $·input['telefono'], $input['email'], $input['carrito'], $input['rol'])) {
             $usuario = new Usuario(
-                $input['id_usuario'],
+                $input['idUsuario'],
                 $input['nombre'],
                 $input['foto'],
                 $input['contraseña'],
@@ -127,9 +127,9 @@ switch ($method) {
 
     case 'DELETE':
         // Eliminar un usuario por ID
-        if (isset($_GET['id_usuario']) && !empty($_GET['id_usuario'])) {
-            $id_usuario = $_GET['id_usuario'];
-            $success = $repositorioUsuario->delete($id_usuario);
+        if (isset($_GET['idUsuario']) && !empty($_GET['idUsuario'])) {
+            $idUsuario = $_GET['idUsuario'];
+            $success = $repositorioUsuario->delete($idUsuario);
             if ($success) {
                 http_response_code(200); // OK
                 echo json_encode(["success" => true, "message" => "Usuario eliminado correctamente."]);

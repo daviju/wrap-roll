@@ -51,6 +51,38 @@ class RepositorioKebabIngredientes {
         }
     }
 
+
+    public function findByIdKebab($idKebab) {
+        try {
+            // SQL para obtener todas las relaciones con un ID de Kebab específico
+            $sql = "SELECT * FROM KebabIngredientes 
+                    WHERE Kebab_idKebab = :idKebab";
+            $stm = $this->con->prepare($sql);
+            $stm->execute(['idKebab' => $idKebab]);
+            $registros = $stm->fetchAll(PDO::FETCH_ASSOC);
+    
+            // Verificamos si se encontraron registros
+            if ($registros) {
+                // Creamos un array con los objetos KebabIngredientes
+                $kebabIngredientes = [];
+                foreach ($registros as $registro) {
+                    $kebabIngredientes[] = new KebabIngredientes(
+                        $registro['Kebab_idKebab'],
+                        $registro['Ingredientes_idIngredientes']
+                    );
+                }
+                return $kebabIngredientes;
+            } else {
+                echo json_encode(["error" => "No se encontraron relaciones para el kebab con ID $idKebab."]);
+                return null;
+            }
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al obtener las relaciones: " . $e->getMessage()]);
+            return null;
+        }
+    }
+    
+
     // Método para obtener todas las relaciones
     public function findAll() {
         try {

@@ -1,14 +1,12 @@
 <?php
 
-class RepositorioUsuario {
-    private $con;
-
-    public function __construct($con) {
-        $this->con = $con;
-    }
+class RepositorioUsuario
+{
+    public static $con;
 
     // Método para obtener un usuario por ID
-    public function findById($id) {
+    public function findById($id)
+    {
         try {
             $sql = "SELECT * FROM Usuario WHERE idUsuario = :id";
             $stm = $this->con->prepare($sql);
@@ -38,7 +36,8 @@ class RepositorioUsuario {
     }
 
     // Método para verificar un usuario por email y contrasena
-    public function verifyUser($email, $password) {
+    public function verifyUser($email, $password)
+    {
         try {
             $usuario = $this->findUserByEmail($email);
             if ($usuario && password_verify($password, $usuario['contrasena'])) {
@@ -62,10 +61,12 @@ class RepositorioUsuario {
     }
 
     // Método para obtener un usuario por email
-    public function findUserByEmail($email) {
+    public static function findUserByEmail($email)
+    {
         try {
+            $con = Database::getConection();
             $sql = "SELECT * FROM Usuario WHERE email = :email";
-            $stm = $this->con->prepare($sql);
+            $stm = $con->prepare($sql);
             $stm->execute(['email' => $email]);
             return $stm->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
@@ -75,13 +76,14 @@ class RepositorioUsuario {
     }
 
     // Método para crear un nuevo usuario
-    public function create(Usuario $usuario) {
+    public function create(Usuario $usuario)
+    {
         try {
             $carrito = json_encode($usuario->getCarrito());
             $sql = "INSERT INTO Usuario (nombre, foto, contrasena, monedero, email, carrito, rol, telefono)
                     VALUES (:nombre, :foto, :contrasena, :monedero, :email, :carrito, :rol, :telefono)";
             $stm = $this->con->prepare($sql);
-    
+
             $stm->bindValue(':nombre', $usuario->getNombre());
             $stm->bindValue(':foto', $usuario->getFoto());
             $stm->bindValue(':contrasena', $usuario->getContrasena());
@@ -97,10 +99,11 @@ class RepositorioUsuario {
             return false;
         }
     }
-    
-    
+
+
     // Método para actualizar un usuario
-    public function update(Usuario $usuario) {
+    public function update(Usuario $usuario)
+    {
         try {
             $carrito = json_encode($usuario->getCarrito());
             $sql = "UPDATE Usuario SET nombre = :nombre, foto = :foto, contrasena = :contrasena,
@@ -125,7 +128,8 @@ class RepositorioUsuario {
     }
 
     // Método para eliminar un usuario
-    public function delete($id) {
+    public function delete($id)
+    {
         try {
             $sql = "DELETE FROM Usuario WHERE idUsuario = :id";
             $stm = $this->con->prepare($sql);
@@ -138,15 +142,18 @@ class RepositorioUsuario {
     }
 
     // Método para obtener todos los usuarios
-    public function findAll() {
+    public static function findAll()
+    {
+
         try {
+            $con = Database::getConection();
             $sql = "SELECT * FROM Usuario";
-            $stm = $this->con->prepare($sql);
+            $stm = $con->prepare($sql);
             $stm->execute();
             $usuarios = [];
 
             while ($registro = $stm->fetch(PDO::FETCH_ASSOC)) {
-                $usuarios[] = new Usuario(
+                $user = new Usuario(
                     $registro['idUsuario'],
                     $registro['nombre'],
                     $registro['foto'],
@@ -157,6 +164,8 @@ class RepositorioUsuario {
                     $registro['rol'],
                     $registro['telefono']
                 );
+
+                array_push($usuarios, $user);
             }
 
             return $usuarios;
@@ -166,5 +175,3 @@ class RepositorioUsuario {
         }
     }
 }
-
-?>

@@ -1,104 +1,140 @@
 <?php
 
 class RepositorioIngredientesAlergenos {
-    private $con;
-
-    public function __construct($con){
-        $this->con = $con;
-    }
+    public static $con;
 
     // CREATE
-    public function create($ingredienteAlergeno) {
-        $sqlaco = "INSERT INTO Ingredientes_Alergenos (Ingredientes_idIngredientes, Alergenos_idAlergenos) 
-                   VALUES (:idIngredientes, :idAlergenos, :tipo, :foto)";
+    public static function create($ingredienteAlergeno) {
+        try {
+            $con = Database::getConection();
+            $sqlaco = "INSERT INTO Ingredientes_Alergenos (Ingredientes_idIngredientes, Alergenos_idAlergenos) 
+                       VALUES (:idIngredientes, :idAlergenos)";
 
-        $stm = $this->con->prepare($sqlaco);
-        
-        $stm->execute([
-            'idIngredientes' => $ingredienteAlergeno->getIDIngredientes(),
-            'idAlergenos' => $ingredienteAlergeno->getIDAlergenos(),
-        ]);
+            $stm = $con->prepare($sqlaco);
+            $stm->execute([
+                'idIngredientes' => $ingredienteAlergeno->getIDIngredientes(),
+                'idAlergenos' => $ingredienteAlergeno->getIDAlergenos(),
+            ]);
 
-        return $stm->rowCount() > 0;
+            return $stm->rowCount() > 0;
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al crear el ingrediente-alergeno: " . $e->getMessage()]);
+            return false;
+        }
     }
 
     // FIND BY ID
-    public function findById($idIngredientes, $idAlergenos) {
-        $sqlaco = "SELECT *
-                 FROM Ingredientes_Alergenos 
-                 WHERE Ingredientes_idIngredientes = :idIngredientes AND Alergenos_idAlergenos = :idAlergenos";
+    public static function findById($idIngredientes, $idAlergenos) {
+        try {
+            $con = Database::getConection();
+            $sqlaco = "SELECT * FROM Ingredientes_Alergenos 
+                       WHERE Ingredientes_idIngredientes = :idIngredientes 
+                       AND Alergenos_idAlergenos = :idAlergenos";
 
-        $stm = $this->con->prepare($sqlaco);
-        
-        $stm->execute([
-            'idIngredientes' => $idIngredientes,
-            'idAlergenos' => $idAlergenos,
-        ]);
-        
-        $registro = $stm->fetch();
+            $stm = $con->prepare($sqlaco);
+            $stm->execute([
+                'idIngredientes' => $idIngredientes,
+                'idAlergenos' => $idAlergenos,
+            ]);
 
-        if ($registro) {
-            return new IngredientesAlergenos(
-                $registro['Ingredientes_idIngredientes'],
-                $registro['Alergenos_idAlergenos'],
-            );
+            return $stm->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al obtener el ingrediente-alergeno: " . $e->getMessage()]);
+            return null;
         }
-
-        return null;
     }
 
     // FIND ALL
-    public function findAll(): array {
-        $sqlaco = "SELECT * FROM Ingredientes_Alergenos";
-        
-        $stm = $this->con->prepare($sqlaco);
-        $stm->execute();
+    public static function findAll(): array {
+        try {
+            $con = Database::getConection();
+            $sqlaco = "SELECT * FROM Ingredientes_Alergenos";
+            $stm = $con->prepare($sqlaco);
+            $stm->execute();
 
-        $ingredientesAlergenos = [];
+            $ingredientesAlergenos = [];
+            while ($registro = $stm->fetch(PDO::FETCH_ASSOC)) {
+                $ingredienteAlergeno = new IngredientesAlergenos(
+                    $registro['Ingredientes_idIngredientes'],
+                    $registro['Alergenos_idAlergenos']
+                );
+                array_push($ingredientesAlergenos, $ingredienteAlergeno);
+            }
 
-        while ($registro = $stm->fetch()) {
-
-            $ingredientesAlergenos[] = new IngredientesAlergenos(
-                $registro['Ingredientes_idIngredientes'],
-                $registro['Alergenos_idAlergenos'],
-            );
+            return $ingredientesAlergenos;
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al obtener los ingredientes-alergenos: " . $e->getMessage()]);
+            return [];
         }
-        
-        return $ingredientesAlergenos;
+    }
+
+    // FIND ALL BY INGREDIENTE ID
+    public static function findAllByIngredienteId($idIngredientes): array {
+        try {
+            $con = Database::getConection();
+            $sqlaco = "SELECT * FROM Ingredientes_Alergenos 
+                       WHERE Ingredientes_idIngredientes = :idIngredientes";
+            $stm = $con->prepare($sqlaco);
+            $stm->execute([
+                'idIngredientes' => $idIngredientes,
+            ]);
+
+            $ingredientesAlergenos = [];
+            while ($registro = $stm->fetch(PDO::FETCH_ASSOC)) {
+                $ingredienteAlergeno = new IngredientesAlergenos(
+                    $registro['Ingredientes_idIngredientes'],
+                    $registro['Alergenos_idAlergenos']
+                );
+                array_push($ingredientesAlergenos, $ingredienteAlergeno);
+            }
+
+            return $ingredientesAlergenos;
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al obtener los ingredientes-alergenos por ID: " . $e->getMessage()]);
+            return [];
+        }
     }
 
     // UPDATE
-    public function update($ingredienteAlergeno) {
-        $sqlaco = "UPDATE Ingredientes_Alergenos 
-                    SET Alergenos_idAlergenos = :idAlergenos
-                   WHERE Ingredientes_idIngredientes = :idIngredientes";
-        
-        $stm = $this->con->prepare($sqlaco);
+    public static function update($ingredienteAlergeno) {
+        try {
+            $con = Database::getConection();
+            $sqlaco = "UPDATE Ingredientes_Alergenos 
+                       SET Alergenos_idAlergenos = :idAlergenos 
+                       WHERE Ingredientes_idIngredientes = :idIngredientes";
 
-        $stm->execute([
-            'idIngredientes' => $ingredienteAlergeno->getIDIngredientes(),
-            'idAlergenos' => $ingredienteAlergeno->getIDAlergenos(),
-        ]);
+            $stm = $con->prepare($sqlaco);
+            $stm->execute([
+                'idIngredientes' => $ingredienteAlergeno->getIDIngredientes(),
+                'idAlergenos' => $ingredienteAlergeno->getIDAlergenos(),
+            ]);
 
-        return $stm->rowCount() > 0;
+            return $stm->rowCount() > 0;
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al actualizar el ingrediente-alergeno: " . $e->getMessage()]);
+            return false;
+        }
     }
 
     // DELETE
-    public function delete($idIngredientes, $idAlergenos): bool {
-        $sqlaco = "DELETE FROM Ingredientes_Alergenos 
-                    WHERE Ingredientes_idIngredientes = :idIngredientes 
-                    AND Alergenos_idAlergenos = :idAlergenos 
-                    AND Alergenos_tipo = :tipo 
-                    AND Alergenos_foto = :foto";
-                    
-        $stm = $this->con->prepare($sqlaco);
-        
-        $stm->execute([
-            'idIngredientes' => $idIngredientes,
-            'idAlergenos' => $idAlergenos,
-        ]);
+    public static function delete($idIngredientes, $idAlergenos): bool {
+        try {
+            $con = Database::getConection();
+            $sqlaco = "DELETE FROM Ingredientes_Alergenos 
+                       WHERE Ingredientes_idIngredientes = :idIngredientes 
+                       AND Alergenos_idAlergenos = :idAlergenos";
 
-        return $stm->rowCount() > 0;
+            $stm = $con->prepare($sqlaco);
+            $stm->execute([
+                'idIngredientes' => $idIngredientes,
+                'idAlergenos' => $idAlergenos,
+            ]);
+
+            return $stm->rowCount() > 0;
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al eliminar el ingrediente-alergeno: " . $e->getMessage()]);
+            return false;
+        }
     }
 }
 

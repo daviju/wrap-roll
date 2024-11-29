@@ -25,3 +25,5 @@
             <button id="btn-cerrar-modal">Cerrar</button>
         </div>
     </div>
+
+<script src="./js/indexCuenta.js"></script>

@@ -16,12 +16,13 @@
         <div class="carousel-slide carousel-bg">
             <span class="tag">DISTRIBUIDOR MAYORISTA ONLINE DE PRODUCTOS COMO CARNE DE KEBAB.</span>
             <h2>La carne de mejor calidad<br>Producción y distribución de kebab.</h2>
-            <button>COMPRA AHORA →</button>
+            <button><a href="?menu=kebabCasa">COMPRA AHORA →</a></button>
         </div>
     </div>
 
       <!-- Sidebar Section -->
       <div class="sidebar">
+        <a href="?menu=kebabCasa">
         <div class="sidebar-item">
           <div class="sidebar-image" id="image01"></div>
           <div class="sidebar-text">
@@ -29,13 +30,18 @@
             <p>Carne 100% HALAL ;)</p>
           </div>
         </div>
-        <div class="sidebar-item">
-          <div class="sidebar-image" id="image02"></div>
-          <div class="sidebar-text">
-            <h4>Kebab al Gusto</h4>
-            <p>Personaliza tu kebab con tus ingredientes favoritos</p>
+        </a>
+        
+        <a href="?menu=kebabGusto">
+          <div class="sidebar-item">
+            <div class="sidebar-image" id="image02"></div>
+            <div class="sidebar-text">
+              <h4>Kebab al Gusto</h4>
+              <p>Personaliza tu kebab con tus ingredientes favoritos</p>
+            </div>
           </div>
-        </div>
+        </a>
+        
       </div>
     </div>
 

@@ -34,7 +34,8 @@
 
         <main id="main-content">
             <?php
-                require_once './Vistas/Main/inisio.php';
+                $dr = $_SERVER['DOCUMENT_ROOT'];
+                require_once $dr . '/cargadores/enruta.php';
             ?>
         </main>
 
@@ -45,5 +46,6 @@
     </body>
     
     <script src="js/changer.js"></script>
+    <script src="js/header.js"></script>
 
 </html>

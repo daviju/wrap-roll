@@ -4,7 +4,7 @@
 <div class="container">
     <!-- Botón para crear un nuevo ingrediente -->
     <div class="new-card">
-        <a href="#crearIng">
+        <a href="?admin=crearIngredientes">
             <span>+<br>Crear Ingrediente</span>
         </a>
     </div>
@@ -13,3 +13,5 @@
 
     <div class="space-filler"></div> <!-- Contenedor vacío para el espacio -->
 </div>
+
+<script src="./js/clasesjs/Ingredientes.js"></script>

@@ -1,60 +1,118 @@
 <?php
+
 header("Content-Type: application/json");
 
+require_once __DIR__ . '/../Clases/KebabIngredientes.php';
+require_once __DIR__ . '/../Repositorios/RepositorioKebabIngredientes.php';
+require_once __DIR__ . '/../Repositorios/RepositorioIngredientes.php';
+require_once __DIR__ . '/../cargadores/Autocargador.php';
 require_once __DIR__ . '/../Repositorios/Database.php';
 
 Autocargador::autocargar();
 
 // Crear conexión utilizando tu clase Database
 $con = Database::getConection();
-$repositorioKebabIngredientes = new RepositorioKebabIngredientes($db);
+$repositorioKebabIngredientes = new RepositorioKebabIngredientes($con);
+$repositorioIngrediente = new RepositorioIngredientes($con);
 
+// Obtener el método HTTP
 $method = $_SERVER['REQUEST_METHOD'];
+$input = json_decode(file_get_contents('php://input'), true);
 
-// Ajustar el manejo de la ruta
-$path = explode('/', trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'));
-$path = array_slice($path, 3); // Ajustar según el número de segmentos en la URL antes de 'api/kebabsingredientes'
+// Verificar si el JSON es válido
+if ($method != 'GET' && $method != 'DELETE' && json_last_error() !== JSON_ERROR_NONE) {
+    http_response_code(400); // Bad Request
+    echo json_encode(["error" => "JSON malformado."]);
+    exit;
+}
 
 switch ($method) {
     case 'GET':
-        if (isset($path[0]) && isset($path[1]) && is_numeric($path[0]) && is_numeric($path[1])) {
-            // Obtener una relación kebabs-ingredientes por IDs de kebab e ingrediente
-            $kebabIngrediente = $repositorioKebabIngredientes->findByIds($path[0], $path[1]);
-            echo json_encode($kebabIngrediente);
+        if (isset($_GET['ID_Kebab'])) {
+            // Obtener las relaciones kebab-ingrediente por ID_Kebab
+            $kebabIngrediente = $repositorioKebabIngredientes->findByIdKebab($_GET['ID_Kebab']);
+            
+            if ($kebabIngrediente) {
+                // Crear un array con los nombres de los ingredientes
+                $ingredientesConNombres = [];
+                foreach ($kebabIngrediente as $relacion) {
+                    // Obtener el nombre del ingrediente utilizando el repositorio de ingredientes
+                    $ingrediente = $repositorioIngrediente->findById($relacion->getIDIngrediente());
+                    if ($ingrediente) {
+                        $ingredientesConNombres[] = $ingrediente->getNombre();  // Obtener solo el nombre del ingrediente
+                    } else {
+                        $ingredientesConNombres[] = "Ingrediente no encontrado";
+                    }
+                }
+                http_response_code(200);
+                echo json_encode($ingredientesConNombres);  // Devuelve solo los nombres de los ingredientes
+            } else {
+                http_response_code(404);
+                echo json_encode(["error" => "Relación kebab-ingrediente no encontrada."]);
+            }
         } else {
-            // Obtener todas las relaciones kebabs-ingredientes
             $kebabsIngredientes = $repositorioKebabIngredientes->findAll();
+            http_response_code(200);
             echo json_encode($kebabsIngredientes);
         }
         break;
+    
 
     case 'POST':
-        // Crear una nueva relación kebabs-ingredientes
-        $input = json_decode(file_get_contents('php://input'), true);
-        $kebabIngrediente = new KebabIngredientes($input['ID_Kebab'], $input['ID_Ingrediente']);
-        $success = $repositorioKebabIngredientes->create($kebabIngrediente);
-        echo json_encode(['success' => $success]);
+        // Crear una nueva relación kebab-ingrediente
+        if (isset($input['ID_Kebab'], $input['ID_Ingrediente'])) {
+            $kebabIngrediente = new KebabIngredientes($input['ID_Kebab'], $input['ID_Ingrediente']);
+            $success = $repositorioKebabIngredientes->create($kebabIngrediente);
+            if ($success) {
+                http_response_code(201); // Created
+                echo json_encode(["message" => "Relación kebab-ingrediente creada correctamente."]);
+            } else {
+                http_response_code(500); // Internal Server Error
+                echo json_encode(["error" => "Error al crear la relación kebab-ingrediente."]);
+            }
+        } else {
+            http_response_code(400); // Bad Request
+            echo json_encode(["error" => "Datos incompletos para crear la relación."]);
+        }
         break;
 
     case 'PUT':
-        if (isset($path[0]) && isset($path[1]) && is_numeric($path[0]) && is_numeric($path[1])) {
-            // Actualizar una relación kebabs-ingredientes
-            $input = json_decode(file_get_contents('php://input'), true);
-            $kebabIngrediente = new KebabIngredientes($path[0], $input['ID_Ingrediente']);
+        // Actualizar una relación kebab-ingrediente
+        if (isset($input['ID_Kebab'], $input['ID_Ingrediente'])) {
+            $kebabIngrediente = new KebabIngredientes($input['ID_Kebab'], $input['ID_Ingrediente']);
             $success = $repositorioKebabIngredientes->update($kebabIngrediente);
-            echo json_encode(['success' => $success]);
+            if ($success) {
+                http_response_code(200); // OK
+                echo json_encode(["message" => "Relación kebab-ingrediente actualizada correctamente."]);
+            } else {
+                http_response_code(500); // Internal Server Error
+                echo json_encode(["error" => "Error al actualizar la relación kebab-ingrediente."]);
+            }
+        } else {
+            http_response_code(400); // Bad Request
+            echo json_encode(["error" => "Datos incompletos para actualizar la relación."]);
         }
         break;
 
     case 'DELETE':
-        if (isset($path[0]) && isset($path[1]) && is_numeric($path[0]) && is_numeric($path[1])) {
-            // Eliminar una relación kebabs-ingredientes
-            $success = $repositorioKebabIngredientes->delete($path[0], $path[1]);
-            echo json_encode(['success' => $success]);
+        // Eliminar una relación kebab-ingrediente por IDs
+        if (isset($_GET['ID_Kebab']) && isset($_GET['ID_Ingrediente'])) {
+            $success = $repositorioKebabIngredientes->delete($_GET['ID_Kebab'], $_GET['ID_Ingrediente']);
+            if ($success) {
+                http_response_code(200); // OK
+                echo json_encode(["message" => "Relación kebab-ingrediente eliminada correctamente."]);
+            } else {
+                http_response_code(500); // Internal Server Error
+                echo json_encode(["error" => "Error al eliminar la relación kebab-ingrediente."]);
+            }
+        } else {
+            http_response_code(400); // Bad Request
+            echo json_encode(["error" => "ID de kebab o ingrediente no proporcionados."]);
         }
         break;
 
     default:
-        echo json_encode(['error' => 'Método no soportado']);
+        http_response_code(405); // Method Not Allowed
+        echo json_encode(["error" => "Método no soportado."]);
 }
 ?>

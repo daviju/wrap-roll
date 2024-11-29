@@ -210,3 +210,28 @@ div .list-items{
     width: 446px;
     background-color: #c08981;   
 }
+
+.preview-container {
+    border: 2px dashed #b23927;
+    border-radius: 5px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    color: #333;
+    text-align: center;
+    position: relative;
+    width: 50%;
+    margin-left: 24%;
+}
+
+.preview-container:hover {
+    border-color: #ff2200;
+}
+
+.preview-container span {
+    font-size: 14px;
+    color: #b23927;
+}

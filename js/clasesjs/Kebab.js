@@ -16,7 +16,7 @@ function cargarKebabs() {
         });
 }
 
-// Función para mostrar las tarjetas de los kebabs en la cuadrícula
+// Función para mostrar los kebabs en la página
 function mostrarKebabs(kebabs) {
     const contenedor = document.querySelector('.product-grid');
 
@@ -27,7 +27,7 @@ function mostrarKebabs(kebabs) {
     kebabs.forEach(kebab => {
         const tarjeta = document.createElement('a');
         tarjeta.classList.add('product-item');
-        tarjeta.setAttribute('data-id', kebab.id_kebab);
+        tarjeta.setAttribute('data-id', kebab.ID_Kebab);
 
         // Crear estructura HTML de la tarjeta
         const sidebarImage = document.createElement('div');
@@ -40,13 +40,36 @@ function mostrarKebabs(kebabs) {
         const kebabPrice = document.createElement('p');
         kebabPrice.textContent = `${kebab.precio} €`;
 
-        // Agregar todo al item de kebab
-        tarjeta.appendChild(sidebarImage);
-        tarjeta.appendChild(kebabName);
-        tarjeta.appendChild(kebabPrice);
+        // Crear el contenedor para los ingredientes
+        const ingredientesList = document.createElement('p');
+        ingredientesList.textContent = '';
 
-        // Insertar el item de kebab en el contenedor
-        contenedor.appendChild(tarjeta);
+        // Obtener los ingredientes para este kebab
+        fetch(`./Api/ApiKebabIngredientes.php?ID_Kebab=${kebab.ID_Kebab}`)
+            .then(response => response.json())
+            .then(ingredientesData => {
+                if (Array.isArray(ingredientesData) && ingredientesData.length > 0) {
+                    // Si ya es un array de nombres, solo unirlos
+                    const ingredientesNombres = ingredientesData.join(', ');
+                    ingredientesList.textContent += ingredientesNombres;  // Mostrar los nombres de los ingredientes
+                } else {
+                    ingredientesList.textContent += 'Sin ingredientes disponibles';
+                }
+            })
+            .catch(error => {
+                console.error("Error al cargar los ingredientes:", error);
+                ingredientesList.textContent += 'Error al cargar los ingredientes';
+            })
+            .finally(() => {
+                // Agregar todo al item de kebab después de la carga de los ingredientes
+                tarjeta.appendChild(sidebarImage);
+                tarjeta.appendChild(kebabName);
+                tarjeta.appendChild(kebabPrice);
+                tarjeta.appendChild(ingredientesList);
+
+                // Insertar el item de kebab en el contenedor
+                contenedor.appendChild(tarjeta);
+            });
     });
 }
 
