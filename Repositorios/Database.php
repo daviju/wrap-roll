@@ -10,7 +10,7 @@ class Database {
             try {
                 // Configuración de la conexión usando PDO
                 self::$con = new PDO(
-                    "mysql:host=localhost;dbname=mydb", // DSN
+                    "mysql:host=localhost:3307;dbname=mydb", // DSN
                     'root', // Usuario
                     '', // Contraseña
                     [
