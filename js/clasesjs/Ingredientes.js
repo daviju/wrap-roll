@@ -114,34 +114,6 @@ function modificarIngrediente(id) {
 }
 
 // Función para borrar un ingrediente
-
-/*
-function borrarIngrediente(id) {
-    const confirmacion = confirm('¿Estás seguro de que quieres borrar este ingrediente?');
-    if (confirmacion) {
-        fetch(`http://www.daviju.es/Api/ApiIngredientes.php?ID_Ingredientes=${id}`, {
-            method: 'DELETE', // Método para borrar el ingrediente
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        })        
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Ingrediente borrado correctamente');
-                // Recargar los ingredientes después de borrar
-                cargarIngredientes();
-            } else {
-                alert('Error al borrar el ingrediente');
-            }
-        })
-        .catch(error => {
-            console.error('Error al borrar el ingrediente:', error);
-        });
-    }
-}*/
-
-// Función para borrar un ingrediente
 function borrarIngrediente(id) {
     const confirmacion = confirm('¿Estás seguro de que quieres borrar este ingrediente?');
     if (confirmacion) {

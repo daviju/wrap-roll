@@ -78,10 +78,30 @@ class RepositorioKebab {
 
     // DELETE
     public function delete($id): bool {
-        $stm = $this->con->prepare("DELETE FROM Kebab WHERE idKebab = :id");
-        $stm->execute(['id' => $id]);
+        try {
+            // Eliminar los ingredientes asociados antes de eliminar el kebab
+            $this->eliminarIngredientes($id);
 
-        return $stm->rowCount() > 0;
+            // Eliminar el kebab
+            $stm = $this->con->prepare("DELETE FROM Kebab WHERE idKebab = :id");
+            $stm->execute(['id' => $id]);
+
+            return $stm->rowCount() > 0;
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al eliminar el kebab: " . $e->getMessage()]);
+            return false;
+        }
+    }
+
+    // Método para eliminar los ingredientes asociados a un kebab
+    private function eliminarIngredientes($kebabId) {
+        try {
+            $sql = "DELETE FROM kebabingredientes WHERE idKebab = :idKebab";
+            $stm = $this->con->prepare($sql);
+            $stm->execute(['idKebab' => $kebabId]);
+        } catch (PDOException $e) {
+            echo json_encode(["error" => "Error al eliminar los ingredientes asociados: " . $e->getMessage()]);
+        }
     }
 }
 ?>

@@ -14,6 +14,7 @@ body {
   margin: 0;
   height: 94vh;
   display: grid;
+  overflow-x: hidden; /* Evitar scroll horizontal */
 }
 
 /* Contenedor título con fondo */
@@ -27,6 +28,7 @@ body {
   background-color: #e1d8b8;
   flex-direction: column; /* Apilar título y navegación verticalmente */
   gap: 10px; /* Espacio entre título y nav */
+  z-index: 1; /* Prioridad menor al menú desplegable */
 }
 
 /* Estilos para el logo-titulo */
@@ -53,16 +55,18 @@ body {
 /* Estilos generales del menú */
 nav {
   position: relative;
-  background: #4A4A4A;
+  background: #4a4a4a;
   display: flex;
   justify-content: center;
   padding: 10px;
   width: 100%; /* Asegurar que el nav tome el ancho completo */
+  z-index: 100; /* Mayor prioridad sobre contenido */
 }
 
 nav .menu {
   display: flex;
   gap: 20px;
+  flex-wrap: wrap; /* Permite que los elementos del menú se ajusten en pantallas pequeñas */
 }
 
 nav .item {
@@ -99,20 +103,18 @@ nav a:hover::after {
   width: 100%; /* Se extiende al ancho total del enlace */
 }
 
+/* Dropdown con display: none por defecto */
 .dropdown {
-  overflow: hidden;
+  display: none; /* Ocultar menú inicialmente */
   list-style: none;
   position: absolute;
   padding: 0;
   width: 100%;
   left: 0;
-  top: 52px;
-}
-
-.dropdown > div {
-  transform: translate(0, -100%);
-  transition: all 0.5s 0.1s;
-  position: relative;
+  top: 100%; /* Aparecer justo debajo del ítem */
+  z-index: 1000; /* Colocar el dropdown por encima */
+  opacity: 0; /* Comienza invisible */
+  transition: all 0.3s ease-in-out; /* Transición suave */
 }
 
 .dropdown a {
@@ -128,19 +130,48 @@ nav a:hover::after {
   background: #254fb5;
 }
 
-nav .item:hover > .dropdown > div {
-  transform: translate(0);
+/* Deslizamiento suave */
+nav .item .dropdown {
+  transform: translateY(-20px); /* Comienza ligeramente hacia arriba */
 }
 
+/* Mostrar menú con animación en clic */
+nav .item.active > .dropdown {
+  display: block;
+  opacity: 1; /* Hacerlo visible con la animación */
+  transform: translateY(0); /* Restaurar la posición */
+}
+
+/* Responsive - Ajustes para pantallas pequeñas */
 @media (max-width: 768px) {
   nav {
     flex-direction: column;
   }
+  .menu {
+    flex-direction: column;
+    gap: 10px; /* Espacio entre los elementos */
+  }
+
   .user-menu .dropdown-menu {
     top: auto;
     right: 0;
     left: 0;
     width: 100%;
+  }
+
+  .user-menu .dropdown-menu {
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 9998; /* Asegura que esté por encima de otros elementos */
+  }
+
+  .botones-invitado {
+    position: relative;
+    justify-content: center;
+    gap: 15px;
+    padding: 10px;
+    margin-top: 20px;
   }
 }
 
@@ -152,13 +183,13 @@ nav .item:hover > .dropdown > div {
 
 .user-menu .dropdown-menu {
   display: none;
-  position: absolute;
-  top: 50px;
-  right: auto; /* Ajuste para mover a la izquierda */
-  left: -120px; /* Ajuste para mover a la izquierda */
-  background: #ac3729; /* Cambiar color de fondo */
+  position: absolute; /* Aseguramos que esté posicionado respecto al user-menu */
+  top: -3vh; /* Alineado al mismo nivel que el user-menu */
+  left: -160px; /* Ajuste para que se muestre a la izquierda */
+  background: #ac3729; /* Color de fondo */
   border-radius: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 9999; /* Asegura que esté encima de otros elementos */
 }
 
 .user-menu .dropdown-menu a {

@@ -68,7 +68,7 @@
                 </div>
               </div>
 
-              <nav class="navbar">
+              <nav class="navbar-admin">
                 <a class="item" href="?menu=inicio">Inicio</a>
                 <div class="item">
                   Kebabs
@@ -142,7 +142,7 @@
         
       } else {
         echo '
-              <nav class="navbar">
+              <nav class="navbar-admin">
                 <a class="item" href="?menu=inicio">Inicio</a>
                 <div class="item">
                   Kebabs

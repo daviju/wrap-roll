@@ -101,3 +101,11 @@
 #main-content .links a:hover {
     text-decoration: underline;
 }
+
+/* Estilo para el mensaje de error */
+.error-message {
+    color: red;
+    font-size: 1rem;
+    margin-top: 10px;
+    text-align: center;
+}
