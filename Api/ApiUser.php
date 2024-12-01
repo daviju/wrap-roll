@@ -97,18 +97,18 @@ switch ($method) {
         break;
 
     case 'PUT':
-        // Actualizar un usuario existente
-        if (isset($input['idUsuario'], $input['nombre'], $input['foto'], $input['contraseña'], $input['monedero'], $·input['telefono'], $input['email'], $input['carrito'], $input['rol'])) {
+        // Verificar que se haya pasado el ID
+        if (isset($input['idUsuario'], $input['nombre'], $input['foto'], $input['contrasena'], $input['monedero'], $input['email'], $input['carrito'], $input['rol'], $input['telefono'])) {
             $usuario = new Usuario(
-                $input['idUsuario'],
+                $input['idUsuario'],  // ID ya proporcionado para actualizar
                 $input['nombre'],
                 $input['foto'],
-                $input['contraseña'],
+                $input['contrasena'],
                 $input['monedero'],
-                $input['telefono'],
                 $input['email'],
                 $input['carrito'],
-                $input['rol']
+                $input['rol'] ?? "Cliente",
+                $input['telefono']
             );
 
             $success = $repositorioUsuario->update($usuario);
@@ -121,9 +121,10 @@ switch ($method) {
             }
         } else {
             http_response_code(400); // Bad Request
-            echo json_encode(["error" => "Datos insuficientes para actualizar el usuario."]);
+            echo json_encode(["error" => "Datos incompletos para actualizar el usuario."]);
         }
         break;
+
 
     case 'DELETE':
         // Eliminar un usuario por ID

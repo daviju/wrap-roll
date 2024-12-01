@@ -130,7 +130,6 @@
                   Mantenimiento
                   <div class="dropdown">
                     <div>
-                      <a href="?admin=kebab">Kebab</a>
                       <a href="?admin=ingredientes">Ingredientes</a>
                       <a href="?admin=alergenos">Alergenos</a>
                     </div>

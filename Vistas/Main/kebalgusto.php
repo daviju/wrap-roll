@@ -51,9 +51,9 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn">Crear</button>
+            <button type="submit" class="btn">Enviar al Carrito</button>
         </form>
     </div>
 </div>
 
-<script src="./js/clasesjs/crearKebab.js" defer></script>
+<script src="./js/clasesjs/crearKebabGusto.js" defer></script>

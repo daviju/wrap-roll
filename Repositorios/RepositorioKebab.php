@@ -96,9 +96,9 @@ class RepositorioKebab {
     // Método para eliminar los ingredientes asociados a un kebab
     private function eliminarIngredientes($kebabId) {
         try {
-            $sql = "DELETE FROM kebabingredientes WHERE idKebab = :idKebab";
+            $sql = "DELETE FROM kebabingredientes WHERE Kebab_idKebab = :Kebab_idKebab";
             $stm = $this->con->prepare($sql);
-            $stm->execute(['idKebab' => $kebabId]);
+            $stm->execute(['Kebab_idKebab' => $kebabId]);
         } catch (PDOException $e) {
             echo json_encode(["error" => "Error al eliminar los ingredientes asociados: " . $e->getMessage()]);
         }

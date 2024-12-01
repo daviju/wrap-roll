@@ -14,8 +14,6 @@ $role = isset($_SESSION['user']) ? $_SESSION['user']->rol : '';
     <div class="space-filler"></div> <!-- Contenedor vacío para el espacio -->
 </div>
 
-<!-- <script src="./js/clasesjs/Kebab.js"></script> -->
-
 <script>
     // Pasamos la variable de rol a JavaScript
     const userRole = '<?php echo $role; ?>';

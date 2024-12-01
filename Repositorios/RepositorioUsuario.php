@@ -102,23 +102,33 @@ class RepositorioUsuario
 
 
     // Método para actualizar un usuario
-    public function update(Usuario $usuario)
+    public static function update(Usuario $usuario)
     {
         try {
-            $carrito = json_encode($usuario->getCarrito());
-            $sql = "UPDATE Usuario SET nombre = :nombre, foto = :foto, contrasena = :contrasena,
-                    monedero = :monedero, telefono = :telefono, email = :email, carrito = :carrito, rol = :rol
+            $con = Database::getConection();
+
+            $carrito = json_encode($usuario->getCarrito() ?? []);
+            $sql = "UPDATE Usuario 
+                    SET nombre = :nombre, 
+                        foto = :foto, 
+                        contrasena = :contrasena,
+                        monedero = :monedero, 
+                        email = :email, 
+                        carrito = :carrito, 
+                        rol = :rol,
+                        telefono = :telefono
                     WHERE idUsuario = :idUsuario";
-            $stm = $this->con->prepare($sql);
+            $stm = $con->prepare($sql);
 
             $stm->bindValue(':idUsuario', $usuario->getIDUsuario());
             $stm->bindValue(':nombre', $usuario->getNombre());
             $stm->bindValue(':foto', $usuario->getFoto());
-            $stm->bindValue(':contrasena', $usuario->getcontrasena());
+            $stm->bindValue(':contrasena', $usuario->getContrasena());
             $stm->bindValue(':monedero', $usuario->getMonedero());
             $stm->bindValue(':email', $usuario->getEmail());
-            $stm->bindValue(':carrito', json_encode($usuario->getCarrito() ?? []));
+            $stm->bindValue(':carrito', $carrito);
             $stm->bindValue(':rol', $usuario->getRol());
+            $stm->bindValue(':telefono', $usuario->getTelefono());
 
             return $stm->execute();
         } catch (PDOException $e) {
