@@ -3,30 +3,26 @@ class LineaPedido {
 
     // Atributos
     public $ID_LineaPedido;
-
+    
     public $cantidad;
-    public $descripcion;
-    public $producto;
+    public $precio;
+    public $linea_pedidos;
 
     public $ID_Pedido;
 
     // Constructor
-    public function __construct($ID_LineaPedido, $cantidad, $descripcion, $producto, $ID_Pedido) {
+    public function __construct($ID_LineaPedido, $cantidad, $precio, $linea_pedidos, $ID_Pedido) {
         $this->ID_LineaPedido = $ID_LineaPedido;
-        
         $this->cantidad = $cantidad;
-        $this->descripcion = $descripcion;
-        $this->producto = $producto;
-        
+        $this->precio = $precio;
+        $this->linea_pedidos = $linea_pedidos;
         $this->ID_Pedido = $ID_Pedido;
     }
 
-    
     // To String
     public function __toString() {
-        return "LineaPedido [ID_LineaPedido = $this->ID_LineaPedido, cantidad = $this->cantidad, descripcion = $this->descripcion, producto = " . json_encode($this->producto) . ", ID_Pedido = $this->ID_Pedido]";
+        return "LineaPedido [ID_LineaPedido = $this->ID_LineaPedido, cantidad = $this->cantidad, precio = $this->precio, linea_pedidos = " . json_encode($this->linea_pedidos) . ", ID_Pedido = $this->ID_Pedido]";
     }
-
 
     // Métodos Getters
     public function getIDLineaPedido() {
@@ -37,18 +33,17 @@ class LineaPedido {
         return $this->cantidad;
     }
 
-    public function getDescripcion() {
-        return $this->descripcion;
+    public function getPrecio() {
+        return $this->precio;
     }
 
-    public function getProducto() {
-        return $this->producto;
+    public function getLineaPedidos() {
+        return $this->linea_pedidos;
     }
 
     public function getIDPedido() {
         return $this->ID_Pedido;
     }
-
 
     // Métodos Setters
     public function setIDLineaPedido($ID_LineaPedido) {
@@ -59,12 +54,12 @@ class LineaPedido {
         $this->cantidad = $cantidad;
     }
 
-    public function setDescripcion($descripcion) {
-        $this->descripcion = $descripcion;
+    public function setPrecio($precio) {
+        $this->precio = $precio;
     }
 
-    public function setProducto($producto) {
-        $this->producto = $producto;
+    public function setLineaPedidos($linea_pedidos) {
+        $this->linea_pedidos = $linea_pedidos;
     }
 
     public function setIDPedido($ID_Pedido) {

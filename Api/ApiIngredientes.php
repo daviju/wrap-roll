@@ -9,6 +9,10 @@ require_once __DIR__ . '/../Repositorios/Database.php';
 
 Autocargador::autocargar();
 
+// Habilitar el manejo de errores
+ini_set('display_errors', 1); // Mostrar errores en el navegador
+error_reporting(E_ALL); // Mostrar todos los errores
+
 // Crear conexión utilizando tu clase Database
 $con = Database::getConection();
 $repositorioIngredientes = new RepositorioIngredientes($con);
@@ -54,50 +58,42 @@ switch ($method) {
             $nombre = $inputData['nombre'];
             $precio = $inputData['precio'];
             $tipo = $inputData['tipo'];
-            $fotoNombre = $inputData['foto']; // Recibe solo el nombre del archivo
-            $alergenos = $inputData['selectedAlergenos']; // Alérgenos ya están en el JSON
+            $foto = $inputData['foto'];
+            $selectedAlergenos = $inputData['selectedAlergenos'];
 
-            // Validamos alergenos
-            if (!is_array($alergenos)) {
-                http_response_code(400);
-                echo json_encode(["error" => "Formato inválido en alérgenos."]);
-                exit;
-            }
+            // Crear un objeto Ingrediente
+            $ingrediente = new Ingredientes(null, $nombre, $precio, $tipo, $foto);
 
-            // Crear el objeto Ingredientes
-            $ingrediente = new Ingredientes(
-                null, // ID será autogenerado
-                $nombre,
-                $precio,
-                $tipo,
-                $fotoNombre
-            );
+            // Insertar el ingrediente en la base de datos
+            $repositorio = new RepositorioIngredientes(Database::getConection());
+            $ingredienteId = $repositorio->create($ingrediente);
 
-            // Guardar en la base de datos el ingrediente
-            $ultimoID = $repositorioIngredientes->create($ingrediente);
+            if ($ingredienteId) {
+                // Asociar alérgenos al ingrediente
+                $ingrediente->ID_Ingredientes = $ingredienteId;
+                $ingrediente->alergenos = $selectedAlergenos;
 
-            if ($ultimoID) { // Si se guardó correctamente
-                // Asignar alérgenos al ingrediente creado
-                $asignacionAlergenos = $repositorioIngredientes->asignarAlergeno($ultimoID, $alergenos);
+                $resultadoAlergenos = RepositorioIngredientes::insertIngredienteHasAlergenos($ingrediente);
 
-                // Responder solo una vez con el mensaje de éxito
-                if ($asignacionAlergenos) {
-                    http_response_code(201); // Created
-                    echo json_encode(["message" => "Ingrediente creado y alérgenos asignados correctamente."]);
+                if ($resultadoAlergenos !== null) {
+                    http_response_code(200);
+                    echo json_encode([
+                        "success" => "Ingrediente creado y asociado correctamente.",
+                        "ingredienteId" => $ingredienteId
+                    ]);
                 } else {
                     http_response_code(500);
-                    echo json_encode(["error" => "Error al asignar los alérgenos."]);
+                    echo json_encode(["error" => "Error al asociar alérgenos al ingrediente."]);
                 }
-            } else { // Si hubo un error
-                http_response_code(500);
-                echo json_encode(["error" => "Error al crear el ingrediente."]);
+            } else {
+                http_response_code(505);
+                echo json_encode(["error" => "No se pudo crear el ingrediente."]);
             }
-        } else { // Si no se proporcionaron los datos necesarios
-            http_response_code(400); // Bad Request
-            echo json_encode(["error" => "Datos incompletos para crear el ingrediente."]);
+        } else {
+            http_response_code(400);
+            echo json_encode(["error" => "Datos incompletos o inválidos."]);
         }
         break;
-
 
 
 

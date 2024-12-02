@@ -51,6 +51,15 @@
                 </div>
             </div>
 
+            <hr>
+
+            <div class="alergenos">
+                <h3>Alergenos</h3>
+                <div class="alergenos-container">
+                    <!-- Los alérgenos se cargarán aqui -->
+                </div>
+            </div>
+
             <button type="submit" class="btn">Enviar al Carrito</button>
         </form>
     </div>

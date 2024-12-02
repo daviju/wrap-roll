@@ -1,0 +1,191 @@
+body {
+    font-family: "Euclid Circular A", "Poppins";
+    background: #171a20;
+    margin: 0;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    overflow-x: hidden;
+    height: 100vh;
+  }
+  
+  /* Contenedor del título y navegación */
+  .titulo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-height: 16vh;
+    margin-bottom: 0;
+    background-color: #e1d8b8;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1;
+  }
+  
+  /* Estilos para el logo-titulo */
+  .logo-titulo {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+  
+  .icons {
+    position: absolute;
+    right: 40px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .titulo-kebab {
+    margin: 0;
+    font-size: 3rem;
+    color: #ac3729 !important;
+  }
+  
+  /* Estilos generales del menú */
+  nav {
+    position: relative;
+    background: #4a4a4a;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    width: 100%;
+    z-index: 100;
+  }
+  
+  /* Estilos del contenedor principal */
+  .container {
+    background-color: #e1d8b7;
+    width: 80%;
+    max-width: 600px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin-top: 10px;
+    z-index: 0;
+    overflow-y: auto;
+    color: black;
+  }
+  
+  /* Estilos para el contenido */
+  h1 {
+    text-align: center;
+    color: #b53424;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #f2f2f2;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+  }
+  
+  .quantity-btn {
+    background-color: #b53424;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .delivery {
+    margin-bottom: 15px;
+  }
+  
+  .delivery label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .delivery select {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+  
+  .payment-info {
+    margin-top: 20px;
+  }
+  
+  .payment-info div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .add-credit {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .add-credit input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+  
+  .add-btn, .order-btn {
+    background-color: #b53424;
+    border: none;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .order-btn {
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  /* Media Queries para dispositivos pequeños */
+  @media (max-width: 768px) {
+    .titulo {
+      min-height: 10vh; /* Reducir el espacio del título */
+    }
+  
+    .logo-titulo {
+      flex-direction: column; /* Logo apilado verticalmente */
+    }
+  
+    .titulo-kebab {
+      font-size: 2rem; /* Reducir tamaño de texto del título */
+    }
+  
+    .container {
+      width: 90%;
+      padding: 15px;
+    }
+  
+    h1 {
+      font-size: 20px; /* Reducir tamaño de fuente */
+    }
+  
+    table {
+      font-size: 14px; /* Reducir tamaño de texto en tablas */
+    }
+  
+    .quantity-btn, .add-btn, .order-btn {
+      padding: 8px 15px; /* Botones más pequeños */
+    }
+  
+    .add-credit input {
+      padding: 6px; /* Entrada más pequeña */
+    }
+  }
+  

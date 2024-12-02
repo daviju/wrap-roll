@@ -7,19 +7,21 @@ class Kebab {
     public $foto;
     public $precio;
 
+    public $ingredientes = [];
 
     // Constructor
-    public function __construct($ID_Kebab, $nombre, $foto, $precio) {
+    public function __construct($ID_Kebab, $nombre, $foto, $precio, $ingredientes = []) {
         $this->ID_Kebab = $ID_Kebab;
         $this->nombre = $nombre;
         $this->foto = $foto;
         $this->precio = $precio;
+        $this->ingredientes = $ingredientes;
     }
 
 
     // To String
     public function __toString() {
-        return "Kebab [ID_Kebab = $this->ID_Kebab, nombre = $this->nombre, foto = $this->foto, precio = $this->precio]";
+        return "Kebab [ID_Kebab = $this->ID_Kebab, nombre = $this->nombre, foto = $this->foto, precio = $this->precio, ingredientes = " . implode(", ", $this->ingredientes) . "]";
     }
 
 
@@ -40,6 +42,10 @@ class Kebab {
         return $this->precio;
     }
 
+    public function getIngredientes() {
+        return $this->ingredientes;
+    }
+
 
     // Métodos Setters
     public function setIDKebab($ID_Kebab) {
@@ -56,6 +62,10 @@ class Kebab {
 
     public function setPrecio($precio){
         $this->precio = $precio;
+    }
+
+    public function setIngredientes($ingredientes) {
+        $this->ingredientes = $ingredientes;
     }
     
 }

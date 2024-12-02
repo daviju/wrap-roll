@@ -1,120 +1,120 @@
 console.log('Paso 1: La página ha cargado.');
-    console.log('Paso 1: La página ha cargado.');
+console.log('Paso 1: La página ha cargado.');
 
-    // Referencias a los elementos HTML
-    const form = document.getElementById('drag-drop-form');
-    const list1 = document.getElementById('list1')?.querySelector('.list-items');
-    const list2 = document.getElementById('list2')?.querySelector('.list-items');
-    const btn = document.querySelector('.btn');
+// Referencias a los elementos HTML
+const form = document.getElementById('drag-drop-form');
+const list1 = document.getElementById('list1')?.querySelector('.list-items');
+const list2 = document.getElementById('list2')?.querySelector('.list-items');
+const btn = document.querySelector('.btn');
 
-    // Validamos que las listas existan
-    if (!list1 || !list2) {
-        console.error('Error: No se encontraron los elementos "list1" o "list2" en el HTML.');
-    }
+// Validamos que las listas existan
+if (!list1 || !list2) {
+    console.error('Error: No se encontraron los elementos "list1" o "list2" en el HTML.');
+}
 
-    console.log('Paso 2: Ejecutando loadAlergenos...');
-    loadAlergenos();
+console.log('Paso 2: Ejecutando loadAlergenos...');
+loadAlergenos();
 
-    // Función para cargar los alérgenos desde ApiAlergenos.php
-    async function loadAlergenos() {
-        await fetch('./Api/ApiAlergenos.php')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Paso 3: Datos de la API recibidos:', data);
-                if (Array.isArray(data) && data.length > 0) {
-                    data.forEach(alergeno => {
-                        console.log('Paso 4: Procesando alérgeno:', alergeno);
-
-                        const div = document.createElement('div');
-                        div.className = 'list';
-                        div.textContent = alergeno.tipo; // Campo "tipo" de la API
-                        div.draggable = true;
-                        div.dataset.id = alergeno.ID_Alergenos; // Campo "ID_Alergenos" de la API
-                        list1.appendChild(div);
-
-                        // Eventos para drag and drop
-                        div.addEventListener('dragstart', handleDragStart);
-                        div.addEventListener('dragend', handleDragEnd);
-                    });
-                } else {
-                    console.warn('Paso 5: La API devolvió un array vacío o no válido.');
-                }
-            })
-            .catch(error => console.error('Paso 6: Error al cargar alérgenos:', error));
-    }
-
-    // Función para manejar el inicio del arrastre
-    function handleDragStart(event) {
-        event.dataTransfer.setData('text/plain', event.target.dataset.id); // Guardar el ID
-        event.target.classList.add('dragging');
-    }
-
-    // Función para manejar el fin del arrastre
-    function handleDragEnd(event) {
-        event.target.classList.remove('dragging');
-    }
-
-    // Función para permitir que un área acepte el item arrastrado
-    function handleDragOver(event) {
-        event.preventDefault(); // Necesario para permitir el drop
-    }
-
-    // Función para manejar el drop de los alérgenos
-    function handleDrop(event, targetList) {
-        event.preventDefault();
-        const alergenoId = event.dataTransfer.getData('text/plain'); // Obtenemos el ID del alérgeno
-        const draggedElement = document.querySelector(`[data-id='${alergenoId}']`);
-
-        if (!draggedElement) return;
-
-        // Mover el elemento directamente a la lista objetivo
-        if (!targetList.contains(draggedElement)) {
-            targetList.appendChild(draggedElement);
-        }
-    }
-
-
-    // Función para crear un nuevo ingrediente
-    function createIngrediente(nombre, foto, precio, tipo) {
-        const formData = new FormData();
-        formData.append('nombre', nombre);
-        formData.append('foto', foto);
-        formData.append('precio', precio);
-        formData.append('tipo', tipo);
-
-        return fetch('./Api/ApiIngredientes.php', {
-            method: 'POST',
-            body: formData
+// Función para cargar los alérgenos desde ApiAlergenos.php
+async function loadAlergenos() {
+    await fetch('./Api/ApiAlergenos.php')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Ingrediente creado:', data);
-                return data; // Devuelve el ingrediente creado
-            })
-            .catch(error => console.error('Error al crear ingrediente:', error));
-    }
+        .then(data => {
+            console.log('Paso 3: Datos de la API recibidos:', data);
+            if (Array.isArray(data) && data.length > 0) {
+                data.forEach(alergeno => {
+                    console.log('Paso 4: Procesando alérgeno:', alergeno);
 
-    // Función para relacionar el ingrediente con los alérgenos seleccionados
-    function relateIngredienteAlergenos(ingredienteId, alergenos) {
-        const formData = new FormData();
-        formData.append('ingrediente_id', ingredienteId);
-        formData.append('alergenos', JSON.stringify(alergenos)); // Convertimos el array a JSON
+                    const div = document.createElement('div');
+                    div.className = 'list';
+                    div.textContent = alergeno.tipo; // Campo "tipo" de la API
+                    div.draggable = true;
+                    div.dataset.id = alergeno.ID_Alergenos; // Campo "ID_Alergenos" de la API
+                    list1.appendChild(div);
 
-        return fetch('./Api/ApiIngredientesAlergenos.php', {
-            method: 'POST',
-            body: formData
+                    // Eventos para drag and drop
+                    div.addEventListener('dragstart', handleDragStart);
+                    div.addEventListener('dragend', handleDragEnd);
+                });
+            } else {
+                console.warn('Paso 5: La API devolvió un array vacío o no válido.');
+            }
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Relación establecida:', data);
-            })
-            .catch(error => console.error('Error al relacionar alérgenos:', error));
+        .catch(error => console.error('Paso 6: Error al cargar alérgenos:', error));
+}
+
+// Función para manejar el inicio del arrastre
+function handleDragStart(event) {
+    event.dataTransfer.setData('text/plain', event.target.dataset.id); // Guardar el ID
+    event.target.classList.add('dragging');
+}
+
+// Función para manejar el fin del arrastre
+function handleDragEnd(event) {
+    event.target.classList.remove('dragging');
+}
+
+// Función para permitir que un área acepte el item arrastrado
+function handleDragOver(event) {
+    event.preventDefault(); // Necesario para permitir el drop
+}
+
+// Función para manejar el drop de los alérgenos
+function handleDrop(event, targetList) {
+    event.preventDefault();
+    const alergenoId = event.dataTransfer.getData('text/plain'); // Obtenemos el ID del alérgeno
+    const draggedElement = document.querySelector(`[data-id='${alergenoId}']`);
+
+    if (!draggedElement) return;
+
+    // Mover el elemento directamente a la lista objetivo
+    if (!targetList.contains(draggedElement)) {
+        targetList.appendChild(draggedElement);
     }
+}
+
+
+// Función para crear un nuevo ingrediente
+function createIngrediente(nombre, foto, precio, tipo) {
+    const formData = new FormData();
+    formData.append('nombre', nombre);
+    formData.append('foto', foto);
+    formData.append('precio', precio);
+    formData.append('tipo', tipo);
+
+    return fetch('./Api/ApiIngredientes.php', {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Ingrediente creado:', data);
+            return data; // Devuelve el ingrediente creado
+        })
+        .catch(error => console.error('Error al crear ingrediente:', error));
+}
+
+// Función para relacionar el ingrediente con los alérgenos seleccionados
+function relateIngredienteAlergenos(ingredienteId, alergenos) {
+    const formData = new FormData();
+    formData.append('ingrediente_id', ingredienteId);
+    formData.append('alergenos', JSON.stringify(alergenos)); // Convertimos el array a JSON
+
+    return fetch('./Api/ApiIngredientesAlergenos.php', {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Relación establecida:', data);
+        })
+        .catch(error => console.error('Error al relacionar alérgenos:', error));
+}
 
 // Enviar el formulario
 form.addEventListener('submit', async function (event) {
@@ -175,59 +175,25 @@ form.addEventListener('submit', async function (event) {
             body: JSON.stringify(ingredienteData)
         });
 
-        console.log('Respuesta del servidor al crear ingrediente:', response);
-
+        // Verificamos si la respuesta fue exitosa
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorMessage = await response.json(); // Obtener texto de la respuesta si hay error
+            throw new Error(`Error ${response.status}: ${errorMessage}`);
         }
 
-        const data = await response.json();
-        console.log('Ingrediente creado correctamente en la API:', data);
+        const data = await response.text();
+        console.log(data);
 
-        // Obtener el ID del ingrediente creado
-        const ingredienteId = data.idIngredientes;
-
-        console.log('ID del ingrediente creado:', ingredienteId);
-
-        // Relacionar el ingrediente con los alérgenos seleccionados
-        await relateIngredienteAlergenos(ingredienteId, selectedAlergenos);
 
         // Limpiar los campos del formulario y la lista de alérgenos seleccionados
         form.reset();
         list2.innerHTML = '';
     } catch (error) {
-        console.error('Error al crear ingrediente o relacionar alérgenos:', error);
+        console.error('Error al crear ingrediente :', error);
     }
 });
 
 
-
-
-// Función para relacionar el ingrediente con los alérgenos seleccionados
-function relateIngredienteAlergenos(ingredienteId, alergenos) {
-    const promises = alergenos.map(alergenoId => {
-        const formData = new FormData();
-        formData.append('ingrediente_id', ingredienteId);
-        formData.append('alergeno_id', alergenoId);
-
-        return fetch('./Api/ApiIngredientesAlergenos.php', {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(`Relación creada para ingrediente ${ingredienteId} con alérgeno ${alergenoId}:`, data);
-            });
-    });
-
-    // Esperar a que todas las promesas se resuelvan
-    return Promise.all(promises);
-}
 
 
 // Asignar eventos para las listas

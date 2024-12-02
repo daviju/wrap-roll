@@ -9,18 +9,72 @@ class RepositorioKebab {
 
     // CREATE
     public function create($kebab) {
-        $stm = $this->con->prepare("INSERT INTO Kebab (idKebab, nombre, foto, precio) 
-                                    VALUES (:idKebab, :nombre, :foto, :precio)");
-        
-        $stm->execute([
-            'idKebab' => $kebab->getIDKebab(),
-            'nombre' => $kebab->getNombre(),
-            'foto' => $kebab->getFoto(),
-            'precio' => $kebab->getPrecio()
-        ]);
+        $con = Database::getConection();
 
-        return $stm->rowCount() > 0;
+        try {
+            $con->beginTransaction();
+
+            $sql ="INSERT INTO Kebab (nombre, foto, precio) 
+                    VALUES (:nombre, :foto, :precio)";
+            $stmt = $con->prepare($sql);
+
+            $stmt->bindValue(':nombre', $kebab->nombre);
+            $stmt->bindValue(':foto', $kebab->foto);
+            $stmt->bindValue(':precio', $kebab->precio);
+
+            // Insertar kebab
+            if (!$stmt->execute()) {
+                throw new Exception("Error al insertar el kebab.");
+            }
+
+            // Obtener el id del kebab insertado
+            $nuevoID = $con->lastInsertId();
+
+            // Asociar alérgenos al nuevo kebab
+            $kebab->ID_Kebab = $nuevoID;
+            $resultadoIngredientes = self::insertKebabHasIngredientes($kebab);
+
+            if ($resultadoIngredientes === null) {
+                throw new Exception("Error al asociar ingredientes al kebab.");
+            }
+
+            $con->commit();
+            return $nuevoID;
+
+        } catch (Exception $e) {
+            if ($con->inTransaction()) {
+                $con->rollBack();
+            }
+
+            echo json_encode(["error" => "Error al crear el kebab: " . $e->getMessage()]);
+            return null;
+        }
     }
+
+    public static function insertKebabHasIngredientes($kebab){
+        $con = Database::getConection();
+
+        try {
+            $sql = "INSERT INTO kebabingredientes(Kebab_idKebab, Ingredientes_idIngredientes) 
+                    VALUES (:idKebab, :idIngredientes)";
+
+            $stmt = $con->prepare($sql);
+            
+            foreach ($kebab->ingredientes as $ingrediente_id) {
+                $stmt->bindValue(':idKebab', $kebab->ID_Kebab, PDO::PARAM_INT); // Asume que es un número
+                $stmt->bindValue(':idIngredientes', $ingrediente_id, PDO::PARAM_INT); // Asume que es un número
+                $stmt->execute();
+            }
+
+            return $kebab->ingredientes;
+        } catch (Exception $e) {
+            if ($con->inTransaction()) {
+                $con->rollBack();
+            }
+             // Lanzar excepción o registrar error
+            throw new Exception("Error al asociar ingredientes al kebab: " . $e->getMessage());
+        }
+    } 
 
     // FIND BY ID
     public function findById($id) {

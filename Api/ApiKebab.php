@@ -53,27 +53,51 @@ switch ($method) {
         break;
 
     case 'POST':
+        // Leer los datos JSON del cuerpo de la solicitud
+        $input = json_decode(file_get_contents("php://input"), true);
+        
         // Crear un nuevo kebab
-        if (isset($input['nombre'], $input['foto'], $input['precio'])) {
+        if (isset($input['nombre'], $input['foto'], $input['precio'], $input['selectedIngredientes'])) {
+            $nombre = $input['nombre'];
+            $foto = $input['foto'];
+            $precio = $input['precio'];
+            $selectedIngredientes = $input['selectedIngredientes'];
+            
             $kebab = new Kebab(
-                null,  // ID será auto-generado
-                $input['nombre'],
-                $input['foto'],
-                $input['precio']
-            );
+                null, // ID será auto-generado
+                $nombre, 
+                $foto, 
+                $precio, 
+                $selectedIngredientes);
 
-            $result = $repositorioKebab->create($kebab);
-            if ($result) {
-                http_response_code(201);
-                echo json_encode(["message" => "Kebab creado exitosamente."]);
+                $repositorio = new RepositorioKebab(Database::getConection());
+                $kebabId = $repositorio->create($kebab);
+
+                if ($kebabId) {
+                    // Asociar ingredientes al kebab
+                    $kebab->ID_Kebab = $kebabId;
+                    $kebab->ingredientes = $selectedIngredientes;
+
+                    $resultadoIngredientes = RepositorioKebab::insertKebabHasIngredientes($kebab);
+
+                    if ($resultadoIngredientes !== null) {
+                        http_response_code(200);
+                        echo json_encode([
+                            "success" => "Kebab creado con éxito y asociado con exito.",
+                            "kebabId" => $kebabId
+                        ]);
+                    } else {
+                        http_response_code(500);
+                        echo json_encode(["error" => "Error al asociar ingredientes al kebab."]);
+                    }
+                } else {
+                    http_response_code(505);
+                    echo json_encode(["error" => "Error al crear el kebab."]);
+                }
             } else {
-                http_response_code(500);
-                echo json_encode(["error" => "Error al crear el kebab."]);
+                http_response_code(400);
+                echo json_encode(["error" => "Datos incompletos para crear el kebab."]);
             }
-        } else {
-            http_response_code(400);
-            echo json_encode(["error" => "Datos incompletos para crear el kebab."]);
-        }
         break;
 
     case 'PUT':

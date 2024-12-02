@@ -36,6 +36,7 @@ class Ingredientes {
         return $this->ID_Ingredientes;
     }
 
+
     public function getNombre() {
         return $this->nombre;
     }
