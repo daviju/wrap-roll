@@ -1,0 +1,194 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #171a21;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    margin-top: 60px;
+    color: #fff;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centrar todo horizontalmente */
+    margin-top: 20px;
+}
+
+.new-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 400px; /* Cambiar el ancho */
+    height: 100px; /* Reducir la altura */
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #e1d8b7;
+    margin-bottom: 20px;
+    margin-top: 50px; /* Asegurar espacio entre el header y la tarjeta */
+    transition: background-color 0.3s;
+    color: #514d4e; /* Color del texto cambiado a un tono naranja */
+}
+
+.new-card:hover {
+    background-color: #c4bda3;
+    transform: scale(1.05); /* Escala la tarjeta al hacer hover */
+    transition: all 0.3s ease-in-out; /* Transición suave para el hover */
+}
+
+.product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center; /* Centrar las tarjetas */
+    width: 100%; /* Que ocupe el espacio necesario */
+    margin-top: 20px;
+}
+
+.product-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 200px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #e1d8b7;
+    text-decoration: none;
+    color: #514d4e; /* Cambiar el color del texto */
+    transition: box-shadow 0.3s, transform 0.3s ease-in-out; /* Animación en sombra y escala */
+}
+
+.product-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave en hover */
+    transform: scale(1.05); /* Añadir efecto de escala al hacer hover */
+    background-color: #c4bda3; /* Cambiar el color de fondo en hover */
+}
+
+.sidebar-image {
+    width: 100%; /* Ancho adaptable */
+    height: 120px; /* Altura más pequeña */
+    max-width: 150px; /* Limitar el tamaño máximo */
+    max-height: 120px; /* Limitar la altura máxima */
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    object-fit: cover; /* Ajustar imagen sin deformarla */
+}
+
+.product-item h3 {
+    margin: 10px 0 5px;
+    font-size: 22px; /* Nombre del ingrediente más grande */
+    font-weight: bold; /* Hacer el nombre en negrita */
+    color: #514d4e; /* Mantenido el color original */
+}
+
+/* Aumentar el tamaño de las letras en los demás elementos */
+.product-item p {
+    font-size: 16px; /* Aumentar el tamaño de fuente */
+    color: #514d4e;
+}
+
+/* Cambiar color del precio a azul */
+.product-item p:nth-of-type(1) {
+    font-size: 14px;
+    color: #af352d;
+}
+
+/* Mantener tipo igual que antes */
+.product-item p:nth-of-type(2) {
+    font-size: 14px;
+    color: #514d4e; /* Tipo no cambia */
+}
+
+/* Estilo para los botones de acción (Modificar y Borrar) */
+.botones-accion button {
+    padding: 10px 20px; /* Mayor tamaño para los botones */
+    font-size: 16px; /* Tamaño de fuente más grande */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #af352d;
+    color: #fff; /* Texto blanco */
+    transition: all 0.3s ease-in-out; /* Transición suave */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra ligera para los botones */
+}
+
+.botones-accion button:hover {
+    background-color: #8b2b25; /* Color más oscuro en hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Aumentar la sombra en hover */
+    transform: translateY(-2px); /* Efecto de "levantamiento" al pasar el ratón */
+}
+
+.botones-accion button:active {
+    background-color: #d2815a; /* Color más oscuro cuando se hace click */
+    transform: translateY(0); /* Volver al estado normal cuando se hace clic */
+}
+
+/* Estilo para los botones de "Modificar" y "Borrar" dentro de la tarjeta */
+.botones-accion {
+    display: flex;
+    justify-content: space-around; /* Asegura que los botones estén separados */
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Añadir un pequeño margen entre los botones */
+.botones-accion button + button {
+    margin-left: 10px; /* Espacio entre los botones */
+}
+
+.space-filler {
+    height: 100px; /* Ajusta la altura a lo que necesites */
+}
+
+/* Contenedor de los alérgenos */
+.alergenos-container {
+    display: flex;
+    flex-wrap: wrap; /* Permitir que se ajusten a la línea */
+    justify-content: center; /* Centrar los alérgenos dentro de la tarjeta */
+    gap: 8px; /* Espacio entre los alérgenos */
+    margin-top: 10px; /* Separación con el texto anterior */
+    padding: 5px;
+    background-color: #f9f3e3; /* Fondo suave para destacar */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+/* Estilo para los alérgenos individuales */
+.alergeno-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px; /* Tamaño más pequeño para las imágenes */
+    height: 30px;
+    border: 1px solid #ccc; /* Borde alrededor de cada alergeno */
+    border-radius: 50%; /* Hacer las imágenes circulares */
+    background-color: #fff;
+    overflow: hidden; /* Asegurar que las imágenes no sobresalgan */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
+
+/* Estilo para la imagen de los alérgenos */
+.alergeno-img {
+    width: 100%; /* Imagen ocupa el contenedor */
+    height: 100%; /* Imagen ocupa el contenedor */
+    object-fit: cover; /* Asegurar que la imagen se ajuste sin deformarse */
+}
+
+/* Texto alternativo (si no hay imagen) */
+.alergeno-item span {
+    font-size: 10px; /* Texto pequeño */
+    color: #514d4e;
+    text-align: center;
+}
+
+/* Asegurar máximo 4 tarjetas por fila en pantallas grandes */
+@media (min-width: 768px) {
+    .product-item {
+        flex: 1 0 21%; /* Hacer que cada tarjeta ocupe un 21% del ancho */
+    }
+}

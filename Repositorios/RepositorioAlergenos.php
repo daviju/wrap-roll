@@ -70,7 +70,10 @@ class RepositorioIngredientes {
     // Método para eliminar un alérgeno
     public function delete($id) {
         try {
-            $sql = "DELETE FROM Alergenos WHERE idAlergenos = :id";
+            $sql = "DELETE 
+                    FROM Alergenos 
+                    WHERE idAlergenos = :id";
+                    
             $stm = $this->con->prepare($sql);
             $stm->execute(['id' => $id]);
             return $stm->rowCount() > 0;

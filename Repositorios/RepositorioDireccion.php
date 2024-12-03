@@ -1,7 +1,7 @@
 <?php
 
 class RepositorioDireccion {
-    private $con;
+    public $con;
 
     public function __construct($con) {
         $this -> con = $con;
@@ -55,30 +55,47 @@ class RepositorioDireccion {
         return null;
     }
 
-
     // FIND ALL
-    public function findAll() {
-        $stm = $this->con->prepare("SELECT * FROM Direccion");
-        $stm->execute();
-
-        $direcciones = [];
-
-        while ($registro = $stm->fetch()) {
-            $direcciones[] = new Direccion(
-                $registro['idDireccion'],
-                $registro['nombrevia'],
-                $registro['numero'],
-                $registro['tipovia'],
-                $registro['puerta'],
-                $registro['escalera'],
-                $registro['planta'],
-                $registro['localidad'], 
-                $registro['Usuario_idUsuario']
-            );
+    public static function findAll($idUsuario) {
+        // Obtener conexión a la base de datos
+        $con = Database::getConection();
+    
+        try {
+            // Preparar la consulta con un parámetro para filtrar por ID de usuario
+            $sql = "SELECT * FROM Direccion 
+                    WHERE Usuario_idUsuario = :idUsuario";
+            $stm = $con->prepare($sql);
+    
+            // Asignar el valor del parámetro
+            $stm->bindParam(':idUsuario', $idUsuario, PDO::PARAM_INT);
+    
+            // Ejecutar la consulta
+            $stm->execute();
+    
+            $direcciones = [];
+    
+            // Recorrer los resultados y crear instancias de Direccion
+            while ($registro = $stm->fetch(PDO::FETCH_ASSOC)) {
+                $direcciones[] = new Direccion(
+                    $registro['idDireccion'],
+                    $registro['nombrevia'],
+                    $registro['numero'],
+                    $registro['tipovia'],
+                    $registro['puerta'],
+                    $registro['escalera'],
+                    $registro['planta'],
+                    $registro['localidad'],
+                    $registro['Usuario_idUsuario']
+                );
+            }
+    
+            return $direcciones;
+        } catch (PDOException $e) {
+            // Manejo de errores
+            throw new Exception("Error al obtener direcciones: " . $e->getMessage());
         }
-
-        return $direcciones;
     }
+    
 
 
     // UPDATE

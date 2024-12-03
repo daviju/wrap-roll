@@ -2,31 +2,50 @@
 header("Content-Type: application/json");
 
 require_once __DIR__ . '/../Repositorios/Database.php';
+require_once __DIR__ . '/../cargadores/Autocargador.php';
+require_once __DIR__ . '/../Repositorios/RepositorioDireccion.php';
 
 Autocargador::autocargar();
 
+
 // Crear conexión utilizando tu clase Database
 $con = Database::getConection();
-$repositorioDireccion = new RepositorioDireccion($db);
+$repositorioDireccion = new RepositorioDireccion($con);
 
+// Obtener método y ruta
 $method = $_SERVER['REQUEST_METHOD'];
-
-// Ajustar el manejo de la ruta
 $path = explode('/', trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'));
-$path = array_slice($path, 3); // Ajustar según el número de segmentos en la URL antes de 'api/direccion'
 
 switch ($method) {
     case 'GET':
-        if (isset($path[0]) && is_numeric($path[0])) {
-            // Obtener una dirección por ID
-            $direccion = $repositorioDireccion->findById($path[0]);
-            echo json_encode($direccion);
+        // Verificar si se pasa un ID de dirección en la ruta (e.g., /7)
+        if (isset($path[2]) && is_numeric($path[2])) {
+            $idDireccion = (int)$path[2]; // Capturar el ID de la dirección
+            $direccion = $repositorioDireccion->findById($idDireccion);
+    
+            if ($direccion) {
+                echo json_encode($direccion);
+            } else {
+                http_response_code(404);
+                echo json_encode(["error" => "Dirección no encontrada"]);
+            }
+        } elseif (isset($_GET['idUsuario']) && is_numeric($_GET['idUsuario'])) {
+            // Obtener todas las direcciones de un usuario
+            $idUsuario = (int)$_GET['idUsuario'];
+            $direcciones = $repositorioDireccion->findAll($idUsuario);
+    
+            if ($direcciones) {
+                echo json_encode($direcciones);
+            } else {
+                http_response_code(404);
+                echo json_encode(["error" => "No se encontraron direcciones para este usuario"]);
+            }
         } else {
-            // Obtener todas las direcciones
-            $direcciones = $repositorioDireccion->findAll();
-            echo json_encode($direcciones);
+            http_response_code(400);
+            echo json_encode(["error" => "Se requiere el ID del usuario o una dirección válida"]);
         }
         break;
+    
 
     case 'POST':
         // Crear una nueva dirección

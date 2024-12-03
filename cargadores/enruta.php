@@ -83,11 +83,19 @@ if (isset($_GET['admin'])) {
         case "crearIngredientes":
             require_once './Vistas/Admin/crearIngredientes.php';
             break;
-        
+
         case "kebab":
             require_once './Vistas/Admin/modKebab.php';
             break;
-        
+
+        case "alergenos":
+            require_once './Vistas/Admin/modAlergenos.php';
+            break;
+
+        case "crearAlergenos":
+            require_once './Vistas/Admin/crearAlergenos.php';
+            break;
+
             /*
             case "usuarios":
             require_once './Vistas/Admin/usuarios.php';
@@ -98,11 +106,9 @@ if (isset($_GET['admin'])) {
         case "pedidos":
             require_once './Vistas/Admin/pedidos.php';
             break;
-
           */
         default:
-          require_once './Vistas/Main/inisio.php';
-        break;
+            require_once './Vistas/Main/inisio.php';
+            break;
     }
 }
-?>

@@ -1,7 +1,30 @@
-// Función para inicializar los datos del usuario
+/*
+    Funciones para manejar la cuenta del usuario
+
+    Métodos:
+        inicializarCuenta(): Inicializa la cuenta del usuario y muestra su perfil, email, monedero y dirección.
+        mostrarErrorUsuario(mensaje): Muestra un mensaje de error en caso de que no se pueda cargar la información del usuario.
+        mostrarModal(): Muestra el modal para añadir dinero al monedero.
+        guardarCantidad(): Guarda la cantidad ingresada para añadir al monedero del usuario y actualiza la información en la base de datos.
+        cerrarModal(): Cierra el modal de añadir dinero al monedero.
+
+    TODO: Implementar la inicialización de la cuenta y las funcionalidades del monedero
+        * inicializarCuenta: Carga los datos del usuario (foto, nombre, email, monedero y dirección) y los muestra en la interfaz.
+        * mostrarErrorUsuario: Muestra un mensaje de error en caso de que no se pueda obtener la información del usuario.
+        * mostrarModal: Muestra el modal de añadir dinero al monedero.
+        * guardarCantidad: Permite al usuario añadir una cantidad al monedero y actualiza la información en el servidor.
+        * cerrarModal: Cierra el modal de añadir dinero al monedero.
+        
+    Detalles:
+        * El monedero es un valor numérico que se actualiza cuando el usuario añade dinero.
+        * La dirección del usuario se obtiene a través de una API externa (http://www.daviju.es/Api/ApiDireccion.php).
+        * Se utiliza la función `fetch` para obtener la información de la API y actualizar los datos del usuario.
+        * Los datos del usuario se actualizan en el servidor usando una petición `PUT` a './Api/ApiUser.php'.
+*/
+
 function inicializarCuenta() {
-    if (!userData) {
-        console.error("Usuario no disponible en la sesión.");
+    if (!userData || !userData.idUsuario) {  // Asegurándonos de que el ID del usuario esté disponible
+        console.error("Usuario no disponible en la sesión o falta ID.");
         mostrarErrorUsuario("No se pudo cargar la información del usuario.");
         return;
     }
@@ -22,9 +45,8 @@ function inicializarCuenta() {
     fotoPerfil.classList.add("foto-perfil");
 
     // Verifica si hay foto del usuario, si no se asigna una foto predeterminada
-    fotoPerfil.style.backgroundImage = userData.foto
-        ? `url('http://localhost/SERVIDOR/wrap&roll/images/${userData.foto}')`
-        : "url('./images/usuarioBase.png')";
+    const fotoUrl = userData.foto ? `http://localhost/SERVIDOR/wrap&roll/images/${userData.foto}` : "./images/usuarioBase.png";
+    fotoPerfil.style.backgroundImage = `url('${fotoUrl}')`;
 
     perfilHeader.appendChild(fotoPerfil);
 
@@ -48,13 +70,51 @@ function inicializarCuenta() {
     monedero.innerHTML = `<strong>Monedero:</strong> <span id="monedero-usuario">${userData.monedero?.toFixed(2) || "0.00"} €</span>`;
     card.appendChild(monedero);
 
-    // Dirección
-    const direccion = document.createElement("p");
-    direccion.classList.add("direccion");
-    direccion.innerHTML = `<strong>Dirección:</strong> <span id="direccion-usuario">${userData.direccion || "No especificada"}</span>`;
-    card.appendChild(direccion);
+    // Obtener la dirección del usuario desde la API
+    const userId = userData.idUsuario;  // Asegurándonos de usar el idUsuario
+    if (!userId) {
+        console.error("El ID del usuario no está definido.");
+        mostrarErrorUsuario("ID de usuario no disponible.");
+        return;
+    }
 
-    // Botones
+    fetch(`http://www.daviju.es/Api/ApiDireccion.php?idUsuario=${userId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error(data.error);
+                return;
+            }
+
+            // Si hay direcciones, tomar la primera o mostrar mensaje si no tiene direcciones
+            const direccionUsuario = data.length > 0 ? data[0] : {
+                nombrevia: "No especificada",
+                numero: "No especificado",
+                tipovia: "No especificado",
+                puerta: "No especificado",
+                escalera: "No especificado",
+                planta: "No especificado",
+                localidad: "No especificada"
+            };
+
+            // Dirección (ahora se añaden todos los campos)
+            const direccion = document.createElement("p");
+            direccion.classList.add("direccion");
+            direccion.innerHTML = `
+                <strong>Dirección:</strong>
+                <span id="direccion-usuario">
+                    ${direccionUsuario.tipovia} ${direccionUsuario.nombrevia}, ${direccionUsuario.numero} ${direccionUsuario.puerta ? ', Puerta: ' + direccionUsuario.puerta : ''} 
+                    ${direccionUsuario.escalera ? ', Escalera: ' + direccionUsuario.escalera : ''} 
+                    ${direccionUsuario.planta ? ', Planta: ' + direccionUsuario.planta : ''} 
+                    ${direccionUsuario.localidad ? ', ' + direccionUsuario.localidad : ''}
+                </span>`;
+            card.appendChild(direccion); // La dirección se añade aquí, justo después del monedero
+        })
+        .catch(error => {
+            console.error("Error al obtener la dirección:", error);
+        });
+
+    // Botones (se añaden después de la dirección)
     const botones = document.createElement("div");
     botones.classList.add("botones");
 
@@ -73,7 +133,6 @@ function inicializarCuenta() {
 
     infoCuenta.appendChild(card);
 }
-
 
 // Función para mostrar errores en el contenedor
 function mostrarErrorUsuario(mensaje) {
@@ -111,19 +170,19 @@ function guardarCantidad() {
             },
             body: JSON.stringify(usuarioActualizado)
         })
-        .then(response => response.text()) // Usamos .text() para obtener la respuesta como texto
-        .then(data => {
-            console.log(data); // Ver qué es lo que está devolviendo el servidor
-            try {
-                const responseJson = JSON.parse(data); // Intentamos parsear la respuesta
-                console.log("Respuesta de la API:", responseJson);
-            } catch (e) {
-                console.error("Error al parsear la respuesta:", e);
-            }
-        })
-        .catch(error => {
-            console.error("Error al actualizar el dinero:", error);
-        });        
+            .then(response => response.text()) // Usamos .text() para obtener la respuesta como texto
+            .then(data => {
+                console.log(data); // Ver qué es lo que está devolviendo el servidor
+                try {
+                    const responseJson = JSON.parse(data); // Intentamos parsear la respuesta
+                    console.log("Respuesta de la API:", responseJson);
+                } catch (e) {
+                    console.error("Error al parsear la respuesta:", e);
+                }
+            })
+            .catch(error => {
+                console.error("Error al actualizar el dinero:", error);
+            });
     } else {
         alert("Por favor, ingrese una cantidad válida.");
     }

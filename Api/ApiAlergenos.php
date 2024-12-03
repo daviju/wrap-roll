@@ -90,6 +90,9 @@ switch ($method) {
     case 'DELETE':
         // Eliminar un alergeno
         if (isset($input['id_alergeno'])) {
+            // Agregar log para depuración
+            error_log("Cuerpo recibido en DELETE: " . print_r($input, true));
+            
             $success = $repositorioAlergenos->delete($input['id_alergeno']);
             if ($success) {
                 http_response_code(200); // OK
@@ -109,4 +112,3 @@ switch ($method) {
         echo json_encode(["error" => "Método no soportado."]);
         break;
 }
-?>
