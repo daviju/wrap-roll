@@ -9,8 +9,9 @@ class RepositorioDireccion {
 
 
     // CREATE
-    public function create($direccion) {
-        $stm = $this->con->prepare("INSERT INTO Direccion (idDireccion, nombrevia, numero, tipovia, puerta, escalera, planta, localidad, Usuario_idUsuario) 
+    public static function create($direccion) {
+        $con = Database::getConection();
+        $stm = $con->prepare("INSERT INTO Direccion (idDireccion, nombrevia, numero, tipovia, puerta, escalera, planta, localidad, Usuario_idUsuario) 
                                     VALUES (:idDireccion, :nombrevia, :numero, :tipovia, :puerta, :escalera, :planta, :localidad, :idUsuario)");
 
         $stm->execute([
@@ -30,8 +31,10 @@ class RepositorioDireccion {
 
 
     // FIND BY ID
-    public function findById($id) {
-        $stm = $this->con->prepare("SELECT * FROM Direccion 
+    public static function findById($id) {
+        $con = Database::getConection();
+
+        $stm = $con->prepare("SELECT * FROM Direccion 
                                     WHERE idDireccion = :id");
 
         $stm->execute(['id' => $id]);
@@ -99,8 +102,10 @@ class RepositorioDireccion {
 
 
     // UPDATE
-    public function update($direccion) {
-        $stm = $this->con->prepare("UPDATE Direccion 
+    public static function update($direccion) {
+        $con = Database::getConection(); 
+
+        $stm = $con->prepare("UPDATE Direccion 
                                     SET nombrevia = :nombrevia, numero = :numero, tipovia = :tipovia, puerta = :puerta, escalera = :escalera, planta = :planta, localidad = :localidad 
                                     WHERE idDireccion = :idDireccion");
 
@@ -120,8 +125,10 @@ class RepositorioDireccion {
 
 
     // DELETE
-    public function delete($id) {
-        $stm = $this->con->prepare("DELETE FROM Direccion 
+    public static function delete($id) {
+        $con = Database::getConection();
+
+        $stm = $con->prepare("DELETE FROM Direccion 
                                     WHERE idDireccion = :id");
 
         $stm->execute(['id' => $id]);

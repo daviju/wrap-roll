@@ -8,10 +8,12 @@ class RepositorioIngredientes {
     }
 
     // Método para obtener un alérgeno por ID
-    public function findById($id) {
+    public static function findById($id) {
+        $con = Database::getConection();
+
         try {
             $sql = "SELECT * FROM Alergenos WHERE idAlergenos = :id";
-            $stm = $this->con->prepare($sql);
+            $stm = $con->prepare($sql);
             $stm->execute(['id' => $id]);
             $registro = $stm->fetch(PDO::FETCH_ASSOC);
 
@@ -32,11 +34,12 @@ class RepositorioIngredientes {
     }
 
     // Método para crear un nuevo alérgeno
-    public function create(Alergenos $alergeno) {
+    public static function create(Alergenos $alergeno) {
+        $con = Database::getConection();
         try {
             $sql = "INSERT INTO Alergenos (idAlergenos, tipo, foto)
                     VALUES (:idAlergenos, :tipo, :foto)";
-            $stm = $this->con->prepare($sql);
+            $stm = $con->prepare($sql);
 
             $stm->bindValue(':idAlergenos', $alergeno->getIDAlergenos());
             $stm->bindValue(':tipo', $alergeno->getTipo());
@@ -50,11 +53,12 @@ class RepositorioIngredientes {
     }
 
     // Método para actualizar un alérgeno
-    public function update(Alergenos $alergeno) {
+    public static function update(Alergenos $alergeno) {
+        $con = Database::getConection();
         try {
             $sql = "UPDATE Alergenos SET tipo = :tipo, foto = :foto
                     WHERE idAlergenos = :idAlergenos";
-            $stm = $this->con->prepare($sql);
+            $stm = $con->prepare($sql);
 
             $stm->bindValue(':idAlergenos', $alergeno->getIDAlergenos());
             $stm->bindValue(':tipo', $alergeno->getTipo());
@@ -68,13 +72,14 @@ class RepositorioIngredientes {
     }
 
     // Método para eliminar un alérgeno
-    public function delete($id) {
+    public static function delete($id) {
+        $con = Database::getConection();
         try {
             $sql = "DELETE 
                     FROM Alergenos 
                     WHERE idAlergenos = :id";
                     
-            $stm = $this->con->prepare($sql);
+            $stm = $con->prepare($sql);
             $stm->execute(['id' => $id]);
             return $stm->rowCount() > 0;
         } catch (PDOException $e) {
@@ -84,10 +89,11 @@ class RepositorioIngredientes {
     }
 
     // Método para obtener todos los alérgenos
-    public function findAll() {
+    public static function findAll() {
+        $con = Database::getConection();
         try {
             $sql = "SELECT * FROM Alergenos";
-            $stm = $this->con->prepare($sql);
+            $stm = $con->prepare($sql);
             $stm->execute();
             $alergenos = [];
 

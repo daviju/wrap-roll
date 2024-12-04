@@ -1,10 +1,9 @@
 <link rel="stylesheet" href="../../css/indexRegisterStyle.css">
 
 <div class="container">
-
     <div class="register-container">
         <h2>Crear Cuenta</h2>
-        <form action="#" method="post" enctype="multipart/form-data">
+        <form id="registro-form" action="#" method="post" enctype="multipart/form-data">
             <div class="form-columns">
                 <div class="column">
                     <div class="input-group">

@@ -8,10 +8,11 @@ class RepositorioIngredientes {
     }
 
     // Método para obtener un ingrediente por ID
-    public function findById($id) {
+    public static function findById($id) {
+        $con = Database::getConection();
         try {
             $sql = "SELECT * FROM Ingredientes WHERE idIngredientes = :id";
-            $stm = $this->con->prepare($sql);
+            $stm = $con->prepare($sql);
             $stm->execute(['id' => $id]);
             $registro = $stm->fetch(PDO::FETCH_ASSOC);
 
@@ -22,7 +23,7 @@ class RepositorioIngredientes {
                                  JOIN Ingredientes_Alergenos ia ON a.idAlergenos = ia.Alergenos_idAlergenos
                                  WHERE ia.Ingredientes_idIngredientes = :id";
                                  
-                $stmAlergenos = $this->con->prepare($sqlAlergenos);
+                $stmAlergenos = $con->prepare($sqlAlergenos);
                 $stmAlergenos->execute(['id' => $id]);
                 $alergenos = $stmAlergenos->fetchAll(PDO::FETCH_ASSOC);
 
@@ -44,7 +45,7 @@ class RepositorioIngredientes {
         }
     }
 
-    public function create($ingrediente) {
+    public static function create($ingrediente) {
         $con = Database::getConection();
     
         try {
@@ -112,15 +113,17 @@ class RepositorioIngredientes {
     
 
     // Método para actualizar un ingrediente y sus alérgenos
-    public function update(Ingredientes $ingrediente) {
+    public static function update(Ingredientes $ingrediente) {
+        $con = Database::getConection();
+
         try {
-            $this->con->beginTransaction();
+            $con->beginTransaction();
 
             // Actualizar el ingrediente
             $sql = "UPDATE Ingredientes 
                     SET nombre = :nombre, precio = :precio, tipo = :tipo, foto = :foto 
                     WHERE idIngredientes = :id";
-            $stm = $this->con->prepare($sql);
+            $stm = $con->prepare($sql);
 
             $stm->bindValue(':id', $ingrediente->getIDIngredientes());
             $stm->bindValue(':nombre', $ingrediente->getNombre());
@@ -129,12 +132,12 @@ class RepositorioIngredientes {
             $stm->bindValue(':foto', $ingrediente->getFoto());
 
             if (!$stm->execute()) {
-                $this->con->rollBack();
+                $con->rollBack();
                 return false;
             }
 
             // Eliminar alérgenos actuales del ingrediente
-            $this->eliminarAlergenos($ingrediente->getIDIngredientes());
+            RepositorioIngredientes::eliminarAlergenos($ingrediente->getIDIngredientes());
 
             // Reasignar los alérgenos utilizando insertIngredienteHasAlergenos
             $resultadoAlergenos = self::insertIngredienteHasAlergenos((object)[
@@ -145,15 +148,15 @@ class RepositorioIngredientes {
             ]);
 
             if ($resultadoAlergenos === null) {
-                $this->con->rollBack();
+                $con->rollBack();
                 return false;
             }
 
-            $this->con->commit();
+            $con->commit();
             return true;
 
         } catch (PDOException $e) {
-            $this->con->rollBack();
+            $con->rollBack();
             echo json_encode(["error" => "Error al actualizar el ingrediente: " . $e->getMessage()]);
             return false;
         }
@@ -161,13 +164,16 @@ class RepositorioIngredientes {
 
 
     // Método para eliminar un ingrediente y sus alérgenos
-    public function delete($id) {
+    public static function delete($id) {
+        $con = Database::getConection();
         try {
             // Eliminar los alérgenos antes de eliminar el ingrediente
-            $this->eliminarAlergenos($id);
+            RepositorioIngredientes::eliminarAlergenos($id);
 
-            $sql = "DELETE FROM Ingredientes WHERE idIngredientes = :id";
-            $stm = $this->con->prepare($sql);
+            $sql = "DELETE FROM Ingredientes 
+                    WHERE idIngredientes = :id";
+
+            $stm = $con->prepare($sql);
             $stm->execute(['id' => $id]);
             return $stm->rowCount() > 0;
         } catch (PDOException $e) {
@@ -177,10 +183,11 @@ class RepositorioIngredientes {
     }
 
     // Método para obtener todos los ingredientes
-    public function findAll() {
+    public static function findAll() {
+        $con = Database::getConection();
         try {
             $sql = "SELECT * FROM Ingredientes";
-            $stm = $this->con->prepare($sql);
+            $stm = $con->prepare($sql);
             $stm->execute();
             $ingredientes = [];
 
@@ -190,7 +197,7 @@ class RepositorioIngredientes {
                                  FROM Alergenos a
                                  JOIN Ingredientes_Alergenos ia ON a.idAlergenos = ia.Alergenos_idAlergenos
                                  WHERE ia.Ingredientes_idIngredientes = :id";
-                $stmAlergenos = $this->con->prepare($sqlAlergenos);
+                $stmAlergenos = $con->prepare($sqlAlergenos);
                 $stmAlergenos->execute(['id' => $registro['idIngredientes']]);
                 $alergenos = $stmAlergenos->fetchAll(PDO::FETCH_ASSOC);
 
@@ -212,36 +219,19 @@ class RepositorioIngredientes {
     }
 
 
-    public function eliminarAlergenos($ingredienteId)
+    public static function eliminarAlergenos($ingredienteId)
     {
+        $con = Database::getConection();
         try {
             $sql = "DELETE FROM Ingredientes_Alergenos 
                     WHERE Ingredientes_idIngredientes = :idIngredientes";
             
-            $stm = $this->con->prepare($sql);
+            $stm = $con->prepare($sql);
             $stm->execute(['ingrediente_id' => $ingredienteId]);
 
         } catch (PDOException $e) {
             echo json_encode(["error" => "Error al eliminar alérgenos asociados: " . $e->getMessage()]);
         }
     }
-
-    // Método para eliminar un ingrediente
-    public function eliminar($id)
-    {
-        try {
-            $this->eliminarAlergenos($id);
-            $sql = "DELETE FROM Ingredientes 
-                    WHERE idIngredientes = :id";
-
-            $stm = $this->con->prepare($sql);
-            return $stm->execute(['id' => $id]);
-            
-        } catch (PDOException $e) {
-            echo json_encode(["error" => "Error al eliminar el ingrediente: " . $e->getMessage()]);
-            return false;
-        }
-    }
 }
-
 ?>

@@ -1,19 +1,23 @@
 <?php
 
-class RepositorioLineaPedido {
+class RepositorioLineaPedido
+{
     private $con;
 
-    public function __construct($con) {
+    public function __construct($con)
+    {
         $this->con = $con;
     }
 
     // CREATE
-    public function create($linea) {
+    public static function create($linea)
+    {
+        $con = Database::getConection();
         $sqlaco = "INSERT INTO LineaPedido (idLineaPedido, linea_pedidos, Pedidos_idPedidos) 
                    VALUES (:idLineaPedido, :linea_pedidos, :idPedido)";
 
-        $stm = $this->con->prepare($sqlaco);
-        
+        $stm = $con->prepare($sqlaco);
+
         $stm->execute([
             'idLineaPedido' => $linea->getIDLineaPedido(),
             'linea_pedidos' => json_encode($linea->getLineaPedidos()), // Encode linea_pedidos -> JSON
@@ -24,13 +28,15 @@ class RepositorioLineaPedido {
     }
 
     // FIND BY ID
-    public function findById($id) {
+    public static function findById($id)
+    {
+        $con = Database::getConection();
         $sqlaco = "SELECT * FROM LineaPedido 
                     WHERE idLineaPedido = :id";
 
-        $stm = $this->con->prepare($sqlaco);
+        $stm = $con->prepare($sqlaco);
         $stm->execute(['id' => $id]);
-        
+
         $registro = $stm->fetch();
 
         if ($registro) {
@@ -45,14 +51,16 @@ class RepositorioLineaPedido {
     }
 
     // FIND ALL
-    public function findAll(): array {
+    public static function findAll(): array
+    {
+        $con = Database::getConection();
         $sqlaco = "SELECT * FROM LineaPedido";
 
-        $stm = $this->con->prepare($sqlaco);
+        $stm = $con->prepare($sqlaco);
         $stm->execute();
 
         $lineas = [];
-        
+
         while ($registro = $stm->fetch()) {
             $lineas[] = new LineaPedido(
                 $registro['idLineaPedido'],
@@ -60,17 +68,19 @@ class RepositorioLineaPedido {
                 $registro['Pedidos_idPedidos'],
             );
         }
-        
+
         return $lineas;
     }
 
     // UPDATE
-    public function update($linea) {
+    public static function update($linea)
+    {
+        $con = Database::getConection();
         $sqlaco = "UPDATE LineaPedido 
                     SET linea_pedidos = :linea_pedidos, Pedidos_idPedidos = :idPedido 
                    WHERE idLineaPedido = :idLineaPedido";
-        
-        $stm = $this->con->prepare($sqlaco);
+
+        $stm = $con->prepare($sqlaco);
 
         $stm->execute([
             'idLineaPedido' => $linea->getIDLineaPedido(),
@@ -82,14 +92,15 @@ class RepositorioLineaPedido {
     }
 
     // DELETE
-    public function delete($id): bool {
+    public static function delete($id): bool
+    {
+        $con = Database::getConection();
         $sqlaco = "DELETE FROM LineaPedido 
                     WHERE idLineaPedido = :id";
 
-        $stm = $this->con->prepare($sqlaco);
+        $stm = $con->prepare($sqlaco);
         $stm->execute(['id' => $id]);
 
         return $stm->rowCount() > 0;
     }
 }
-?>

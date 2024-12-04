@@ -36,10 +36,12 @@ class RepositorioUsuario
     }
 
     // Método para verificar un usuario por email y contrasena
-    public function verifyUser($email, $password)
-    {
+    public static function verifyUser($email, $password) {
+        $con = Database::getConection();
+
         try {
-            $usuario = $this->findUserByEmail($email);
+            $usuario = self::findUserByEmail($email);
+
             if ($usuario && password_verify($password, $usuario['contrasena'])) {
                 return new Usuario(
                     $usuario['idUsuario'],
@@ -66,7 +68,7 @@ class RepositorioUsuario
         try {
             $con = Database::getConection();
             $sql = "SELECT * FROM Usuario WHERE email = :email";
-            $stm = $con->prepare($sql);
+            $stm = self::$con->prepare($sql); // Preparar la consulta SQL 
             $stm->execute(['email' => $email]);
             return $stm->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
@@ -76,13 +78,16 @@ class RepositorioUsuario
     }
 
     // Método para crear un nuevo usuario
-    public function create(Usuario $usuario)
-    {
+    public static function create(Usuario $usuario) {
+        $con = Database::getConection();
+
         try {
             $carrito = json_encode($usuario->getCarrito());
+
             $sql = "INSERT INTO Usuario (nombre, foto, contrasena, monedero, email, carrito, rol, telefono)
                     VALUES (:nombre, :foto, :contrasena, :monedero, :email, :carrito, :rol, :telefono)";
-            $stm = $this->con->prepare($sql);
+
+            $stm = $con->prepare($sql);
 
             $stm->bindValue(':nombre', $usuario->getNombre());
             $stm->bindValue(':foto', $usuario->getFoto());
@@ -99,7 +104,6 @@ class RepositorioUsuario
             return false;
         }
     }
-
 
     // Método para actualizar un usuario
     public static function update(Usuario $usuario)
@@ -138,13 +142,17 @@ class RepositorioUsuario
     }
 
     // Método para eliminar un usuario
-    public function delete($id)
-    {
+    public static function delete($id) {
+        $con = Database::getConection();
+
         try {
-            $sql = "DELETE FROM Usuario WHERE idUsuario = :id";
-            $stm = $this->con->prepare($sql);
+            $sql = "DELETE FROM Usuario 
+                    WHERE idUsuario = :id";
+            
+            $stm = $con->prepare($sql);
             $stm->execute(['id' => $id]);
             return $stm->rowCount() > 0;
+
         } catch (PDOException $e) {
             echo json_encode(["error" => "Error al eliminar el usuario: " . $e->getMessage()]);
             return false;
@@ -152,12 +160,12 @@ class RepositorioUsuario
     }
 
     // Método para obtener todos los usuarios
-    public static function findAll()
-    {
+    public static function findAll() {
+        $con = Database::getConection();
 
         try {
-            $con = Database::getConection();
             $sql = "SELECT * FROM Usuario";
+            
             $stm = $con->prepare($sql);
             $stm->execute();
             $usuarios = [];

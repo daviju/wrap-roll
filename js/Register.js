@@ -1,28 +1,42 @@
+document.addEventListener("DOMContentLoaded", function () {
+    // Event listener para el formulario de registro
+    document.getElementById("registro-form").addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevenir el envío del formulario tradicional
+        registrarUsuario(); // Llamar a la función de registro
+    });
+});
+
 // Función para registrar un usuario
 function registrarUsuario() {
     // Recoger los datos del formulario
-    const nombre = document.getElementById("nombre").value;
-    const foto = document.getElementById("foto").files[0]; // Si se selecciona una imagen
-    const contrasena = document.getElementById("contrasena").value;
+    const nombre = document.getElementById("name").value;
+    const foto = document.getElementById("photo").files[0]?.name || ""; // Solo enviar el nombre de la foto
+    const contrasena = document.getElementById("password").value;
     const email = document.getElementById("email").value;
-    const telefono = document.getElementById("telefono").value;
-    const monedero = 0; // Si es nuevo, lo inicializamos en 0
-    const rol = "usuario"; // Puedes cambiar el rol según lo que prefieras
+    const telefono = document.getElementById("phone").value;
+    const monedero = document.getElementById("wallet").value;
+    const rol = "Cliente"; // Puedes cambiar el rol según lo que prefieras
     const carrito = []; // Inicializamos el carrito vacío
 
-    // Crear un FormData para enviar los datos, incluyendo la foto
+    // Crear un FormData para enviar los datos
     const formData = new FormData();
     formData.append('nombre', nombre);
-    formData.append('foto', foto);
+    formData.append('foto', foto); // Solo el nombre del archivo
     formData.append('contrasena', contrasena);
-    formData.append('email', email);
-    formData.append('telefono', telefono);
     formData.append('monedero', monedero);
+    formData.append('email', email);
+    formData.append('carrito', JSON.stringify(carrito));
     formData.append('rol', rol);
-    formData.append('carrito', JSON.stringify(carrito)); // El carrito debe enviarse como un JSON
+    formData.append('telefono', telefono);
+
+    // Mostrar en la consola lo que se enviará a la API
+    console.log("Datos enviados a la API:");
+    formData.forEach((value, key) => {
+        console.log(`${key}: ${value}`);
+    });
 
     // Hacer la solicitud POST a la API para registrar al usuario
-    fetch('http://localhost/tu_api/ApiUser.php', {
+    fetch('./Api/ApiUser.php', {
         method: 'POST',
         body: formData
     })
@@ -40,9 +54,3 @@ function registrarUsuario() {
         alert('Hubo un problema al registrar el usuario.');
     });
 }
-
-// Event listener para el formulario de registro
-document.getElementById("registro-form").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevenir el envío del formulario tradicional
-    registrarUsuario(); // Llamar a la función de registro
-});

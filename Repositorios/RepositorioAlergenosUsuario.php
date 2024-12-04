@@ -1,5 +1,8 @@
 <?php
+ // NO LO USO
 
+
+ 
 class RepositorioAlergenosUsuario {
     private $con;
 

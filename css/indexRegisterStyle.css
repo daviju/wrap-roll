@@ -1,102 +1,141 @@
-/* Reset general */
+/* Ajustes generales */
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-/* Cuerpo */
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #171a21;
+  }
+  
+  body {
+    font-family: "Poppins", sans-serif;
+    background: #171a20;
+    color: white;
+    margin: 0;
+    overflow-x: hidden; /* Evitar scroll horizontal */
+  }
+  
+  /* Contenedor principal */
+  .container {
+    margin-top: 10vh; /* Espacio para el header fijo */
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    min-height: 100vh;
-    padding: 120px 20px 60px; /* Espacio superior para header y footer */
-}
-
-/* Contenedor principal */
-.container {
-    width: 100%;
-    max-width: 500px; /* Limita el ancho del formulario */
-    background-color: #ffffff;
-    border-radius: 10px;
-    padding: 30px 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    text-align: center; /* Centra el contenido del formulario */
-}
-
-/* Título */
-.register-container h2 {
-    font-size: 24px;
+    min-height: 84vh; /* Ajusta el tamaño para cubrir el espacio disponible */
+    padding: 20px;
+  }
+  
+  /* Contenedor del formulario de registro */
+  .register-container {
+    background: #e1d8b8; /* Fondo claro para destacar el formulario */
     color: #333;
+    width: 100%;
+    max-width: 800px;
+    padding: 20px 30px;
+    border-radius: 15px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  /* Título del formulario */
+  .register-container h2 {
     margin-bottom: 20px;
-}
-
-/* Estilos de los inputs */
-.input-group {
-    margin-bottom: 15px;
+    font-size: 2rem;
+    color: #ac3729; /* Color principal */
+  }
+  
+  /* Contenedor de columnas */
+  .form-columns {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  /* Columnas del formulario */
+  .column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  /* Separador entre columnas */
+  .separator {
+    width: 2px;
+    background: #ac3729; /* Color principal */
+    opacity: 0.8;
+  }
+  
+  /* Grupo de inputs */
+  .input-group {
     text-align: left;
-}
-
-.input-group label {
+  }
+  
+  .input-group label {
     display: block;
-    font-size: 14px;
     margin-bottom: 5px;
-    color: #555;
-}
-
-.input-group input {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .input-group input {
     width: 100%;
     padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ddd;
+    font-size: 1rem;
+    border: 1px solid #ccc;
     border-radius: 5px;
-}
-
-.input-group input:focus {
     outline: none;
-    border-color: #4a90e2;
-}
-
-/* Botón */
-.btn {
+  }
+  
+  .input-group input:focus {
+    border-color: #ac3729;
+    box-shadow: 0px 0px 4px rgba(172, 55, 41, 0.5);
+  }
+  
+  /* Botón de envío */
+  .btn {
+    display: inline-block;
     width: 100%;
-    background-color: #4a90e2;
-    color: #fff;
-    padding: 12px;
-    font-size: 16px;
+    margin-top: 20px;
+    padding: 10px 0;
+    background-color: #af352d; /* Rojo Wrap & Roll */
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 20px;
-}
-
-.btn:hover {
-    background-color: #357ab7;
-}
-
-/* Links */
-.links {
-    margin-top: 20px;
-}
-
-.links a {
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .btn:hover {
+    background-color: #8b2b25; /* Rojo más oscuro */
+  }
+  
+  /* Enlace de iniciar sesión */
+  .links {
+    margin-top: 15px;
+  }
+  
+  .links a {
+    color: #333;
     text-decoration: none;
-    color: #4a90e2;
-    font-size: 14px;
-}
-
-.links a:hover {
+    font-size: 0.9rem;
+  }
+  
+  .links a:hover {
+    color: #ac3729;
     text-decoration: underline;
-}
-
-/* Responsividad */
-@media (max-width: 768px) {
-    .container {
-        padding: 20px 15px;
+  }
+  
+  /* Responsivo */
+  @media (max-width: 768px) {
+    .form-columns {
+      flex-direction: column;
+      gap: 10px;
     }
-}
+  
+    .separator {
+      display: none; /* Ocultar el separador en pantallas pequeñas */
+    }
+  }
+  

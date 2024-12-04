@@ -1,6 +1,3 @@
-console.log('Paso 1: La página ha cargado.');
-console.log('Paso 1: La página ha cargado.');
-
 // Referencias a los elementos HTML
 const form = document.getElementById('drag-drop-form');
 const list1 = document.getElementById('list1')?.querySelector('.list-items');
@@ -12,7 +9,6 @@ if (!list1 || !list2) {
     console.error('Error: No se encontraron los elementos "list1" o "list2" en el HTML.');
 }
 
-console.log('Paso 2: Ejecutando loadAlergenos...');
 loadAlergenos();
 
 // Función para cargar los alérgenos desde ApiAlergenos.php
@@ -50,6 +46,10 @@ async function loadAlergenos() {
 
 // Función para manejar el inicio del arrastre
 function handleDragStart(event) {
+    // Store the ID of the dragged element in the dataTransfer object
+    event.dataTransfer.setData('text/plain', event.target.dataset.id);
+    
+    // Add the 'dragging' class to the element being dragged
     event.dataTransfer.setData('text/plain', event.target.dataset.id); // Guardar el ID
     event.target.classList.add('dragging');
 }

@@ -8,11 +8,12 @@ class RepositorioKebabIngredientes {
     }
 
     // Método para crear una relación entre Kebab e Ingrediente
-    public function create(KebabIngredientes $kebabIngredientes) {
+    public static function create(KebabIngredientes $kebabIngredientes) {
+        $con = Database::getConection();
         try {
             $sql = "INSERT INTO KebabIngredientes (Kebab_idKebab, Ingredientes_idIngredientes) 
                     VALUES (:idKebab, :idIngrediente)";
-            $stm = $this->con->prepare($sql);
+            $stm = $con->prepare($sql);
 
             $stm->bindValue(':idKebab', $kebabIngredientes->getIDKebab());
             $stm->bindValue(':idIngrediente', $kebabIngredientes->getIDIngrediente());
@@ -25,11 +26,12 @@ class RepositorioKebabIngredientes {
     }
 
     // Método para obtener una relación por los IDs de Kebab e Ingrediente
-    public function findByIds($idKebab, $idIngrediente) {
+    public static function findByIds($idKebab, $idIngrediente) {
+        $con = Database::getConection();
         try {
             $sql = "SELECT * FROM KebabIngredientes 
                     WHERE Kebab_idKebab = :idKebab AND Ingredientes_idIngredientes = :idIngrediente";
-            $stm = $this->con->prepare($sql);
+            $stm = $con->prepare($sql);
             $stm->execute([
                 'idKebab' => $idKebab,
                 'idIngrediente' => $idIngrediente
@@ -52,12 +54,13 @@ class RepositorioKebabIngredientes {
     }
 
 
-    public function findByIdKebab($idKebab) {
+    public static function findByIdKebab($idKebab) {
+        $con = Database::getConection();
         try {
             // SQL para obtener todas las relaciones con un ID de Kebab específico
             $sql = "SELECT * FROM KebabIngredientes 
                     WHERE Kebab_idKebab = :idKebab";
-            $stm = $this->con->prepare($sql);
+            $stm = $con->prepare($sql);
             $stm->execute(['idKebab' => $idKebab]);
             $registros = $stm->fetchAll(PDO::FETCH_ASSOC);
     
@@ -84,10 +87,11 @@ class RepositorioKebabIngredientes {
     
 
     // Método para obtener todas las relaciones
-    public function findAll() {
+    public static function findAll() {
+        $con = Database::getConection();
         try {
             $sql = "SELECT * FROM KebabIngredientes";
-            $stm = $this->con->prepare($sql);
+            $stm = $con->prepare($sql);
             $stm->execute();
             $kebabsIngredientes = [];
 
@@ -106,12 +110,13 @@ class RepositorioKebabIngredientes {
     }
 
     // Método para actualizar una relación
-    public function update(KebabIngredientes $kebabIngredientes) {
+    public static function update(KebabIngredientes $kebabIngredientes) {
+        $con = Database::getConection();
         try {
             $sql = "UPDATE KebabIngredientes 
                     SET Ingredientes_idIngredientes = :idIngrediente 
                     WHERE Kebab_idKebab = :idKebab";
-            $stm = $this->con->prepare($sql);
+            $stm = $con->prepare($sql);
 
             $stm->bindValue(':idKebab', $kebabIngredientes->getIDKebab());
             $stm->bindValue(':idIngrediente', $kebabIngredientes->getIDIngrediente());
@@ -124,11 +129,12 @@ class RepositorioKebabIngredientes {
     }
 
     // Método para eliminar una relación
-    public function delete($idKebab, $idIngrediente) {
+    public static function delete($idKebab, $idIngrediente) {
+        $con = Database::getConection();
         try {
             $sql = "DELETE FROM KebabIngredientes 
                     WHERE Kebab_idKebab = :idKebab AND Ingredientes_idIngredientes = :idIngrediente";
-            $stm = $this->con->prepare($sql);
+            $stm = $con->prepare($sql);
             $stm->execute([
                 'idKebab' => $idKebab,
                 'idIngrediente' => $idIngrediente

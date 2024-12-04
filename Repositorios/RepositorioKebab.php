@@ -1,20 +1,23 @@
 <?php
 
-class RepositorioKebab {
+class RepositorioKebab
+{
     private $con;
 
-    public function __construct($con){
+    public function __construct($con)
+    {
         $this->con = $con;
     }
 
     // CREATE
-    public function create($kebab) {
+    public static function create($kebab)
+    {
         $con = Database::getConection();
 
         try {
             $con->beginTransaction();
 
-            $sql ="INSERT INTO Kebab (nombre, foto, precio) 
+            $sql = "INSERT INTO Kebab (nombre, foto, precio) 
                     VALUES (:nombre, :foto, :precio)";
             $stmt = $con->prepare($sql);
 
@@ -40,7 +43,6 @@ class RepositorioKebab {
 
             $con->commit();
             return $nuevoID;
-
         } catch (Exception $e) {
             if ($con->inTransaction()) {
                 $con->rollBack();
@@ -51,7 +53,8 @@ class RepositorioKebab {
         }
     }
 
-    public static function insertKebabHasIngredientes($kebab){
+    public static function insertKebabHasIngredientes($kebab)
+    {
         $con = Database::getConection();
 
         try {
@@ -59,7 +62,7 @@ class RepositorioKebab {
                     VALUES (:idKebab, :idIngredientes)";
 
             $stmt = $con->prepare($sql);
-            
+
             foreach ($kebab->ingredientes as $ingrediente_id) {
                 $stmt->bindValue(':idKebab', $kebab->ID_Kebab, PDO::PARAM_INT); // Asume que es un número
                 $stmt->bindValue(':idIngredientes', $ingrediente_id, PDO::PARAM_INT); // Asume que es un número
@@ -71,19 +74,22 @@ class RepositorioKebab {
             if ($con->inTransaction()) {
                 $con->rollBack();
             }
-             // Lanzar excepción o registrar error
+            // Lanzar excepción o registrar error
             throw new Exception("Error al asociar ingredientes al kebab: " . $e->getMessage());
         }
-    } 
+    }
 
     // FIND BY ID
-    public function findById($id) {
-        $stm = $this->con->prepare("SELECT * 
+    public static function findById($id)
+    {
+        $con = Database::getConection();
+
+        $stm = $con->prepare("SELECT * 
                                     FROM Kebab 
                                     WHERE idKebab = :id");
-                                    
+
         $stm->execute(['id' => $id]);
-        
+
         $kebab = null;
         $registro = $stm->fetch();
 
@@ -99,8 +105,11 @@ class RepositorioKebab {
     }
 
     // FIND ALL
-    public function findAll(): array {
-        $stm = $this->con->prepare("SELECT * FROM Kebab");
+    public static function findAll(): array
+    {
+        $con = Database::getConection();
+
+        $stm = $con->prepare("SELECT * FROM Kebab");
         $stm->execute();
 
         $kebabs = [];
@@ -117,8 +126,11 @@ class RepositorioKebab {
     }
 
     // UPDATE
-    public function update($kebab) {
-        $stm = $this->con->prepare("UPDATE Kebab SET nombre = :nombre, foto = :foto, precio = :precio WHERE idKebab = :idKebab");
+    public static function update($kebab)
+    {
+        $con = Database::getConection();
+
+        $stm = $con->prepare("UPDATE Kebab SET nombre = :nombre, foto = :foto, precio = :precio WHERE idKebab = :idKebab");
 
         $stm->execute([
             'idKebab' => $kebab->getIDKebab(),
@@ -131,13 +143,20 @@ class RepositorioKebab {
     }
 
     // DELETE
-    public function delete($id): bool {
+    public static function delete($id): bool
+    {
+        $con = Database::getConection();
+        // Crear instancia del repositorio con la conexión
+        $repositorioIngredientes = new RepositorioIngredientes($con);
+
         try {
             // Eliminar los ingredientes asociados antes de eliminar el kebab
-            $this->eliminarIngredientes($id);
+            RepositorioKebab::eliminarIngredientes($id);
 
             // Eliminar el kebab
-            $stm = $this->con->prepare("DELETE FROM Kebab WHERE idKebab = :id");
+            $stm = $con->prepare("DELETE FROM Kebab 
+                                  WHERE idKebab = :idKebab");     
+        
             $stm->execute(['id' => $id]);
 
             return $stm->rowCount() > 0;
@@ -148,14 +167,15 @@ class RepositorioKebab {
     }
 
     // Método para eliminar los ingredientes asociados a un kebab
-    private function eliminarIngredientes($kebabId) {
+    private static function eliminarIngredientes($kebabId)
+    {
+        $con = Database::getConection();
         try {
             $sql = "DELETE FROM kebabingredientes WHERE Kebab_idKebab = :Kebab_idKebab";
-            $stm = $this->con->prepare($sql);
+            $stm = $con->prepare($sql);
             $stm->execute(['Kebab_idKebab' => $kebabId]);
         } catch (PDOException $e) {
             echo json_encode(["error" => "Error al eliminar los ingredientes asociados: " . $e->getMessage()]);
         }
     }
 }
-?>

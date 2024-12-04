@@ -8,8 +8,9 @@ class RepositorioPedido {
     }
 
     // CREATE
-    public function create($pedido) {
-        $stm = $this->con->prepare("INSERT INTO Pedidos (idPedidos, estado, preciototal, fecha_hora, Usuario_idUsuario) 
+    public static function create($pedido) {
+        $con = Database::getConection();
+        $stm = $con->prepare("INSERT INTO Pedidos (idPedidos, estado, preciototal, fecha_hora, Usuario_idUsuario) 
                                     VALUES (:idPedidos, :estado, :preciototal, :fecha_hora, :idUsuario)");
         
         $stm->execute([
