@@ -31,7 +31,7 @@ switch ($method) {
     case 'POST':
         // Crear un nuevo pedido
         $input = json_decode(file_get_contents('php://input'), true);
-        $pedido = new Pedido(null, $input['estado'], $input['direccion'], $input['preciototal'], $input['fechaHora'], $input['ID_Usuario']);
+        $pedido = new Pedido(null, $input['estado'], $input['preciototal'], $input['fechaHora'], $input['ID_Usuario']);
         $success = $repositorioPedido->create($pedido);
         echo json_encode(['success' => $success]);
         break;
@@ -40,7 +40,7 @@ switch ($method) {
         if (isset($path[0]) && is_numeric($path[0])) {
             // Actualizar un pedido
             $input = json_decode(file_get_contents('php://input'), true);
-            $pedido = new Pedido($path[0], $input['estado'], $input['direccion'], $input['preciototal'], $input['fechaHora'], $input['ID_Usuario']);
+            $pedido = new Pedido($path[0], $input['estado'], $input['preciototal'], $input['fechaHora'], $input['ID_Usuario']);
             $success = $repositorioPedido->update($pedido);
             echo json_encode(['success' => $success]);
         }

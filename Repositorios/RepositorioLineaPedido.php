@@ -3,22 +3,20 @@
 class RepositorioLineaPedido {
     private $con;
 
-    public function __construct($con){
+    public function __construct($con) {
         $this->con = $con;
     }
 
     // CREATE
     public function create($linea) {
-        $sqlaco = "INSERT INTO LineaPedido (idLineaPedido, cantidad, descripcion, producto, Pedidos_idPedidos) 
-                   VALUES (:idLineaPedido, :cantidad, :descripcion, :producto, :idPedido)";
+        $sqlaco = "INSERT INTO LineaPedido (idLineaPedido, linea_pedidos, Pedidos_idPedidos) 
+                   VALUES (:idLineaPedido, :linea_pedidos, :idPedido)";
 
         $stm = $this->con->prepare($sqlaco);
         
         $stm->execute([
             'idLineaPedido' => $linea->getIDLineaPedido(),
-            'cantidad' => $linea->getCantidad(),
-            'descripcion' => $linea->getDescripcion(),
-            'producto' => json_encode($linea->getProducto()), // Encode producto -> JSON
+            'linea_pedidos' => json_encode($linea->getLineaPedidos()), // Encode linea_pedidos -> JSON
             'idPedido' => $linea->getIDPedido(),
         ]);
 
@@ -38,9 +36,7 @@ class RepositorioLineaPedido {
         if ($registro) {
             return new LineaPedido(
                 $registro['idLineaPedido'],
-                $registro['cantidad'],
-                $registro['descripcion'],
-                json_decode($registro['producto'], true), // Decode producto -> JSON
+                json_decode($registro['linea_pedidos'], true), // Decode linea_pedidos -> JSON
                 $registro['Pedidos_idPedidos']
             );
         }
@@ -60,9 +56,7 @@ class RepositorioLineaPedido {
         while ($registro = $stm->fetch()) {
             $lineas[] = new LineaPedido(
                 $registro['idLineaPedido'],
-                $registro['cantidad'],
-                $registro['descripcion'],
-                json_decode($registro['producto'], true), // Decode producto -> JSON
+                json_decode($registro['linea_pedidos'], true), // Decode linea_pedidos -> JSON
                 $registro['Pedidos_idPedidos'],
             );
         }
@@ -73,16 +67,14 @@ class RepositorioLineaPedido {
     // UPDATE
     public function update($linea) {
         $sqlaco = "UPDATE LineaPedido 
-                    SET cantidad = :cantidad, descripcion = :descripcion, producto = :producto, Pedidos_idPedidos = :idPedido 
+                    SET linea_pedidos = :linea_pedidos, Pedidos_idPedidos = :idPedido 
                    WHERE idLineaPedido = :idLineaPedido";
         
         $stm = $this->con->prepare($sqlaco);
 
         $stm->execute([
             'idLineaPedido' => $linea->getIDLineaPedido(),
-            'cantidad' => $linea->getCantidad(),
-            'descripcion' => $linea->getDescripcion(),
-            'producto' => json_encode($linea->getProducto()), // Encode producto -> JSON
+            'linea_pedidos' => json_encode($linea->getLineaPedidos()), // Encode linea_pedidos -> JSON
             'idPedido' => $linea->getIDPedido(),
         ]);
 

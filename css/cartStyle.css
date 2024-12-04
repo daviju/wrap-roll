@@ -152,6 +152,21 @@ body {
     width: 100%;
     margin-top: 20px;
   }
+
+  .order-btn:hover {
+    background-color: rgb(124, 1, 1);
+  }
+
+  .quantity-btn{
+    height: 3vh;
+    width: 3vh;
+    padding: 5px;
+    cursor: pointer;
+  }
+
+  .quantity-btn:hover {
+    background-color: rgb(124, 1, 1);
+}
   
   /* Media Queries para dispositivos pequeños */
   @media (max-width: 768px) {

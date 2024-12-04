@@ -7,7 +7,7 @@ Autocargador::autocargar();
 
 // Crear conexión utilizando tu clase Database
 $con = Database::getConection();
-$repositorioLineaPedido = new RepositorioLineaPedido($db);
+$repositorioLineaPedido = new RepositorioLineaPedido($con);
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -31,7 +31,8 @@ switch ($method) {
     case 'POST':
         // Crear una nueva línea de pedido
         $input = json_decode(file_get_contents('php://input'), true);
-        $lineaPedido = new LineaPedido(null, $input['cantidad'], $input['descripcion'], $input['producto'], $input['ID_Pedido']);
+        // Aquí solo necesitamos ID_LineaPedido, linea_pedidos (como JSON) e ID_Pedido
+        $lineaPedido = new LineaPedido(null, $input['linea_pedidos'], $input['ID_Pedido']);
         $success = $repositorioLineaPedido->create($lineaPedido);
         echo json_encode(['success' => $success]);
         break;
@@ -40,7 +41,8 @@ switch ($method) {
         if (isset($path[0]) && is_numeric($path[0])) {
             // Actualizar una línea de pedido
             $input = json_decode(file_get_contents('php://input'), true);
-            $lineaPedido = new LineaPedido($path[0], $input['cantidad'], $input['descripcion'], $input['producto'], $input['ID_Pedido']);
+            // Aquí solo necesitamos ID_LineaPedido, linea_pedidos (como JSON) e ID_Pedido
+            $lineaPedido = new LineaPedido($path[0], $input['linea_pedidos'], $input['ID_Pedido']);
             $success = $repositorioLineaPedido->update($lineaPedido);
             echo json_encode(['success' => $success]);
         }

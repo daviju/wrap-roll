@@ -1,193 +1,102 @@
-/* Reset para márgenes y rellenos */
+/* Reset general */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Cuerpo y contenedor principal */
+/* Cuerpo */
 body {
     font-family: 'Arial', sans-serif;
     background-color: #171a21;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-}
-
-/* Contenedor de todo (imagen + formulario) */
-.container {
-    position: relative;
-    display: flex;
     flex-direction: column;
-    align-items: center;
-    width: 100%; /* Ocupa todo el ancho disponible */
-    max-width: 900px; /* Ancho máximo aumentado */
-    padding: 0 20px; /* Espacio a los lados */
-    padding-top: 60px; /* Aumentamos el espacio superior */
+    min-height: 100vh;
+    padding: 120px 20px 60px; /* Espacio superior para header y footer */
 }
 
-/* Contenedor de la imagen redonda */
-.image-container {
-    width: 120px; /* Más grande para que la imagen se destaque */
-    height: 120px;
-    border-radius: 50%;
-    overflow: hidden;
-    position: absolute;
-    top: -60px; /* Centrada sobre el formulario, sin que se sobreponga */
-}
-
-/* Imagen redonda */
-.sidebar-image {
-    background-image: url('../images/Wrap&Roll.png'); /* Ruta a la imagen */
-    background-size: cover;
-    background-position: center;
+/* Contenedor principal */
+.container {
     width: 100%;
-    height: 100%;
-}
-
-/* Estilo para el formulario de registro */
-.register-container {
-    background-color: #fff;
-    padding: 40px;
+    max-width: 500px; /* Limita el ancho del formulario */
+    background-color: #ffffff;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%; /* Asegura que ocupe el 100% del contenedor */
-    max-width: 800px; /* Aumentado para hacerlo más ancho */
-    text-align: center;
-    margin-top: 1%; /* Más espacio abajo de la imagen */
+    padding: 30px 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center; /* Centra el contenido del formulario */
 }
 
-h2 {
-    margin-bottom: 20px;
-    font-size: 28px; /* Título más prominente */
+/* Título */
+.register-container h2 {
+    font-size: 24px;
     color: #333;
+    margin-bottom: 20px;
 }
 
-/* Estilo de los campos de entrada */
+/* Estilos de los inputs */
 .input-group {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     text-align: left;
 }
 
 .input-group label {
     display: block;
-    font-size: 16px; /* Más legible */
-    color: #555;
+    font-size: 14px;
     margin-bottom: 5px;
+    color: #555;
 }
 
 .input-group input {
     width: 100%;
-    padding: 12px;
+    padding: 10px;
+    font-size: 14px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    font-size: 16px;
-    color: #333;
 }
 
 .input-group input:focus {
-    border-color: #4a90e2;
     outline: none;
+    border-color: #4a90e2;
 }
 
-/* Botón de registro */
+/* Botón */
 .btn {
     width: 100%;
-    padding: 14px;
     background-color: #4a90e2;
+    color: #fff;
+    padding: 12px;
+    font-size: 16px;
     border: none;
     border-radius: 5px;
-    color: #fff;
-    font-size: 18px; /* Botón más llamativo */
     cursor: pointer;
-    margin-top: 30px; /* Para alejar el botón hacia abajo */
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
 }
 
 .btn:hover {
     background-color: #357ab7;
 }
 
-/* Estilo para los enlaces */
+/* Links */
 .links {
-    margin-top: 15px;
+    margin-top: 20px;
 }
 
 .links a {
-    font-size: 15px;
-    color: #4a90e2;
     text-decoration: none;
-    margin: 5px;
+    color: #4a90e2;
+    font-size: 14px;
 }
 
 .links a:hover {
     text-decoration: underline;
 }
 
-/* Campos tipo textarea */
-.input-group textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-    color: #333;
-    resize: vertical;
-    min-height: 70px;
-}
-
-.input-group select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-    color: #333;
-}
-
-.input-group input[type="file"] {
-    padding: 5px;
-    font-size: 14px;
-    border: none;
-}
-
-/* Contenedor de columnas */
-.form-columns {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px; /* Espacio entre columnas */
-}
-
-/* Columnas individuales */
-.column {
-    flex: 1;
-}
-
-/* Separador visual */
-.separator {
-    width: 2px;
-    background-color: #ddd;
-    margin: 0 10px;
-}
-
-/* Media queries para pantallas pequeñas */
+/* Responsividad */
 @media (max-width: 768px) {
-    /* Hacemos que el formulario y la imagen no se superpongan */
-    .image-container {
-        position: static; /* Cambiamos la posición de la imagen */
-        margin-bottom: 20px; /* Añadimos espacio debajo de la imagen */
-    }
-
-    .register-container {
-        padding: 20px; /* Menos padding en pantallas pequeñas */
-        margin-top: 50px; /* Espaciado adicional bajo la imagen */
-    }
-
-    .btn {
-        margin-top: 20px; /* Menos margen superior en pantallas pequeñas */
-    }
-
     .container {
-        padding-top: 0; /* Eliminamos el padding extra */
+        padding: 20px 15px;
     }
 }

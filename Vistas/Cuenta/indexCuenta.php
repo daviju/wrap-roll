@@ -14,7 +14,7 @@ $user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
             <div id="foto-perfil" class="foto-perfil"></div>
             <h2 id="nombre-usuario"></h2>
         </div>
-        
+
         <p id="email-usuario" class="email"></p>
         <p id="monedero-usuario" class="monedero"></p>
         <!-- Dirección (se añade dinámicamente) -->

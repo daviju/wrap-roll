@@ -18,6 +18,9 @@ $role = isset($_SESSION['user']) ? $_SESSION['user']->rol : '';
     // Pasamos la variable de rol a JavaScript
     const userRole = '<?php echo $role; ?>';
 
+    // Se crea un carrito vacío en el localStorage (puedes usar sessionStorage también)
+    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
     window.addEventListener('load', cargarKebabs());
 
     // Función para cargar los kebabs desde la API
@@ -49,7 +52,11 @@ $role = isset($_SESSION['user']) ? $_SESSION['user']->rol : '';
             // Crear estructura HTML de la tarjeta
             const sidebarImage = document.createElement('div');
             sidebarImage.classList.add('sidebar-image');
-            sidebarImage.style.backgroundImage = `url('http://localhost/SERVIDOR/wrap&roll/images/${kebab.foto}')`;
+
+            // Verifica si hay una foto del kebab, si no asigna una imagen predeterminada
+            const kebabImageUrl = kebab.foto ? `./images/${kebab.foto}` : "./images/kebabBase.png";
+            sidebarImage.style.backgroundImage = `url('${kebabImageUrl}')`;
+
 
             const kebabName = document.createElement('h3');
             kebabName.textContent = kebab.nombre;
@@ -83,6 +90,15 @@ $role = isset($_SESSION['user']) ? $_SESSION['user']->rol : '';
                     tarjeta.appendChild(kebabPrice);
                     tarjeta.appendChild(ingredientesList);
 
+                    // Mostrar el botón "Añadir al carrito" si el usuario está logueado
+                    if (userRole) {
+                        const botonCarrito = document.createElement('button');
+                        botonCarrito.classList.add('boton-carrito');
+                        botonCarrito.textContent = 'Añadir al carrito';
+                        botonCarrito.addEventListener('click', () => añadirAlCarrito(kebab));
+                        tarjeta.appendChild(botonCarrito);
+                    }
+
                     // Agregar los botones si el usuario es admin
                     if (userRole === 'Admin') {
                         const botonesContainer = document.createElement('div');
@@ -106,5 +122,56 @@ $role = isset($_SESSION['user']) ? $_SESSION['user']->rol : '';
                     contenedor.appendChild(tarjeta);
                 });
         });
+    }
+
+    // Función para añadir un kebab al carrito
+    function añadirAlCarrito(kebab) {
+        // Obtener los ingredientes asociados al kebab usando fetch
+        fetch(`./Api/ApiKebabIngredientes.php?ID_Kebab=${kebab.ID_Kebab}`)
+            .then(response => response.json())
+            .then(ingredientesData => {
+                if (Array.isArray(ingredientesData)) {
+                    // Crear el objeto de la línea de pedido con el formato que requiere tu clase LineaPedido
+                    const lineaPedido = {
+                        kebabId: kebab.ID_Kebab,
+                        nombre: kebab.nombre,
+                        precio: kebab.precio,
+                        cantidad: 1, // Cantidad predeterminada
+                        ingredientes: ingredientesData, // Aquí se usan los ingredientes obtenidos
+                        pedidosId: null // El id de Pedido es nulo por ahora
+                    };
+
+                    // Crear el JSON para el atributo linea_pedidos
+                    const lineaPedidosJSON = {
+                        cantidad: lineaPedido.cantidad,
+                        nombre: lineaPedido.nombre,
+                        precio: lineaPedido.precio,
+                        ingredientes: lineaPedido.ingredientes
+                    };
+
+                    // Crear el objeto LineaPedido
+                    const nuevaLineaPedido = {
+                        ID_LineaPedido: null, // El ID de la línea de pedido aún no lo tenemos
+                        linea_pedidos: JSON.stringify(lineaPedidosJSON), // Convertimos el objeto a JSON
+                        ID_Pedido: null // El ID del pedido aún es nulo
+                    };
+
+                    // Guardar la línea de pedido en el carrito (localStorage)
+                    carrito.push(nuevaLineaPedido);
+                    localStorage.setItem('carrito', JSON.stringify(carrito));
+
+                    console.log(nuevaLineaPedido);
+                    console.log(carrito);
+                    console.log(lineaPedido);
+                    console.log(lineaPedidosJSON);
+
+                    alert('Kebab añadido al carrito.');
+                } else {
+                    console.error("Error al cargar los ingredientes del kebab.");
+                }
+            })
+            .catch(error => {
+                console.error("Error al cargar los ingredientes:", error);
+            });
     }
 </script>

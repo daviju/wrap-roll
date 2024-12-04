@@ -35,29 +35,106 @@ async function loadAddresses(userId) {
     }
 }
 
-// Función para inicializar el crédito actual del monedero desde PHP
-function initializeUserCredit(monedero) {
-    const currentCreditElement = document.getElementById('current-credit');
-    if (currentCreditElement) {
-        currentCreditElement.textContent = `${monedero.toFixed(2)}€`;
-    }
-}
+// Función para cargar el carrito desde el localStorage
+function cargarCarrito() {
+    const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    const cartItemsContainer = document.getElementById('cart-items');
+    let totalPrice = 0;
 
-// Función para calcular el crédito después de tramitar
-function updateRemainingCredit(totalPrice, currentCredit) {
+    // Limpiar la tabla antes de mostrar los nuevos items
+    cartItemsContainer.innerHTML = '';
+
+    carrito.forEach(item => {
+        const lineaPedido = JSON.parse(item.linea_pedidos); // Obtener el objeto JSON
+
+        // Crear una fila para cada item del carrito
+        const fila = document.createElement('tr');
+
+        // Celda 1: Cantidad con botones +
+        const cantidadCelda = document.createElement('td');
+
+        // Crear los botones de cantidad
+        const btnMinus = document.createElement('button');
+        btnMinus.textContent = '-';
+        btnMinus.classList.add('quantity-btn');
+        btnMinus.addEventListener('click', () => {
+            // Disminuir cantidad
+            if (lineaPedido.cantidad > 1) {
+                lineaPedido.cantidad--;
+                actualizarCarrito();
+            }
+        });
+
+        const btnPlus = document.createElement('button');
+        btnPlus.textContent = '+';
+        btnPlus.classList.add('quantity-btn');
+        btnPlus.addEventListener('click', () => {
+            // Aumentar cantidad
+            lineaPedido.cantidad++;
+            actualizarCarrito();
+        });
+
+        const cantidadText = document.createElement('span');
+        cantidadText.textContent = lineaPedido.cantidad;
+
+        // Añadir los botones y el texto de cantidad a la celda
+        cantidadCelda.appendChild(btnMinus);
+        cantidadCelda.appendChild(cantidadText);
+        cantidadCelda.appendChild(btnPlus);
+        fila.appendChild(cantidadCelda);
+
+        // Celda 2: Kebab (sin precio)
+        const kebabCelda = document.createElement('td');
+        kebabCelda.textContent = `${lineaPedido.nombre} (${lineaPedido.ingredientes.join(', ')})`;
+        fila.appendChild(kebabCelda);
+
+        // Celda 3: Precio
+        const precioCelda = document.createElement('td');
+        const precioTotal = lineaPedido.cantidad * lineaPedido.precio;
+        precioCelda.textContent = `${precioTotal.toFixed(2)}€`;
+        fila.appendChild(precioCelda);
+
+        // Agregar la fila a la tabla
+        cartItemsContainer.appendChild(fila);
+
+        // Sumar el precio total para calcular el total
+        totalPrice += precioTotal;
+    });
+
+    // Actualizar el precio total
+    document.getElementById('total-price').textContent = `${totalPrice.toFixed(2)}€`;
+
+    // Calcular el crédito restante después de tramitar
+    const currentCredit = parseFloat(document.getElementById('current-credit').textContent.replace('€', ''));
     const remainingCredit = currentCredit - totalPrice;
+
+    // Mostrar el crédito restante
     document.getElementById('remaining-credit').textContent = `${remainingCredit.toFixed(2)}€`;
 }
+
+// Función para actualizar el carrito en el localStorage
+function actualizarCarrito() {
+    const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+    cargarCarrito(); // Volver a cargar el carrito actualizado
+}
+
 
 // Función para tramitar el pedido
 document.getElementById('order-btn').addEventListener('click', async () => {
     const totalPrice = parseFloat(document.getElementById('total-price').textContent.replace('€', ''));
     const currentCredit = parseFloat(document.getElementById('current-credit').textContent.replace('€', ''));
 
+    // Verificar si el usuario tiene suficiente crédito
     if (currentCredit >= totalPrice) {
-        updateRemainingCredit(totalPrice, currentCredit);
+        // Si tiene suficiente crédito, actualizar el crédito restante
+        const remainingCredit = currentCredit - totalPrice;
+        document.getElementById('remaining-credit').textContent = `${remainingCredit.toFixed(2)}€`;
+
+        // Mostrar mensaje de éxito
         alert("Pedido procesado correctamente");
     } else {
+        // Si no tiene suficiente crédito, mostrar un mensaje de error
         alert("No tienes suficiente crédito para tramitar el pedido.");
     }
 });
@@ -68,12 +145,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const userId = cartContainer.getAttribute('data-user-id');
 
     if (userId) {
-        // Inicializar el crédito desde la variable PHP
-        initializeUserCredit(userMonedero);
-
         // Cargar las direcciones desde la API
         await loadAddresses(userId);
     } else {
         console.error('No se pudo obtener el ID del usuario.');
     }
+
+    // Cargar el carrito desde el localStorage
+    cargarCarrito();
 });

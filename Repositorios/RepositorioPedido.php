@@ -9,13 +9,12 @@ class RepositorioPedido {
 
     // CREATE
     public function create($pedido) {
-        $stm = $this->con->prepare("INSERT INTO Pedidos (idPedidos, estado, preciototal, fecha_hora, direccion, Usuario_idUsuario) 
-                                    VALUES (:idPedidos, :estado, :preciototal, :fecha_hora, :direccion, :idUsuario)");
+        $stm = $this->con->prepare("INSERT INTO Pedidos (idPedidos, estado, preciototal, fecha_hora, Usuario_idUsuario) 
+                                    VALUES (:idPedidos, :estado, :preciototal, :fecha_hora, :idUsuario)");
         
         $stm->execute([
             'idPedidos' => $pedido->getIDPedido(),
             'estado' => $pedido->getEstado(),
-            'direccion' => $pedido->getDireccion(),
             'preciototal' => $pedido->getPrecioTotal(),
             'fecha_hora' => $pedido->getFechaHora(),
             'idUsuario' => $pedido->getIDUsuario()
@@ -25,7 +24,7 @@ class RepositorioPedido {
     }
 
     // FIND BY ID
-    public function findById($id){
+    public function findById($id) {
         $stm = $this->con->prepare("SELECT * FROM Pedidos 
                                     WHERE idPedidos = :id");
 
@@ -37,7 +36,6 @@ class RepositorioPedido {
             return new Pedido(
                 $registro['idPedidos'],
                 $registro['estado'],
-                $registro['direccion'],
                 $registro['preciototal'],
                 $registro['fecha_hora'],
                 $registro['Usuario_idUsuario']
@@ -58,7 +56,6 @@ class RepositorioPedido {
             $pedidos[] = new Pedido(
                 $registro['idPedidos'],
                 $registro['estado'],
-                $registro['direccion'],
                 $registro['preciototal'],
                 $registro['fecha_hora'],
                 $registro['Usuario_idUsuario']
@@ -70,13 +67,12 @@ class RepositorioPedido {
 
     // UPDATE
     public function update($pedido) {
-        $stm = $this->con->prepare("UPDATE Pedidos SET estado = :estado, preciototal = :preciototal, direccion = :direccion, Usuario_idUsuario = :idUsuario 
+        $stm = $this->con->prepare("UPDATE Pedidos SET estado = :estado, preciototal = :preciototal, Usuario_idUsuario = :idUsuario 
                                     WHERE idPedidos = :idPedidos");
 
         $stm->execute([
             'idPedidos' => $pedido->getIDPedido(),
             'estado' => $pedido->getEstado(),
-            'direccion' => $pedido->getDireccion(),
             'preciototal' => $pedido->getPrecioTotal(),
             'idUsuario' => $pedido->getIDUsuario()
         ]);
@@ -94,3 +90,4 @@ class RepositorioPedido {
         return $stm->rowCount() > 0;
     }
 }
+?>

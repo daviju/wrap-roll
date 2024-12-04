@@ -45,7 +45,7 @@ function inicializarCuenta() {
     fotoPerfil.classList.add("foto-perfil");
 
     // Verifica si hay foto del usuario, si no se asigna una foto predeterminada
-    const fotoUrl = userData.foto ? `http://localhost/SERVIDOR/wrap&roll/images/${userData.foto}` : "./images/usuarioBase.png";
+    const fotoUrl = userData.foto ? `./images/${userData.foto}` : "./images/usuarioBase.png";
     fotoPerfil.style.backgroundImage = `url('${fotoUrl}')`;
 
     perfilHeader.appendChild(fotoPerfil);
@@ -108,7 +108,7 @@ function inicializarCuenta() {
                     ${direccionUsuario.planta ? ', Planta: ' + direccionUsuario.planta : ''} 
                     ${direccionUsuario.localidad ? ', ' + direccionUsuario.localidad : ''}
                 </span>`;
-            card.appendChild(direccion); // La dirección se añade aquí, justo después del monedero
+            card.insertBefore(direccion, botones); // Aquí lo insertamos antes de los botones
         })
         .catch(error => {
             console.error("Error al obtener la dirección:", error);

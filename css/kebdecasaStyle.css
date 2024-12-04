@@ -129,7 +129,39 @@ h2 {
     transform: scale(1.1); /* Aumenta el tamaño ligeramente al pasar el ratón */
 }
 
-/* Media queries para pantallas pequeñas */
+/* Estilo para el botón "Añadir al carrito" */
+.boton-carrito {
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    background-color: #ff9f00; /* Color naranja brillante */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 15px;
+    width: 100%; /* Ocupa todo el ancho disponible */
+    text-align: center;
+    box-sizing: border-box;
+}
+
+/* Efecto hover para el botón "Añadir al carrito" */
+.boton-carrito:hover {
+    background-color: #e68900; /* Naranja más oscuro al pasar el ratón */
+    transform: scale(1.05); /* Agranda ligeramente el botón */
+}
+
+/* Estilo para el botón "Añadir al carrito" cuando el carrito tiene elementos */
+.boton-carrito:not(:disabled) {
+    background-color: #28a745; /* Verde cuando el botón está activo */
+}
+
+.boton-carrito:disabled {
+    background-color: #ccc; /* Color gris para el estado deshabilitado */
+    cursor: not-allowed;
+}
+
+/* Media query para pantallas pequeñas */
 @media (max-width: 768px) {
     .product-grid {
         grid-template-columns: repeat(2, 1fr); /* 2 columnas para pantallas pequeñas */
@@ -145,5 +177,10 @@ h2 {
 
     .sidebar-image {
         height: 180px;
+    }
+
+    .boton-carrito {
+        font-size: 1rem; /* Reduce el tamaño del texto en pantallas pequeñas */
+        padding: 10px 20px;
     }
 }
