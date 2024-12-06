@@ -1,5 +1,8 @@
 <?php
-// Suponiendo que tienes una sesión con el rol del usuario, pasamos el valor a JS
+// Verifica si el usuario esta en la sesion
+$userData = isset($_SESSION['user']) ? $_SESSION['user'] : null;
+
+// El valor de la sesión con el rol del usuario lo pasasmos al JS
 $role = isset($_SESSION['user']) ? $_SESSION['user']->rol : '';
 ?>
 
@@ -17,6 +20,9 @@ $role = isset($_SESSION['user']) ? $_SESSION['user']->rol : '';
 <script>
     // Pasamos la variable de rol a JavaScript
     const userRole = '<?php echo $role; ?>';
+
+    // Pasamos los datos del usuario a JavaScript si está logueado
+    const userData = <?php echo json_encode($userData); ?>;
 
     // Se crea un carrito vacío en el localStorage (puedes usar sessionStorage también)
     let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
@@ -126,11 +132,14 @@ $role = isset($_SESSION['user']) ? $_SESSION['user']->rol : '';
 
     // Función para añadir un kebab al carrito
     function añadirAlCarrito(kebab) {
+
         // Obtener los ingredientes asociados al kebab usando fetch
         fetch(`./Api/ApiKebabIngredientes.php?ID_Kebab=${kebab.ID_Kebab}`)
             .then(response => response.json())
             .then(ingredientesData => {
+
                 if (Array.isArray(ingredientesData)) {
+
                     // Crear el objeto de la línea de pedido con el formato que requiere tu clase LineaPedido
                     const lineaPedido = {
                         kebabId: kebab.ID_Kebab,
@@ -152,20 +161,55 @@ $role = isset($_SESSION['user']) ? $_SESSION['user']->rol : '';
                     // Crear el objeto LineaPedido
                     const nuevaLineaPedido = {
                         ID_LineaPedido: null, // El ID de la línea de pedido aún no lo tenemos
-                        linea_pedidos: JSON.stringify(lineaPedidosJSON), // Convertimos el objeto a JSON
+                        linea_pedidos: lineaPedidosJSON, // Convertimos el objeto a JSON
                         ID_Pedido: null // El ID del pedido aún es nulo
                     };
 
-                    // Guardar la línea de pedido en el carrito (localStorage)
-                    carrito.push(nuevaLineaPedido);
-                    localStorage.setItem('carrito', JSON.stringify(carrito));
-
                     console.log(nuevaLineaPedido);
-                    console.log(carrito);
-                    console.log(lineaPedido);
-                    console.log(lineaPedidosJSON);
 
-                    alert('Kebab añadido al carrito.');
+                    // Si el usuario está logueado, actualizar el carrito en la sesión y en el servidor
+                    if (userData && userData.idUsuario) {
+
+                        // Obtener el carrito actual desde los datos del usuario
+                        let carrito = Array.isArray(userData.carrito) ? userData.carrito : []; // Si no es un array, inicializar como un array vacío
+
+                        // Añadir la nueva línea de pedido al carrito
+                        carrito.push(nuevaLineaPedido);
+
+                        // Crear el objeto con los datos del usuario y el carrito actualizado
+                        const usuarioActualizado = {
+                            ...userData, // Copia todos los datos del usuario original
+                            carrito: carrito // Actualiza solo el carrito
+                        };
+
+                        console.log(usuarioActualizado);
+                        console.log("ID de Usuario:", userData.idUsuario); // Verifica que el ID del usuario está presente
+                        
+                        // Enviar la actualización del carrito al servidor usando un PUT
+                        fetch('./Api/ApiUser.php', {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(usuarioActualizado)
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    console.log("Carrito actualizado en el servidor.");
+                                } else {
+                                    console.error("Error al actualizar el carrito en el servidor.");
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Error al enviar el carrito al servidor:", error);
+                            });
+
+                        alert('Kebab añadido al carrito.');
+                    } else {
+                        console.error("Usuario no logueado o datos de usuario no disponibles.");
+                    }
+
                 } else {
                     console.error("Error al cargar los ingredientes del kebab.");
                 }

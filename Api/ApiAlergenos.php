@@ -1,12 +1,41 @@
 <?php
-header("Content-Type: application/json");
-
 /*
-    Get -> funcionan los dos
-    Post -> funciona
-    Put -> funciona
-    Delete -> funciona
+    API para gestionar alergenos
+
+    Métodos:
+        GET: Obtiene uno o todos los alergenos.
+        POST: Crea un nuevo alergeno.
+        PUT: Actualiza un alergeno existente.
+        DELETE: Elimina un alergeno.
+
+    Detalles:
+        * El script maneja las operaciones CRUD para alergenos en una base de datos utilizando el repositorio `RepositorioAlergenos`.
+        * La conexión a la base de datos se establece mediante la clase `Database`.
+        * La respuesta se envía en formato JSON con el código de estado HTTP correspondiente.
+        
+    Manejo de errores:
+        * Si el JSON recibido en las solicitudes POST, PUT o DELETE es malformado, se responde con un error 400 (Bad Request).
+        * Si el método HTTP no es soportado, se responde con un error 405 (Method Not Allowed).
+        * En cada operación, si los datos requeridos no se proporcionan o son incorrectos, se responde con un error 400.
+        * En los casos de éxito, se responde con el código de estado correspondiente (200, 201) y un mensaje de éxito en formato JSON.
+
+    Funciones de cada método HTTP:
+        * GET: 
+            - Si se proporciona un `id_alergeno`, devuelve el alergeno correspondiente.
+            - Si no se proporciona `id_alergeno`, devuelve todos los alergenos.
+        * POST:
+            - Recibe los datos necesarios (`tipo` y `foto`) para crear un nuevo alergeno y lo almacena en la base de datos.
+        * PUT:
+            - Recibe un `id_alergeno`, `tipo` y `foto` para actualizar un alergeno existente.
+        * DELETE:
+            - Recibe un `id_alergeno` para eliminar el alergeno correspondiente.
+
+    TODO: Implementar la validación de los datos de entrada y mejorar el manejo de excepciones.
+        * Mejorar el manejo de errores para situaciones como problemas con la base de datos o validación de los datos.
+        * Asegurar que los datos recibidos en las solicitudes sean correctos antes de realizar las operaciones en la base de datos.
 */
+
+header("Content-Type: application/json");
 
 require_once __DIR__ . '/../Clases/Alergenos.php';
 require_once __DIR__ . '/../Repositorios/RepositorioAlergenos.php';

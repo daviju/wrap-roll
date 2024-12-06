@@ -1,4 +1,40 @@
 <?php
+/*
+    API para gestionar ingredientes
+
+    Métodos:
+        GET: Obtiene un ingrediente específico por su ID o todos los ingredientes.
+        POST: Crea un nuevo ingrediente.
+        PUT: Actualiza un ingrediente existente.
+        DELETE: Elimina un ingrediente por su ID.
+
+    Detalles:
+        * La conexión a la base de datos se realiza utilizando la clase `Database`.
+        * La información de los ingredientes se gestiona a través de la clase `RepositorioIngredientes`.
+        * La respuesta se envía en formato JSON con el código de estado HTTP correspondiente.
+
+    Manejo de errores:
+        * Si el método HTTP no es soportado, se responde con un error 405 (Method Not Allowed).
+        * Si se reciben datos malformados en una solicitud `POST` o `PUT`, se puede devolver un error 400 (Bad Request).
+        * En cada operación, si los datos requeridos no se proporcionan o son incorrectos, se responde con un error adecuado.
+
+    Funciones de cada método HTTP:
+        * GET:
+            - Si se proporciona un `ID_Ingredientes` en la ruta, devuelve el ingrediente específico correspondiente.
+            - Si no se proporciona un `ID_Ingredientes`, devuelve todos los ingredientes.
+            - Si no se proporcionan parámetros válidos, responde con un error 400.
+        * POST:
+            - Crea un nuevo ingrediente con los datos `nombre`, `precio`, `tipo`, `foto`, y `selectedAlergenos`.
+        * PUT:
+            - Actualiza un ingrediente existente utilizando su `ID_Ingredientes`.
+            - Los datos necesarios son los detalles del ingrediente a actualizar, incluyendo la posible actualización de la foto.
+        * DELETE:
+            - Elimina un ingrediente utilizando su `ID_Ingredientes`.
+
+    TODO: Mejorar la validación de los datos de entrada y manejo de errores.
+        * Implementar validaciones más detalladas en los métodos `POST`, `PUT` y `DELETE` para asegurar que los datos sean correctos antes de realizar las operaciones en la base de datos.
+        * Asegurar la correcta gestión de excepciones y posibles fallos en la base de datos.
+*/
 
 header("Content-Type: application/json");
 

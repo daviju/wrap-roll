@@ -36,7 +36,8 @@ class RepositorioUsuario
     }
 
     // Método para verificar un usuario por email y contrasena
-    public static function verifyUser($email, $password) {
+    public static function verifyUser($email, $password)
+    {
         $con = Database::getConection();
 
         try {
@@ -78,7 +79,8 @@ class RepositorioUsuario
     }
 
     // Método para crear un nuevo usuario
-    public static function create(Usuario $usuario) {
+    public static function create(Usuario $usuario)
+    {
         $con = Database::getConection();
 
         try {
@@ -113,15 +115,16 @@ class RepositorioUsuario
 
             $carrito = json_encode($usuario->getCarrito() ?? []);
             $sql = "UPDATE Usuario 
-                    SET nombre = :nombre, 
-                        foto = :foto, 
+                    SET nombre = :nombre,
+                        foto = :foto,
                         contrasena = :contrasena,
-                        monedero = :monedero, 
-                        email = :email, 
-                        carrito = :carrito, 
+                        monedero = :monedero,
+                        email = :email,
+                        carrito = :carrito,
                         rol = :rol,
                         telefono = :telefono
-                    WHERE idUsuario = :idUsuario";
+                    WHERE idUsuario = :idUsuario;";
+
             $stm = $con->prepare($sql);
 
             $stm->bindValue(':idUsuario', $usuario->getIDUsuario());
@@ -142,17 +145,17 @@ class RepositorioUsuario
     }
 
     // Método para eliminar un usuario
-    public static function delete($id) {
+    public static function delete($id)
+    {
         $con = Database::getConection();
 
         try {
             $sql = "DELETE FROM Usuario 
                     WHERE idUsuario = :id";
-            
+
             $stm = $con->prepare($sql);
             $stm->execute(['id' => $id]);
             return $stm->rowCount() > 0;
-
         } catch (PDOException $e) {
             echo json_encode(["error" => "Error al eliminar el usuario: " . $e->getMessage()]);
             return false;
@@ -160,12 +163,13 @@ class RepositorioUsuario
     }
 
     // Método para obtener todos los usuarios
-    public static function findAll() {
+    public static function findAll()
+    {
         $con = Database::getConection();
 
         try {
             $sql = "SELECT * FROM Usuario";
-            
+
             $stm = $con->prepare($sql);
             $stm->execute();
             $usuarios = [];

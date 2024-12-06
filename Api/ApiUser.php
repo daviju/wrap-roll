@@ -26,16 +26,16 @@ if ($method != 'GET' && json_last_error() !== JSON_ERROR_NONE) {
 switch ($method) {
     case 'GET':
         // Verificar si es una solicitud de login
-        if (isset($_GET['email'], $_GET['password'])) {
-            $email = $_GET['email'];
-            $password = $_GET['password'];
+        if (isset($_GET['email'], $_GET['password'])) { // Verificar si se envían los parámetros
+            $email = $_GET['email']; // Obtener el email
+            $password = $_GET['password']; // Obtener la contraseña
 
             // Lógica para verificar usuario en la base de datos
-            $usuario = $repositorioUsuario->verifyUser($email, $password);
+            $usuario = $repositorioUsuario->verifyUser($email, $password); // Verificar usuario
 
-            if ($usuario) {
+            if ($usuario) { // Si el usuario existe
                 // Usuario encontrado y autenticado
-                http_response_code(200);
+                http_response_code(200); // OK
                 echo json_encode([
                     "success" => true,
                     "message" => "Inicio de sesión exitoso.",
@@ -49,9 +49,9 @@ switch ($method) {
                     "error" => "Correo electrónico o contraseña incorrectos."
                 ]);
             }
-        } elseif (isset($_GET['idUsuario'])) {
+        } elseif (isset($_GET['idUsuario'])) { // Verificar si es una solicitud de obtener usuario
             // Obtener un usuario por ID
-            $usuario = $repositorioUsuario->findById($_GET['idUsuario']);
+            $usuario = $repositorioUsuario->findById($_GET['idUsuario']); // Obtener usuario por ID
             if ($usuario) {
                 http_response_code(200);
                 echo json_encode($usuario);
@@ -59,15 +59,18 @@ switch ($method) {
                 http_response_code(404);
                 echo json_encode(["error" => "Usuario no encontrado."]);
             }
-        } else {
+        } else { // Solicitud GET sin parámetros
             // Obtener todos los usuarios
-            $usuarios = $repositorioUsuario->findAll();
+            $usuarios = $repositorioUsuario->findAll(); // Obtener todos los usuarios
             http_response_code(200);
             echo json_encode($usuarios);
         }
         break;
 
     case 'POST':
+        // Depuración: Ver los datos que llegan a la API
+        error_log("Datos recibidos en POST: " . print_r($input, true));  // Imprimir los datos en el log del servidor
+
         // Crear un nuevo usuario
         if (isset($input['nombre'], $input['foto'], $input['contrasena'], $input['monedero'], $input['email'], $input['carrito'], $input['rol'], $input['telefono'])) {
             $usuario = new Usuario(
@@ -77,12 +80,12 @@ switch ($method) {
                 $input['contrasena'],
                 $input['monedero'],
                 $input['email'],
-                $input['carrito'],
-                $input['rol'] ?? "Cliente",
+                $input['carrito'] ?? [], // Carrito por defecto si no se proporciona
+                $input['rol'] ?? "Cliente", // Rol por defecto si no se proporciona
                 $input['telefono']
             );
 
-            $success = $repositorioUsuario->create($usuario);
+            $success = $repositorioUsuario->create($usuario); // Crear usuario en la base de datos
             if ($success) {
                 http_response_code(201); // Created
                 echo json_encode(["success" => true, "message" => "Usuario creado correctamente."]);
@@ -97,6 +100,9 @@ switch ($method) {
         break;
 
     case 'PUT':
+        // Depuración: Ver los datos que llegan a la API
+        error_log("Datos recibidos en PUT: " . print_r($input, true));  // Imprimir los datos en el log del servidor
+
         // Verificar que se haya pasado el ID
         if (isset($input['idUsuario'], $input['nombre'], $input['foto'], $input['contrasena'], $input['monedero'], $input['email'], $input['carrito'], $input['rol'], $input['telefono'])) {
             $usuario = new Usuario(
@@ -106,12 +112,12 @@ switch ($method) {
                 $input['contrasena'],
                 $input['monedero'],
                 $input['email'],
-                $input['carrito'],
-                $input['rol'] ?? "Cliente",
+                $input['carrito'] ?? [], // Carrito por defecto si no se proporciona
+                $input['rol'] ?? "Cliente", // Rol por defecto si no se proporciona
                 $input['telefono']
             );
 
-            $success = $repositorioUsuario->update($usuario);
+            $success = $repositorioUsuario->update($usuario); // Actualizar usuario en la base de datos
             if ($success) {
                 http_response_code(200); // OK
                 echo json_encode(["success" => true, "message" => "Usuario actualizado correctamente."]);
@@ -128,9 +134,11 @@ switch ($method) {
 
     case 'DELETE':
         // Eliminar un usuario por ID
-        if (isset($_GET['idUsuario']) && !empty($_GET['idUsuario'])) {
-            $idUsuario = $_GET['idUsuario'];
-            $success = $repositorioUsuario->delete($idUsuario);
+        if (isset($_GET['idUsuario']) && !empty($_GET['idUsuario'])) { // Verificar que se haya pasado el ID
+
+            $idUsuario = $_GET['idUsuario']; // Obtener el ID del usuario a eliminar
+            $success = $repositorioUsuario->delete($idUsuario); // Eliminar el usuario de la base de datos
+
             if ($success) {
                 http_response_code(200); // OK
                 echo json_encode(["success" => true, "message" => "Usuario eliminado correctamente."]);
@@ -149,4 +157,3 @@ switch ($method) {
         echo json_encode(["error" => "Método no soportado."]);
         break;
 }
-?>

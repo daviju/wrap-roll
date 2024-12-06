@@ -78,7 +78,7 @@ function inicializarCuenta() {
         return;
     }
 
-    fetch(`http://www.daviju.es/Api/ApiDireccion.php?idUsuario=${userId}`)
+    fetch(`./Api/ApiDireccion.php?idUsuario=${userId}`)
         .then(response => response.json())
         .then(data => {
             if (data.error) {

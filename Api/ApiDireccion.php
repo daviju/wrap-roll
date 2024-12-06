@@ -1,4 +1,42 @@
 <?php
+/*
+    API para gestionar direcciones de usuarios
+
+    Métodos:
+        GET: Obtiene una dirección específica o todas las direcciones de un usuario.
+        POST: Crea una nueva dirección para un usuario.
+        PUT: Actualiza una dirección existente.
+        DELETE: Elimina una dirección.
+
+    Detalles:
+        * La conexión a la base de datos se realiza utilizando la clase `Database`.
+        * La información de las direcciones es gestionada a través de la clase `RepositorioDireccion`.
+        * La respuesta se envía en formato JSON con el código de estado HTTP correspondiente.
+
+    Manejo de errores:
+        * Si el método HTTP no es soportado, se responde con un error 405 (Method Not Allowed).
+        * Si se reciben datos malformados en una solicitud `POST` o `PUT`, se puede devolver un error 400 (Bad Request).
+        * En cada operación, si los datos requeridos no se proporcionan o son incorrectos, se responde con un error adecuado.
+
+    Funciones de cada método HTTP:
+        * GET:
+            - Si se proporciona un `idDireccion` en la ruta, devuelve la dirección específica correspondiente.
+            - Si se proporciona un `idUsuario` en los parámetros de la URL, devuelve todas las direcciones asociadas a ese usuario.
+            - Si no se proporcionan parámetros válidos, responde con un error 400.
+        * POST:
+            - Crea una nueva dirección para el usuario.
+            - Los datos necesarios son `nombrevia`, `numero`, `tipovia`, `puerta`, `escalera`, `planta`, `localidad`, y `ID_Usuario`.
+        * PUT:
+            - Actualiza una dirección existente utilizando su `idDireccion` en la URL.
+            - Los datos necesarios son los detalles de la dirección a actualizar.
+        * DELETE:
+            - Elimina una dirección utilizando su `idDireccion` en la URL.
+
+    TODO: Mejorar la validación de los datos de entrada y manejo de errores.
+        * Implementar validaciones más detalladas en los métodos `POST`, `PUT` y `DELETE` para asegurar que los datos sean correctos antes de realizar las operaciones en la base de datos.
+        * Asegurar la correcta gestión de excepciones y posibles fallos en la base de datos.
+*/
+
 header("Content-Type: application/json");
 
 require_once __DIR__ . '/../Repositorios/Database.php';
