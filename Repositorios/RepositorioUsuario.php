@@ -5,11 +5,12 @@ class RepositorioUsuario
     public static $con;
 
     // Método para obtener un usuario por ID
-    public function findById($id)
+    public static function findById($id)
     {
+        $con = Database::getConection();
         try {
             $sql = "SELECT * FROM Usuario WHERE idUsuario = :id";
-            $stm = $this->con->prepare($sql);
+            $stm = $con->prepare($sql);
             $stm->execute(['id' => $id]);
             $registro = $stm->fetch(PDO::FETCH_ASSOC);
 

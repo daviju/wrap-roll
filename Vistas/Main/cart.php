@@ -2,9 +2,6 @@
 // Verifica si el usuario está en la sesión
 $user = isset($_SESSION['user']) ? $_SESSION['user'] : null;
 $userId = $user ? $user->idUsuario : null;
-$monedero = is_object($user) ? $user->monedero : 0;
-$carrito = is_object($user) ? $user->carrito : []; // Obtener el carrito del usuario desde la sesión
-
 ?>
 
 <link rel="stylesheet" href="./css/cartStyle.css">
@@ -12,9 +9,6 @@ $carrito = is_object($user) ? $user->carrito : []; // Obtener el carrito del usu
 <!-- Uso el data para que desde el js sea posible acceder a los datos sin tener que hacer un fetch -->
 <div id="cart-container" 
      data-user-id="<?php echo htmlspecialchars($userId, ENT_QUOTES, 'UTF-8'); ?>"
-     data-carrito='<?php echo($carrito); ?>'
-     data-monedero="<?php echo number_format($monedero, 2); ?>"
-     data-direcciones='<?php echo htmlspecialchars(json_encode($direcciones), ENT_QUOTES, 'UTF-8'); ?>'>
 
     <div class="container">
         <h1>Tickets</h1>

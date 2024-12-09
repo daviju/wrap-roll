@@ -1,185 +1,175 @@
-document.addEventListener('DOMContentLoaded', async () => {
-    const cartContainer = document.getElementById('cart-container');
-    const userId = cartContainer.getAttribute('data-user-id');
-    let carrito = cartContainer.getAttribute('data-carrito');
-    const userMonedero = parseFloat(cartContainer.getAttribute('data-monedero')) || 0;
+document.addEventListener("DOMContentLoaded", async () => {
+    const cartContainer = document.getElementById("cart-container");
 
-    console.log('Valor de carrito antes de parsear:', carrito); // Ver el valor de carrito antes de parsear
-    console.log('Tipo de carrito:', typeof carrito); // Verificar el tipo de dato
+    // Obtenemos el ID del usuario desde el atributo data-user-id
+    const userId = cartContainer.dataset.userId;
+    console.log("Cargando datos para el usuario con ID:", userId);
+
+    if (!userId) {
+        console.error("No se pudo obtener el ID del usuario. Asegúrate de que está configurado en el HTML.");
+        return;
+    }
 
     try {
-        carrito = JSON.parse(carrito); // Ahora carrito es un array de objetos JSON
-        console.log('Carrito después de parsear:', carrito); // Ver el carrito después de parsear
-        console.log('Tipo de carrito después de parsear:', typeof carrito); // Verificar el tipo de dato
-        console.log('Es un array:', Array.isArray(carrito)); // Verificar si es un array
-    
-        // Verificar que carrito es un array
-        if (!Array.isArray(carrito) || carrito.length === 0) {
-            console.error("El carrito no es un array válido o está vacío:", carrito);
-            carrito = []; // Si no es un array o está vacío, inicializar como vacío
-        }
+        // Obtener datos del usuario y cargar carrito y monedero
+        await obtenerDatosUsuario(userId);
     } catch (error) {
-        console.error("Error al procesar el carrito:", error);
-        carrito = []; // Inicializar como vacío en caso de error
+        console.error("Error al cargar los datos del usuario:", error);
     }
 
-    // Mostrar el monedero en la página
-    const currentCreditElement = document.getElementById('current-credit');
-    if (currentCreditElement) {
-        currentCreditElement.textContent = `${userMonedero.toFixed(2)}€`;
-    }
-
-    // Cargar las direcciones del usuario
-    if (userId) {
-        await loadAddresses(userId);
-    } else {
-        console.error('No se pudo obtener el ID del usuario.');
-    }
-
-    // Cargar el carrito
-    cargarCarrito(carrito);
-
-    // Función para cargar las direcciones del usuario desde la API
-    async function loadAddresses(userId) {
-        try {
-            const response = await fetch(`./Api/ApiDireccion.php?idUsuario=${userId}`);
-            if (!response.ok) throw new Error('No se pudo obtener las direcciones');
-            const data = await response.json();
-            const addressSelect = document.getElementById('address');
-            addressSelect.innerHTML = ''; // Limpiar el select antes de agregar nuevas opciones
-            if (data.error) {
-                console.error(data.error);
-                return;
-            }
-            // Si no hay direcciones, agrega una opción por defecto
-            if (data.length === 0) {
-                const option = document.createElement('option');
-                option.textContent = 'No hay direcciones disponibles';
-                addressSelect.appendChild(option);
-            } else {
-                // Agregar las direcciones al select
-                data.forEach(address => {
-                    const option = document.createElement('option');
-                    option.textContent = `${address.tipovia} ${address.nombrevia}, ${address.numero}` + `${address.puerta ? ', Puerta: ' + address.puerta : ''}` + `${address.escalera ? ', Escalera: ' + address.escalera : ''}` + `${address.planta ? ', Planta: ' + address.planta : ''}` + `${address.localidad ? ', ' + address.localidad : ''}`;
-                    addressSelect.appendChild(option);
-                });
-            }
-        } catch (error) {
-            console.error("Error al cargar las direcciones:", error);
-        }
-    }
-
-    // Función para cargar el carrito
-    function cargarCarrito(carrito) {
-        const cartItemsContainer = document.getElementById('cart-items');
-        let totalPrice = 0;
-
-        // Limpiar la tabla antes de mostrar los nuevos items
-        cartItemsContainer.innerHTML = '';
-
-        // Verificar si el carrito está vacío
-        if (carrito.length === 0) {
-            cartItemsContainer.innerHTML = '<tr><td colspan="3">Tu carrito está vacío.</td></tr>';
-            console.log("El carrito está vacío");
-            return;
-        }
-
-        carrito.forEach(item => {
-            const lineaPedido = item.linea_pedidos;
-
-            if (!lineaPedido) {
-                console.error("No se pudo procesar 'linea_pedidos':", item);
-                return;
-            }
-
-            // Crear una fila para cada item del carrito
-            const fila = document.createElement('tr');
-
-            // Celda 1: Cantidad con botones +
-            const cantidadCelda = document.createElement('td');
-            // Crear los botones de cantidad
-            const btnMinus = document.createElement('button');
-            btnMinus.textContent = '-';
-            btnMinus.classList.add('quantity-btn');
-            btnMinus.addEventListener('click', () => {
-                // Disminuir cantidad
-                if (lineaPedido.cantidad > 1) {
-                    lineaPedido.cantidad--;
-                    actualizarCarrito();
-                }
-            });
-
-            const btnPlus = document.createElement('button');
-            btnPlus.textContent = '+';
-            btnPlus.classList.add('quantity-btn');
-            btnPlus.addEventListener('click', () => {
-                // Aumentar cantidad
-                lineaPedido.cantidad++;
-                actualizarCarrito();
-            });
-
-            const cantidadText = document.createElement('span');
-            cantidadText.textContent = lineaPedido.cantidad;
-
-            // Añadir los botones y el texto de cantidad a la celda
-            cantidadCelda.appendChild(btnMinus);
-            cantidadCelda.appendChild(cantidadText);
-            cantidadCelda.appendChild(btnPlus);
-            fila.appendChild(cantidadCelda);
-
-            // Celda 2: Kebab (sin precio)
-            const kebabCelda = document.createElement('td');
-            kebabCelda.textContent = `${lineaPedido.nombre} (${lineaPedido.ingredientes.join(', ')})`;
-            fila.appendChild(kebabCelda);
-
-            // Celda 3: Precio
-            const precioCelda = document.createElement('td');
-            const precioTotal = lineaPedido.cantidad * lineaPedido.precio;
-            precioCelda.textContent = `${precioTotal.toFixed(2)}€`;
-            fila.appendChild(precioCelda);
-
-            // Agregar la fila a la tabla
-            cartItemsContainer.appendChild(fila);
-
-            // Sumar el precio total
-            totalPrice += precioTotal;
-        });
-
-        // Actualizar el precio total
-        const totalPriceElement = document.getElementById('total-price');
-        if (totalPriceElement) {
-            totalPriceElement.textContent = `${totalPrice.toFixed(2)}€`;
-        }
-
-        // Actualizar el monedero restante
-        const remainingCredit = userMonedero - totalPrice;
-        const remainingCreditElement = document.getElementById('remaining-credit');
-        if (remainingCreditElement) {
-            remainingCreditElement.textContent = `${remainingCredit.toFixed(2)}€`;
-        }
-    }
-
-    // Función para actualizar el carrito
-    function actualizarCarrito() {
-        console.log('Carrito actualizado');
-        // Aquí iría el código para actualizar el carrito en el servidor (ej. haciendo una solicitud AJAX)
-    }
-
-    // Función para tramitar el pedido
-    document.getElementById('order-btn').addEventListener('click', async () => {
-        const totalPrice = parseFloat(document.getElementById('total-price').textContent.replace('€', ''));
-        const currentCredit = parseFloat(document.getElementById('current-credit').textContent.replace('€', ''));
-
-        // Verificar si el usuario tiene suficiente crédito
-        if (currentCredit >= totalPrice) {
-            // Si tiene suficiente crédito, actualizar el crédito restante
-            const remainingCredit = currentCredit - totalPrice;
-            document.getElementById('remaining-credit').textContent = `${remainingCredit.toFixed(2)}€`;
-            alert("Pedido realizado con éxito");
-            // Aquí podrías agregar la lógica para guardar el pedido en la base de datos
-        } else {
-            // Si no tiene suficiente crédito
-            alert("No tienes suficiente crédito para realizar este pedido.");
-        }
-    });
+    // Cargar direcciones si están disponibles
+    const direcciones = getDireccionesFromData(cartContainer);
+    cargarDirecciones(direcciones);
 });
+
+// Función para obtener las direcciones desde el atributo data-direcciones
+function getDireccionesFromData(cartContainer) {
+    let direcciones = [];
+    try {
+        direcciones = JSON.parse(cartContainer.dataset.direcciones || "[]");
+        console.log("Direcciones iniciales cargadas:", direcciones);
+    } catch (error) {
+        console.error("Error al procesar data-direcciones:", error);
+    }
+    return direcciones;
+}
+
+// Función para obtener datos del usuario y cargar el carrito
+async function obtenerDatosUsuario(userId) {
+    try {
+        const response = await fetch(`./Api/ApiUser.php?idUsuario=${userId}`);
+        if (!response.ok) throw new Error("Error al obtener los datos del usuario.");
+        const userData = await response.json();
+
+        console.log("Datos del usuario obtenidos:", userData);
+
+        // Procesar carrito
+        let carrito = userData.carrito;
+
+        // Si el carrito está en formato JSON string, conviértelo a un array
+        if (typeof carrito === "string") {
+            try {
+                carrito = JSON.parse(carrito);
+            } catch (error) {
+                console.error("Error al parsear el carrito:", error);
+                carrito = [];
+            }
+        }
+
+        console.log("Carrito procesado:", carrito);
+        cargarCarrito(carrito);
+
+        // Monedero
+        const userMonedero = parseFloat(userData.monedero) || 0;
+        mostrarMonedero(userMonedero);
+
+        // Direcciones adicionales (fallback si no se cargaron inicialmente)
+        await loadAddresses(userId);
+    } catch (error) {
+        console.error("Error al obtener los datos del usuario:", error);
+    }
+}
+
+
+// Función para mostrar el monedero
+function mostrarMonedero(monedero) {
+    const monederoElement = document.getElementById("current-credit");
+    if (!monederoElement) {
+        console.error("Elemento del monedero no encontrado en el DOM.");
+        return;
+    }
+
+    monederoElement.textContent = `${monedero.toFixed(2)}€`;
+
+    // También actualizamos el crédito restante al inicializar el monedero
+    const totalPriceElement = document.getElementById("total-price");
+    const totalPrice = parseFloat(totalPriceElement.textContent.replace("€", "")) || 0;
+    actualizarCreditoRestante(totalPrice);
+}
+
+// Función para calcular y mostrar el crédito después de tramitar
+function actualizarCreditoRestante(totalPrice) {
+    const monederoElement = document.getElementById("current-credit");
+    const remainingCreditElement = document.getElementById("remaining-credit");
+
+    if (!monederoElement || !remainingCreditElement) {
+        console.error("Elementos para calcular el crédito restante no encontrados en el DOM.");
+        return;
+    }
+
+    const currentCredit = parseFloat(monederoElement.textContent.replace("€", "")) || 0;
+    const remainingCredit = currentCredit - totalPrice;
+
+    // Actualizar el DOM con el crédito restante
+    remainingCreditElement.textContent = `${remainingCredit.toFixed(2)}€`;
+}
+
+// Función para cargar el carrito en la tabla
+function cargarCarrito(carrito) {
+    console.log("Ejecutando cargarCarrito con:", carrito);
+    const cartItemsContainer = document.getElementById("cart-items");
+    const totalPriceElement = document.getElementById("total-price");
+
+    if (!cartItemsContainer) {
+        console.error("No se encontró el contenedor del carrito en el DOM.");
+        return;
+    }
+
+    // Limpiamos el contenido existente
+    cartItemsContainer.innerHTML = "";
+
+    let totalPrice = 0;
+
+    carrito.forEach((item) => {
+        console.log("Procesando item del carrito:", item);
+
+        const { cantidad, nombre, precio, ingredientes } = item.linea_pedidos;
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${cantidad}</td>
+            <td>
+                <div>
+                    <strong>${nombre}</strong>
+                    <small>${ingredientes.join(", ")}</small>
+                </div>
+            </td>
+            <td>${(precio * cantidad).toFixed(2)}€</td>
+        `;
+
+        // Añadir al total
+        totalPrice += precio * cantidad;
+
+        cartItemsContainer.appendChild(row);
+    });
+
+    // Actualizar el total a pagar en el DOM
+    totalPriceElement.textContent = `${totalPrice.toFixed(2)}€`;
+
+    // Actualizar el crédito después de tramitar
+    actualizarCreditoRestante(totalPrice);
+}
+
+
+// Función para cargar direcciones en el selector
+function cargarDirecciones(direcciones) {
+    const addressSelector = document.getElementById("address");
+    if (!addressSelector) {
+        console.error("Elemento del selector de direcciones no encontrado en el DOM.");
+        return;
+    }
+
+    // Limpiamos las opciones existentes
+    addressSelector.innerHTML = "";
+
+    direcciones.forEach((direccion) => {
+        const option = document.createElement("option");
+        option.value = direccion.id;
+        option.textContent = direccion.descripcion;
+        addressSelector.appendChild(option);
+    });
+
+    if (direcciones.length === 0) {
+        console.warn("No hay direcciones disponibles para cargar.");
+    }
+}
