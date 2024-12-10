@@ -234,3 +234,17 @@ div .list-items{
     font-size: 14px;
     color: #b23927;
 }
+
+.alergenos-container {
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    gap: 10px;
+    color: #1a1a1a;
+}
+
+.alergenos h3{
+    text-align: center;
+    color: #af352d;
+    margin-bottom: 10px;
+}

@@ -1,10 +1,41 @@
 <?php
-
 /*
-    Get -> funcionan los dos
-    Post -> crea bien
-    Put -> actualia bien
-    Delete -> elimina bien
+    API para gestionar kebabs
+
+    Métodos:
+        GET: Obtiene uno o todos los kebabs.
+        POST: Crea un nuevo kebab con sus ingredientes asociados.
+        PUT: Actualiza un kebab existente.
+        DELETE: Elimina un kebab.
+
+    Detalles:
+        * Este script implementa operaciones CRUD para gestionar kebabs en una base de datos.
+        * Utiliza el repositorio `RepositorioKebab` y la clase `Database` para interactuar con la base de datos.
+        * Los datos de respuesta son devueltos en formato JSON con los códigos de estado HTTP adecuados.
+
+    Manejo de errores:
+        * Si el JSON recibido es inválido en los métodos POST o PUT, se responde con un error 400 (Bad Request).
+        * Si el método HTTP no es soportado, se responde con un error 405 (Method Not Allowed).
+        * Si faltan datos necesarios en las solicitudes, se responde con un error 400.
+        * Para errores internos del servidor, como fallos en la base de datos, se responde con un error 500.
+        * Las respuestas exitosas incluyen códigos 200 (OK) o 201 (Created) con detalles del resultado.
+
+    Funciones de cada método HTTP:
+        * GET:
+            - Si se proporciona un `id_kebab`, devuelve los detalles del kebab correspondiente.
+            - Si no se proporciona `id_kebab`, devuelve todos los kebabs registrados.
+        * POST:
+            - Crea un nuevo kebab a partir de los datos proporcionados (`nombre`, `foto`, `precio`, `selectedIngredientes`).
+            - Asocia los ingredientes seleccionados al nuevo kebab.
+        * PUT:
+            - Actualiza un kebab existente identificándolo mediante `id_kebab` y modificando sus atributos (`nombre`, `foto`, `precio`).
+        * DELETE:
+            - Elimina un kebab de la base de datos utilizando su `id_kebab`.
+
+    TODO:
+        * Implementar validaciones adicionales en los datos de entrada.
+        * Manejar mejor los errores derivados de las operaciones con la base de datos.
+        * Agregar registros de log para depuración y monitoreo.
 */
 
 header("Content-Type: application/json");

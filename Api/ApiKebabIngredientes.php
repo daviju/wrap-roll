@@ -1,4 +1,42 @@
 <?php
+/*
+    API para gestionar las relaciones entre kebabs e ingredientes
+
+    Métodos:
+        GET: Obtiene las relaciones entre kebabs e ingredientes.
+        POST: Crea una nueva relación entre un kebab y un ingrediente.
+        PUT: Actualiza una relación existente entre un kebab y un ingrediente.
+        DELETE: Elimina una relación entre un kebab y un ingrediente.
+
+    Detalles:
+        * Esta API permite gestionar las asociaciones entre kebabs e ingredientes en la base de datos.
+        * Utiliza los repositorios `RepositorioKebabIngredientes` y `RepositorioIngredientes` para interactuar con los datos.
+        * Los datos de respuesta se devuelven en formato JSON con los códigos de estado HTTP correspondientes.
+
+    Manejo de errores:
+        * Si el JSON recibido es inválido en métodos POST o PUT, se responde con un error 400 (Bad Request).
+        * Si el método HTTP no es soportado, se responde con un error 405 (Method Not Allowed).
+        * Si faltan datos requeridos en las solicitudes, se responde con un error 400.
+        * Para errores internos, como fallos en la base de datos, se responde con un error 500.
+        * En caso de éxito, las respuestas incluyen códigos 200 (OK) o 201 (Created).
+
+    Funciones de cada método HTTP:
+        * GET:
+            - Si se proporciona un `ID_Kebab`, devuelve los nombres de los ingredientes asociados a ese kebab.
+            - Si no se proporciona `ID_Kebab`, devuelve todas las relaciones kebab-ingrediente.
+        * POST:
+            - Crea una nueva relación entre un kebab y un ingrediente a partir de `ID_Kebab` e `ID_Ingrediente`.
+        * PUT:
+            - Actualiza una relación existente entre un kebab y un ingrediente.
+        * DELETE:
+            - Elimina una relación específica entre un kebab y un ingrediente usando `ID_Kebab` e `ID_Ingrediente`.
+
+    TODO:
+        * Implementar validaciones adicionales para los datos de entrada.
+        * Manejar mejor los casos donde los ingredientes no existen en el repositorio.
+        * Mejorar el manejo de excepciones para operaciones críticas en la base de datos.
+        * Agregar registros de auditoría para las operaciones realizadas.
+*/
 
 header("Content-Type: application/json");
 

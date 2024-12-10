@@ -3,6 +3,10 @@
 <div class="drag-drop-container">
     <div class="container">
         <h2>Crear Kebab</h2>
+        <!-- Agregar un contenedor para almacenar el userId -->
+        <div id="user-data"
+            data-user-id="<?php echo isset($_SESSION['user']) ? $_SESSION['user']->idUsuario : ''; ?>" style="display: none;"></div>
+
         <form id="drag-drop-form" method="post">
             <!-- Contenedor dividido en dos columnas -->
             <div class="input-container">
@@ -10,15 +14,7 @@
                 <div class="left-column">
                     <div class="input-group">
                         <label for="nombre">Nombre:</label>
-                        <input type="text" id="nombre" name="nombre" required placeholder="Introduce el nombre del kebab"> 
-                    </div>
-
-                    <div class="input-group">
-                        <label for="foto">Foto:</label>
-                        <div class="preview-container">
-                            <span>Subir o arrastrar imagen aquí</span>
-                            <input type="file" id="foto" name="foto" required accept="image/*" style="display: none;">
-                        </div>
+                        <input type="text" id="nombre" name="nombre" required placeholder="Introduce el nombre del kebab">
                     </div>
                 </div>
 
@@ -26,7 +22,7 @@
                 <div class="right-column">
                     <div class="input-group">
                         <label for="precio">Precio:</label>
-                        <input type="text" id="precio" name="precio" required placeholder="Introduce el precio del kebab"> 
+                        <input type="text" id="precio" name="precio" required placeholder="Introduce el precio del kebab">
                     </div>
                 </div>
             </div>

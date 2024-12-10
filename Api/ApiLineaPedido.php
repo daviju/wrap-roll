@@ -1,4 +1,46 @@
 <?php
+/*
+    API para la gestión de líneas de pedido
+
+    Descripción:
+        Este script maneja operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre las líneas de pedido en la base de datos. 
+        Utiliza un repositorio (`RepositorioLineaPedido`) para interactuar con las líneas de pedido, ofreciendo una interfaz clara para su gestión.
+
+    Métodos soportados:
+        * GET:
+            - Si se proporciona un ID en la URL, devuelve una línea de pedido específica.
+            - Si no se proporciona ID, devuelve todas las líneas de pedido.
+        * POST:
+            - Crea una nueva línea de pedido con los datos proporcionados en el cuerpo de la solicitud (JSON).
+        * PUT:
+            - Actualiza una línea de pedido específica usando el ID en la URL y datos en el cuerpo de la solicitud.
+        * DELETE:
+            - Elimina una línea de pedido específica según el ID proporcionado en la URL.
+
+    Detalles de implementación:
+        * El ID de la línea de pedido se extrae de la URL, ajustándose al formato de rutas específicas para `lineapedido`.
+        * Los datos del cuerpo de la solicitud (para POST y PUT) se esperan en formato JSON, incluyendo:
+            - `linea_pedidos` (detalle de los productos o servicios en la línea).
+            - `ID_Pedido` (asociación al pedido principal).
+        * La respuesta de cada operación se devuelve en formato JSON con una clave `success` indicando el resultado de la operación.
+
+    Manejo de errores:
+        * Si el método HTTP no es soportado, se devuelve un error genérico en formato JSON.
+        * Asegúrate de manejar excepciones a nivel del repositorio para evitar que errores en la base de datos se propaguen a la respuesta de la API.
+
+    Rutas:
+        * GET /api/lineapedido/ (devuelve todas las líneas de pedido).
+        * GET /api/lineapedido/{id} (devuelve una línea de pedido específica).
+        * POST /api/lineapedido/ (crea una nueva línea de pedido con los datos proporcionados).
+        * PUT /api/lineapedido/{id} (actualiza una línea de pedido existente).
+        * DELETE /api/lineapedido/{id} (elimina una línea de pedido existente).
+
+    TODO:
+        * Implementar validación de los datos de entrada en todos los métodos.
+        * Mejorar el manejo de excepciones y devolver códigos de estado HTTP adecuados.
+        * Agregar autenticación para proteger el acceso a la API.
+*/
+
 header("Content-Type: application/json");
 
 require_once __DIR__ . '/../Repositorios/Database.php';

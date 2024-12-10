@@ -1,4 +1,74 @@
 <?php
+/*
+    API para la gestión de usuarios
+
+    Descripción:
+        Esta API gestiona operaciones relacionadas con los usuarios, incluyendo creación, autenticación, actualización, y eliminación.
+        Proporciona métodos para interactuar con los datos de usuario almacenados en la base de datos a través del repositorio `RepositorioUsuario`.
+
+    Métodos soportados:
+        * GET:
+            - Autenticar un usuario mediante `email` y `password`.
+            - Obtener un usuario específico por `idUsuario`.
+            - Listar todos los usuarios si no se proporcionan parámetros.
+        * POST:
+            - Crear un nuevo usuario proporcionando los datos necesarios en el cuerpo de la solicitud (JSON).
+        * PUT:
+            - Actualizar los datos de un usuario existente identificado por `idUsuario`.
+        * DELETE:
+            - Eliminar un usuario por `idUsuario`.
+
+    Detalles de implementación:
+        * Los datos del cuerpo de las solicitudes POST y PUT se esperan en formato JSON.
+        * Validación básica incluida para garantizar que los datos necesarios se proporcionen.
+        * Cada respuesta incluye un código HTTP adecuado para el contexto:
+            - 200: Solicitud exitosa.
+            - 201: Recurso creado.
+            - 400: Solicitud incorrecta (datos incompletos o mal formados).
+            - 401: No autorizado (credenciales inválidas).
+            - 404: Recurso no encontrado.
+            - 500: Error interno del servidor.
+
+    Rutas:
+        * GET /api/usuario/?email={email}&password={password}:
+            - Verifica las credenciales de un usuario y devuelve sus datos si son válidos.
+        * GET /api/usuario/?idUsuario={idUsuario}:
+            - Devuelve los datos de un usuario específico.
+        * GET /api/usuario/:
+            - Devuelve una lista de todos los usuarios.
+        * POST /api/usuario/:
+            - Crea un nuevo usuario.
+        * PUT /api/usuario/:
+            - Actualiza un usuario existente.
+        * DELETE /api/usuario/?idUsuario={idUsuario}:
+            - Elimina un usuario específico.
+
+    Manejo de errores:
+        * Respuesta clara en caso de errores, incluyendo el motivo del fallo.
+        * Validación de formato JSON en las solicitudes que lo requieran.
+        * Manejo de errores a nivel del repositorio para evitar fugas de detalles internos en las respuestas de la API.
+
+    Ejemplo de estructura JSON para crear o actualizar un usuario:
+    ```json
+    {
+        "idUsuario": 1,                // Solo necesario para PUT
+        "nombre": "John Doe",
+        "foto": "url_de_la_foto",
+        "contrasena": "hashed_password",
+        "monedero": 100.50,
+        "email": "johndoe@example.com",
+        "carrito": [],
+        "rol": "Cliente",
+        "telefono": "123456789"
+    }
+    ```
+
+    TODO:
+        * Implementar encriptación de contraseñas (por ejemplo, utilizando `password_hash` y `password_verify`).
+        * Agregar autenticación de la API para mayor seguridad.
+        * Registrar logs de errores más detallados para facilitar la depuración.
+*/
+
 header("Content-Type: application/json");
 
 require_once __DIR__ . '/../Clases/Usuario.php';

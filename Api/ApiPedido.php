@@ -1,6 +1,45 @@
 <?php
+/*
+    API para gestionar pedidos
+
+    Métodos:
+        GET: Obtiene uno o todos los pedidos.
+        POST: Crea un nuevo pedido.
+        PUT: Actualiza un pedido existente.
+        DELETE: Elimina un pedido.
+
+    Detalles:
+        * El script maneja las operaciones CRUD para los pedidos utilizando el repositorio `RepositorioPedido`.
+        * La conexión a la base de datos se establece mediante la clase `Database`.
+        * La respuesta se envía en formato JSON con el código de estado HTTP correspondiente.
+        
+    Manejo de errores:
+        * Si el JSON recibido en las solicitudes POST o PUT es malformado, se responde con un error 400 (Bad Request).
+        * Si el método HTTP no es soportado, se responde con un error 405 (Method Not Allowed).
+        * En cada operación, si los datos requeridos no se proporcionan o son incorrectos, se responde con un error 400.
+        * En los casos de éxito, se responde con el código de estado correspondiente (200, 201) y un mensaje de éxito en formato JSON.
+
+    Funciones de cada método HTTP:
+        * GET: 
+            - Si se proporciona un `idPedido`, devuelve el pedido correspondiente.
+            - Si no se proporciona `idPedido`, devuelve todos los pedidos.
+        * POST:
+            - Recibe los datos necesarios (`estado`, `preciototal`, `fecha_hora` y `ID_Usuario`) para crear un nuevo pedido y lo almacena en la base de datos.
+        * PUT:
+            - Recibe un `idPedido`, `estado`, `preciototal`, `fecha_hora` y `ID_Usuario` para actualizar un pedido existente.
+        * DELETE:
+            - Recibe un `idPedido` para eliminar el pedido correspondiente.
+
+    TODO: Implementar validaciones adicionales y manejo de excepciones más robusto.
+        * Mejorar el manejo de errores para situaciones como problemas de conexión a la base de datos.
+        * Asegurar que los datos recibidos en las solicitudes sean correctos antes de realizar las operaciones.
+*/
+
 header("Content-Type: application/json");
 
+require_once __DIR__ . '/../Clases/Pedidos.php';
+require_once __DIR__ . '/../Repositorios/RepositorioPedido.php';
+require_once __DIR__ . '/../cargadores/Autocargador.php';
 require_once __DIR__ . '/../Repositorios/Database.php';
 
 Autocargador::autocargar();
@@ -9,52 +48,108 @@ Autocargador::autocargar();
 $con = Database::getConection();
 $repositorioPedido = new RepositorioPedido($con);
 
+// Obtener el método HTTP
 $method = $_SERVER['REQUEST_METHOD'];
+$input = json_decode(file_get_contents('php://input'), true);
 
-// Ajustar el manejo de la ruta
-$path = explode('/', trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'));
-$path = array_slice($path, 3); // Ajustar según el número de segmentos en la URL antes de 'api/pedido'
+// Verificar si el JSON es válido
+if ($method != 'GET' && json_last_error() !== JSON_ERROR_NONE) {
+    http_response_code(400); // Bad Request
+    echo json_encode(["error" => "JSON malformado."]);
+    exit;
+}
 
 switch ($method) {
     case 'GET':
-        if (isset($path[0]) && is_numeric($path[0])) {
+        if (isset($_GET['idPedido'])) {
             // Obtener un pedido por ID
-            $pedido = $repositorioPedido->findById($path[0]);
-            echo json_encode($pedido);
+            $pedido = $repositorioPedido->findById($_GET['idPedido']);
+            if ($pedido) {
+                http_response_code(200); // OK
+                echo json_encode($pedido);
+            } else {
+                http_response_code(404); // Not Found
+                echo json_encode(["error" => "Pedido no encontrado."]);
+            }
         } else {
             // Obtener todos los pedidos
             $pedidos = $repositorioPedido->findAll();
+            http_response_code(200); // OK
             echo json_encode($pedidos);
         }
         break;
 
     case 'POST':
         // Crear un nuevo pedido
-        $input = json_decode(file_get_contents('php://input'), true);
-        $pedido = new Pedido(null, $input['estado'], $input['preciototal'], $input['fechaHora'], $input['ID_Usuario']);
-        $success = $repositorioPedido->create($pedido);
-        echo json_encode(['success' => $success]);
+        if (isset($input['estado'], $input['preciototal'], $input['fecha_hora'], $input['ID_Usuario'])) {
+            $pedido = new Pedido(
+                null, // El ID será generado automáticamente por la base de datos
+                $input['estado'],
+                $input['preciototal'],
+                $input['fecha_hora'],
+                $input['ID_Usuario']
+            );
+
+            $success = $repositorioPedido->create($pedido);
+            if ($success) {
+                http_response_code(201); // Created
+                echo json_encode(["success" => true, "message" => "Pedido creado correctamente."]);
+            } else {
+                http_response_code(500); // Internal Server Error
+                echo json_encode(["error" => "Error al crear el pedido."]);
+            }
+        } else {
+            http_response_code(400); // Bad Request
+            echo json_encode(["error" => "Datos incompletos para crear el pedido."]);
+        }
         break;
 
     case 'PUT':
-        if (isset($path[0]) && is_numeric($path[0])) {
-            // Actualizar un pedido
-            $input = json_decode(file_get_contents('php://input'), true);
-            $pedido = new Pedido($path[0], $input['estado'], $input['preciototal'], $input['fechaHora'], $input['ID_Usuario']);
+        // Actualizar un pedido
+        if (isset($input['idPedido'], $input['estado'], $input['preciototal'], $input['fecha_hora'], $input['ID_Usuario'])) {
+            $pedido = new Pedido(
+                $input['idPedido'],
+                $input['estado'],
+                $input['preciototal'],
+                $input['fecha_hora'],
+                $input['ID_Usuario']
+            );
+
             $success = $repositorioPedido->update($pedido);
-            echo json_encode(['success' => $success]);
+            if ($success) {
+                http_response_code(200); // OK
+                echo json_encode(["success" => true, "message" => "Pedido actualizado correctamente."]);
+            } else {
+                http_response_code(500); // Internal Server Error
+                echo json_encode(["error" => "Error al actualizar el pedido."]);
+            }
+        } else {
+            http_response_code(400); // Bad Request
+            echo json_encode(["error" => "Datos incompletos para actualizar el pedido."]);
         }
         break;
 
     case 'DELETE':
-        if (isset($path[0]) && is_numeric($path[0])) {
-            // Eliminar un pedido
-            $success = $repositorioPedido->delete($path[0]);
-            echo json_encode(['success' => $success]);
+        // Eliminar un pedido por ID
+        if (isset($_GET['idPedido']) && !empty($_GET['idPedido'])) {
+            $idPedido = $_GET['idPedido'];
+            $success = $repositorioPedido->delete($idPedido);
+
+            if ($success) {
+                http_response_code(200); // OK
+                echo json_encode(["success" => true, "message" => "Pedido eliminado correctamente."]);
+            } else {
+                http_response_code(500); // Internal Server Error
+                echo json_encode(["error" => "Error al eliminar el pedido."]);
+            }
+        } else {
+            http_response_code(400); // Bad Request
+            echo json_encode(["error" => "ID del pedido no proporcionado."]);
         }
         break;
 
     default:
-        echo json_encode(['error' => 'Método no soportado']);
+        http_response_code(405); // Method Not Allowed
+        echo json_encode(["error" => "Método no soportado."]);
+        break;
 }
-?>

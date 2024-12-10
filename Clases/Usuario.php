@@ -1,4 +1,61 @@
 <?php
+/*
+    Clase Usuario
+
+    Descripción:
+        La clase `Usuario` representa a un usuario dentro de un sistema. Esta clase almacena información personal del usuario, como su identificador único, nombre, foto, contraseña, saldo en el monedero, teléfono, carrito de compras, rol en el sistema y correo electrónico. Es útil para gestionar los datos del usuario en aplicaciones de compras en línea o sistemas donde los usuarios tienen diferentes roles y privilegios.
+
+    Atributos:
+        - `idUsuario`: Identificador único del usuario.
+        - `nombre`: Nombre del usuario.
+        - `foto`: Foto de perfil del usuario (URL o nombre del archivo).
+        - `contrasena`: Contraseña del usuario (debería ser almacenada de forma segura, por ejemplo, usando hash).
+        - `monedero`: Saldo o monto disponible en el monedero del usuario.
+        - `telefono`: Número de teléfono del usuario.
+        - `carrito`: El carrito de compras del usuario, representado como un JSON (o array).
+        - `rol`: El rol del usuario en el sistema (por ejemplo, "admin", "cliente").
+        - `email`: Correo electrónico del usuario.
+
+    Métodos:
+        - `__construct($idUsuario, $nombre, $foto, $contrasena, $monedero, $email, $carrito, $rol, $telefono)`: Constructor que inicializa los atributos de la clase con los valores proporcionados.
+        - `__toString()`: Método que devuelve una representación en formato de cadena de la instancia del usuario, mostrando todos sus atributos relevantes.
+        - `getIDUsuario()`: Retorna el `idUsuario`, el identificador único del usuario.
+        - `getNombre()`: Retorna el nombre del usuario.
+        - `getFoto()`: Retorna la foto del usuario.
+        - `getContrasena()`: Retorna la contraseña del usuario.
+        - `getMonedero()`: Retorna el saldo disponible en el monedero del usuario.
+        - `getTelefono()`: Retorna el número de teléfono del usuario.
+        - `getCarrito()`: Retorna el carrito de compras del usuario, decodificado de JSON a array.
+        - `getRol()`: Retorna el rol del usuario en el sistema.
+        - `getEmail()`: Retorna el correo electrónico del usuario.
+        - `setIDUsuario($idUsuario)`: Establece el valor de `idUsuario`.
+        - `setNombre($nombre)`: Establece el valor de `nombre`.
+        - `setFoto($foto)`: Establece el valor de `foto`.
+        - `setContrasena($contrasena)`: Establece el valor de `contrasena`.
+        - `setMonedero($monedero)`: Establece el valor de `monedero`.
+        - `setTelefono($telefono)`: Establece el valor de `telefono`.
+        - `setCarrito($carrito)`: Establece el valor de `carrito`, codificando el array a JSON si es necesario.
+        - `setRol($rol)`: Establece el valor de `rol`.
+        - `setEmail($email)`: Establece el valor de `email`.
+
+    Propósito:
+        La clase `Usuario` es fundamental para gestionar la información relacionada con los usuarios de una aplicación o sistema. Específicamente, en sistemas de comercio electrónico o aplicaciones de pedidos en línea, puede utilizarse para realizar seguimientos de los pedidos, gestionar el saldo en el monedero, y asignar roles (como administrador o cliente). Además, permite gestionar el carrito de compras y las preferencias personales del usuario.
+
+    Ejemplo de uso:
+        Crear un objeto de tipo `Usuario` y acceder a sus métodos:
+        ```php
+        $usuario = new Usuario(1, "Juan Pérez", "foto.jpg", "contrasena123", 50.00, "juan@correo.com", [], "cliente", "555-1234");
+        echo $usuario->getNombre();  // Muestra "Juan Pérez"
+        echo $usuario->getEmail();  // Muestra "juan@correo.com"
+        echo $usuario->getMonedero();  // Muestra 50.00
+        ```
+
+    TODO:
+        * Asegurar que las contraseñas sean gestionadas de manera segura (por ejemplo, usando hashing con `password_hash()`).
+        * Mejorar la validación y formato de los datos de entrada, especialmente para el correo electrónico, teléfono y monedero.
+        * Implementar métodos adicionales si se requiere más funcionalidad, como agregar productos al carrito o realizar un pago con el monedero.
+*/
+
 class Usuario {
 
     // Atributos
