@@ -14,9 +14,6 @@ const userId = userIdElement ? userIdElement.getAttribute('data-user-id') : null
 
 console.log('ID del usuario:', userId);
 
-// Contenedor de alérgenos
-const alergenosContainer = document.querySelector('.alergenos-container');
-
 // Validamos que las listas existan en el HTML
 if (!list1 || !list2) {
     console.error('Error: No se encontraron los elementos "list1" o "list2" en el HTML.');
@@ -73,7 +70,6 @@ async function loadIngredientes() {
 // Función para manejar el inicio del arrastre
 function handleDragStart(event) {
     event.dataTransfer.setData('text/plain', event.target.dataset.id); // Guardamos el ID del ingrediente arrastrado
-    event.target.classList.add('dragging'); // Añadimos una clase "dragging" para estilo visual
 }
 
 // Función para manejar el fin del arrastre
@@ -81,13 +77,14 @@ function handleDragEnd(event) {
     event.target.classList.remove('dragging'); // Eliminamos la clase "dragging" cuando se termina el arrastre
 }
 
-// Función para permitir que un área acepte el item arrastrado
+// Permitir el arrastre sobre la lista de ingredientes
 function handleDragOver(event) {
     event.preventDefault(); // Necesario para permitir el drop
+    event.target.classList.add('drag-over'); // Estilo visual cuando el elemento es sobrevolado
 }
 
-// Función para manejar el drop de los ingredientes en la lista de ingredientes seleccionados
-function handleDrop(event, targetList) {
+// Manejo del evento drop
+function handleDrop(event) {
     event.preventDefault(); // Prevenir el comportamiento por defecto
 
     const ingredienteId = event.dataTransfer.getData('text/plain'); // Obtenemos el ID del ingrediente arrastrado
@@ -99,16 +96,11 @@ function handleDrop(event, targetList) {
     }
 
     // Mover el ingrediente a la lista de destino (list2)
-    if (!targetList.contains(draggedElement)) {
-        targetList.appendChild(draggedElement);
+    if (!list2.contains(draggedElement)) {
+        list2.appendChild(draggedElement);
     }
 
     actualizarPrecio(); // Llamar a la función para actualizar el precio
-
-    console.log('ID del ingrediente arrastrado:', ingredienteId);
-    
-    // Llamar a la función para mostrar los alérgenos del ingrediente
-    mostrarAlergenos(ingredienteId); // Aquí llamamos a la función con el ID del ingrediente
 }
 
 // Función para actualizar el precio
@@ -118,57 +110,41 @@ function actualizarPrecio() {
     precioInput.value = totalPrecio.toFixed(2);
 }
 
+// Asignar eventos para las listas de ingredientes
+if (list1 && list2) {
+    list1.addEventListener('dragover', handleDragOver); // Permitir el arrastre sobre la lista de ingredientes disponibles
+    list1.addEventListener('drop', handleDrop); // Manejar el drop en la lista de ingredientes disponibles
+    list2.addEventListener('dragover', handleDragOver); // Permitir el arrastre sobre la lista de ingredientes seleccionados
+    list2.addEventListener('drop', handleDrop); // Manejar el drop en la lista de ingredientes seleccionados
+} else {
+    console.error("No se encontraron los elementos list1 o list2 en el DOM.");
+}
 
-// Función para añadir un kebab al carrito
-function añadirLineaPedidoAlCarrito(kebab) {
-    if (!userId) {
-        console.error("No se encontró el ID del usuario.");
+// Función para mostrar los alérgenos con sus fotos
+function mostrarAlergenos(ingredienteId) {
+    const ingredienteElement = document.querySelector(`[data-id='${ingredienteId}']`);
+    if (!ingredienteElement) {
+        console.error('Error: Ingrediente no encontrado.');
         return;
     }
 
-    const nuevaLineaPedido = {
-        ID_LineaPedido: null,
-        linea_pedidos: {
-            cantidad: 1,
-            nombre: kebab.nombre,
-            precio: kebab.precio,
-            ingredientes: kebab.selectedIngredientes // Aquí se incluyen los nombres de los ingredientes
-        },
-        ID_Pedido: null
-    };
+    const alergenos = JSON.parse(ingredienteElement.dataset.alergenos); // Obtenemos los alérgenos del ingrediente
 
-    fetch(`./Api/ApiUser.php?idUsuario=${userId}`)
-        .then(response => response.json())
-        .then(usuario => {
-            let carrito = usuario?.carrito || [];
-            if (typeof carrito === "string") carrito = JSON.parse(carrito);
+    if (alergenos && alergenos.length > 0) {
+        // Limpiar el contenedor de alérgenos
+        alergenosContainer.innerHTML = '';
 
-            const existente = carrito.find(item => item.linea_pedidos.nombre === kebab.nombre);
-            if (existente) {
-                existente.linea_pedidos.cantidad += 1;
-            } else {
-                carrito.push(nuevaLineaPedido);
-            }
-
-            fetch('./Api/ApiUser.php', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...usuario, carrito: JSON.stringify(carrito) })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        console.log("Carrito actualizado en el servidor.");
-                        alert('Kebab añadido al carrito.');
-                    } else {
-                        console.error("Error al actualizar el carrito en el servidor.");
-                    }
-                })
-                .catch(error => console.error("Error al enviar el carrito al servidor:", error));
-        })
-        .catch(error => console.error("Error al cargar los datos del usuario desde el servidor:", error));
+        // Iteramos sobre los alérgenos y mostramos solo el nombre
+        alergenos.forEach(alergeno => {
+            const div = document.createElement('div');
+            div.textContent = alergeno.tipo; // Mostrar solo el nombre del alérgeno
+            alergenosContainer.appendChild(div); // Añadimos el nombre al contenedor de alérgenos
+        });
+    } else {
+        // Si no hay alérgenos, mostrar un mensaje
+        alergenosContainer.innerHTML = 'Este ingrediente no tiene alérgenos registrados.';
+    }
 }
-
 
 // Enviar el formulario
 form.addEventListener('submit', async function (event) {
@@ -225,37 +201,46 @@ form.addEventListener('submit', async function (event) {
     }
 });
 
-// Asignar eventos para las listas de ingredientes
-if (list1 && list2) {
-    list1.addEventListener('dragover', handleDragOver); // Permitir el arrastre sobre la lista de ingredientes disponibles
-    list1.addEventListener('drop', (event) => handleDrop(event, list1)); // Manejar el drop en la lista de ingredientes disponibles
-    list2.addEventListener('dragover', handleDragOver); // Permitir el arrastre sobre la lista de ingredientes seleccionados
-    list2.addEventListener('drop', (event) => handleDrop(event, list2)); // Manejar el drop en la lista de ingredientes seleccionados
-} else {
-    console.error("No se encontraron los elementos list1 o list2 en el DOM.");
-}
-
-function mostrarAlergenos(ingredienteId) {
-    const ingredienteElement = document.querySelector(`[data-id='${ingredienteId}']`);
-    if (!ingredienteElement) {
-        console.error('Error: Ingrediente no encontrado.');
+// Función para añadir un kebab al carrito
+function añadirLineaPedidoAlCarrito(kebab) {
+    if (!userId) {
+        console.error("No se encontró el ID del usuario.");
         return;
     }
 
-    const alergenos = JSON.parse(ingredienteElement.dataset.alergenos); // Obtenemos los alérgenos del ingrediente
+    const nuevaLineaPedido = {
+        ID_LineaPedido: null,
+        linea_pedidos: {
+            cantidad: 1,
+            nombre: kebab.nombre,
+            precio: kebab.precio,
+            ingredientes: kebab.selectedIngredientes // Aquí se incluyen los nombres de los ingredientes
+        },
+        ID_Pedido: null
+    };
 
-    if (alergenos && alergenos.length > 0) {
-        // Limpiar el contenedor de alérgenos
-        alergenosContainer.innerHTML = '';
+    fetch(`./Api/ApiUser.php?idUsuario=${userId}`)
+        .then(response => response.json())
+        .then(usuario => {
+            let carrito = usuario?.carrito || [];
+            if (typeof carrito === "string") carrito = JSON.parse(carrito);
 
-        // Iteramos sobre los alérgenos y mostramos solo el nombre
-        alergenos.forEach(alergeno => {
-            const div = document.createElement('div');
-            div.textContent = alergeno.tipo; // Mostrar solo el nombre del alérgeno
-            alergenosContainer.appendChild(div); // Añadimos el nombre al contenedor de alérgenos
-        });
-    } else {
-        // Si no hay alérgenos, mostrar un mensaje
-        alergenosContainer.innerHTML = 'Este ingrediente no tiene alérgenos registrados.';
-    }
+            const existente = carrito.find(item => item.linea_pedidos.nombre === kebab.nombre);
+            if (existente) {
+                existente.linea_pedidos.cantidad += 1;
+            } else {
+                carrito.push(nuevaLineaPedido);
+            }
+
+            fetch('./Api/ApiUser.php', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...usuario, carrito: JSON.stringify(carrito) })
+            })
+            .then(() => {
+                console.log('Kebab añadido al carrito exitosamente');
+            })
+            .catch(error => console.error('Error al actualizar el carrito:', error));
+        })
+        .catch(error => console.error('Error al obtener datos del usuario:', error));
 }

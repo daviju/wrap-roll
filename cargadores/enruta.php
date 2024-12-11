@@ -108,7 +108,11 @@ if (isset($_GET['admin'])) {
         case "crearAlergenos":
             require_once './Vistas/Admin/crearAlergenos.php';
             break;
-
+        
+        case "kebabs":
+            require_once './Vistas/Admin/crearKebabs.php';
+            break;
+            
         default:
             require_once './Vistas/Main/inisio.php';
             break;

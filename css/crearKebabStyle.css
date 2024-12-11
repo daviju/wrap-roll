@@ -1,0 +1,225 @@
+/* Estilos generales para la página */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #181a20; /* Color de fondo de la página */
+}
+.main-content{
+    background-color: #181a20;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #e1d8b7; /* Fondo blanco para el contenedor principal */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+h2 {
+    text-align: center;
+    color: #333; /* Color del texto del título */
+}
+
+hr {
+    border: 1px solid #ccc; /* Línea divisoria */
+    margin: 20px 0;
+}
+
+/* Contenedor de los inputs */
+.input-container {
+    display: flex;
+    justify-content: space-between;
+    background-color: #e1d8b7; /* Fondo suave para la sección de los inputs */
+    padding: 20px;
+    border-radius: 8px;
+}
+
+/* Columnas */
+.left-column,
+.right-column {
+    width: 48%;
+}
+
+/* Agrupación de cada campo de entrada */
+.input-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-size: 14px;
+    color: #333; /* Color del texto de las etiquetas */
+}
+
+/* Estilo de los inputs */
+input[type="text"],
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Escondemos el input file, utilizamos el contenedor como área de carga */
+input[type="file"] {
+    display: none;
+}
+
+/* Vista previa de la imagen */
+.preview-container {
+    border: 2px dashed #b23927;
+    border-radius: 5px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0; /* Fondo claro para la vista previa */
+    cursor: pointer;
+    color: #333;
+    text-align: center;
+    position: relative;
+    width: 100%;
+}
+
+.preview-container:hover {
+    border-color: #ff2200; /* Cambio de color al pasar el ratón */
+}
+
+.preview-container span {
+    font-size: 14px;
+    color: #b23927;
+    display: block;
+}
+
+/* Estilo de las listas de ingredientes */
+.list-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.list {
+    width: 48%;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #fafafa; /* Fondo suave para las listas */
+}
+
+div.list {
+    background-color: #c08981;
+}
+
+.list h3 {
+    margin-top: 0;
+    color: #333; /* Color del título de las listas */
+}
+
+.list-items {
+    margin-top: 10px;
+}
+
+/* Estilo de los alérgenos */
+.alergenos {
+    margin-top: 20px;
+}
+
+.alergenos-container {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #333; /* Fondo blanco para los alérgenos */
+}
+
+/* Estilo para el contenedor del botón "Crear" */
+.btn-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.btn {
+    background-color: #b23927; /* Fondo rojo para el botón */
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #ff2200; /* Cambio de color del botón al pasar el ratón */
+}
+
+/* Estilo para cuando el input de tipo file es arrastrado */
+input[type="file"]:focus {
+    outline: none;
+}
+
+/* Estilo de contenedor drag-and-drop */
+.drag-drop-container {
+    background-color: #181a20; /* Fondo blanco para el contenedor principal */
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+.drag-drop-container .container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Nuevos estilos para el área de arrastrar y soltar */
+.list-items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.list-items .list {
+    background-color: #c08981;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.list-items .list.dragging {
+    opacity: 0.5; /* Efecto de arrastre */
+}
+
+.list-items .list:hover {
+    background-color: #a06b5c; /* Cambio de fondo al pasar el ratón */
+}
+
+/* Estilo cuando se arrastra un elemento sobre la lista */
+.list-items.over {
+    background-color: #c6e2d2; /* Fondo suave para la zona de drop */
+}
+
+/* Resposive: Aseguramos que los elementos se adapten en pantallas pequeñas */
+@media (max-width: 768px) {
+    .input-container {
+        flex-direction: column;
+    }
+
+    .left-column,
+    .right-column {
+        width: 100%;
+    }
+
+    .list-container {
+        flex-direction: column;
+    }
+
+    .list {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
