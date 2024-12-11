@@ -89,7 +89,7 @@ function handleDragOver(event) {
 // Función para manejar el drop de los ingredientes en la lista de ingredientes seleccionados
 function handleDrop(event, targetList) {
     event.preventDefault(); // Prevenir el comportamiento por defecto
-    
+
     const ingredienteId = event.dataTransfer.getData('text/plain'); // Obtenemos el ID del ingrediente arrastrado
     const draggedElement = document.querySelector(`[data-id='${ingredienteId}']`); // Buscamos el ingrediente en el DOM
 
@@ -215,8 +215,10 @@ form.addEventListener('submit', async function (event) {
     // Llamar a la función para añadir el kebab al carrito
     try {
         console.log('Enviando JSON al servidor:', JSON.stringify(kebabData));
+
         await añadirLineaPedidoAlCarrito(kebabData); // Función async para manejar la lógica del carrito
         alert('Kebab añadido al carrito correctamente.');
+
     } catch (error) {
         console.error('Error al añadir el kebab al carrito:', error);
         alert('Ocurrió un error al añadir el kebab al carrito. Por favor, inténtalo de nuevo.');

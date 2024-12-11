@@ -141,11 +141,11 @@ function cargarCarrito(carrito, userId) {
     const removeButtons = document.querySelectorAll(".remove-item");
     removeButtons.forEach((button) => {
         button.addEventListener("click", async (event) => {
-            const index = event.target.dataset.index;
-            const userId = event.target.dataset.userId;
+            const index = event.target.dataset.index; // Obtener el index
+            const userId = event.target.dataset.userId; // Obtener el userId
 
             // Eliminar el item del carrito
-            carrito.splice(index, 1);
+            carrito.splice(index, 1); 
 
             // Actualizar el carrito en el servidor
             await actualizarCarrito(userId, carrito);
@@ -161,7 +161,11 @@ async function actualizarCarrito(userId, carrito) {
     try {
         // Primero obtenemos los datos del usuario
         const response = await fetch(`./Api/ApiUser.php?idUsuario=${userId}`);
+
+        // Verificar si la solicitud fue exitosa
         if (!response.ok) throw new Error("Error al obtener los datos del usuario.");
+        
+        // Obtenemos los datos del usuario
         const usuario = await response.json();
 
         console.log("Datos del usuario obtenidos:", usuario);
@@ -181,7 +185,7 @@ async function actualizarCarrito(userId, carrito) {
             body: JSON.stringify(usuarioActualizado),
         });
 
-        if (!updateResponse.ok) {
+        if (!updateResponse.ok) { // Verificar si la solicitud fue exitosa
             throw new Error("Error al actualizar el carrito en el servidor.");
         }
 
@@ -200,7 +204,7 @@ function mostrarMonedero(monedero) {
         return;
     }
 
-    monederoElement.textContent = `${monedero.toFixed(2)}€`;
+    monederoElement.textContent = `${monedero.toFixed(2)}€`; // Mostrar el monedero en el DOM
 
     // También actualizamos el crédito restante al inicializar el monedero
     const totalPriceElement = document.getElementById("total-price");
